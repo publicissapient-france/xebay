@@ -36,7 +36,9 @@ class BidServer {
             throw new BidException(format("\"%s\" is already registered", email));
         }
         StringBuilder key = new StringBuilder();
-        range(0, 16).forEach((i) -> key.append(CHARS_IN_KEY.charAt(random.nextInt(CHARS_IN_KEY.length()))));
+        do {
+            range(0, 16).forEach((i) -> key.append(CHARS_IN_KEY.charAt(random.nextInt(CHARS_IN_KEY.length()))));
+        } while (authorized.containsKey(key.toString()));
         authorized.put(key.toString(), new User(email, key.toString()));
         return key.toString();
     }
