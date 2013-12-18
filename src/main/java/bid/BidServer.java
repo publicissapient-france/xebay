@@ -1,6 +1,9 @@
 package bid;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Random;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -18,6 +21,7 @@ class BidServer {
     private final Random random;
 
     private BidOffer current;
+    private int tick;
 
     BidServer(BidOffer... bidOffers) throws BidException {
         if (bidOffers.length == 0) {
@@ -27,6 +31,7 @@ class BidServer {
         this.bidOffersIterator = new LinkedHashSet<>(asList(bidOffers)).iterator();
         this.random = new Random();
         this.current = bidOffersIterator.next();
+        this.tick = 0;
     }
 
     String register(String email) throws BidException {
@@ -58,6 +63,13 @@ class BidServer {
             throw new BidException(format("increment %s is less than ten percent of initial value %s of item \"%s\"", Double.toString(increment), Double.toString(current.getInitialValue()), current.getName()));
         }
         return current.increment(increment);
+    }
+
+    void tick() {
+        tick++;
+        if (tick % 10 == 0) {
+            current = bidOffersIterator.next();
+        }
     }
 
     User user(String key) {

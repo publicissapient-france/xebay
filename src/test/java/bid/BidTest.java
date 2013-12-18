@@ -1,9 +1,11 @@
 package bid;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static java.util.stream.IntStream.range;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BidTest {
@@ -70,5 +72,15 @@ public class BidTest {
         expectedException.expectMessage("increment 0.42 is less than ten percent of initial value 4.3 of item \"an item\"");
 
         bidServer.bid(key, "an item", 4.3, 0.42);
+    }
+
+    @Test
+    public void a_bid_is_valid_until_ten_tick() {
+        BidServer bidServer = new BidServer(new BidOffer("an item", 4.3), new BidOffer("another item", 2.4));
+        String key = bidServer.register("email@provider.com");
+
+        range(0, 10).forEach((i) -> bidServer.tick());
+
+        assertThat(bidServer.currentBidOffer(key).getName()).isEqualTo("another item");
     }
 }
