@@ -14,7 +14,6 @@ class BidServer {
             "-_";
 
     private final HashMap<String, User> authorized;
-    private final Set<BidOffer> bidOffers;
     private final Iterator<BidOffer> bidOffersIterator;
     private final Random random;
 
@@ -25,8 +24,7 @@ class BidServer {
             throw new BidException();
         }
         this.authorized = new HashMap<>();
-        this.bidOffers = new LinkedHashSet<>(asList(bidOffers));
-        this.bidOffersIterator = this.bidOffers.iterator();
+        this.bidOffersIterator = new LinkedHashSet<>(asList(bidOffers)).iterator();
         this.random = new Random();
         this.current = bidOffersIterator.next();
     }
