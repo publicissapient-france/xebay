@@ -22,7 +22,9 @@ class BidOffer {
     }
 
     void resolve() {
-        if (user != null) {
+        if (user == null) {
+            item.depreciate();
+        } else {
             item.updateValue(currentValue);
             user.buy(item);
         }
