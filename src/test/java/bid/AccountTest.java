@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AccountTest {
     @Test
     public void when_started_user_have_1000_bidpoints() {
-        BidServer bidServer = new BidServer(new BidOffer("an item", 4.3));
+        BidServer bidServer = new BidServer(new BidOffer(new Item("an item", 4.3)));
         String key = bidServer.register("email@provider.com");
 
         User user = bidServer.user(key);

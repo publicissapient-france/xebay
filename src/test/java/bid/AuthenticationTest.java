@@ -17,7 +17,7 @@ public class AuthenticationTest {
 
     @Before
     public void createBidOffer() {
-        bidOffer = new BidOffer("an item", 4.3);
+        bidOffer = new BidOffer(new Item("an item", 4.3));
     }
 
     @Test

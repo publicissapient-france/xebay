@@ -1,31 +1,34 @@
 package bid;
 
 class BidOffer {
-    private final String itemName;
-    private final double initialValue;
+    private final Item item;
 
     private double currentValue;
+    private User user;
 
-    BidOffer(String itemName, double initialValue) {
-        this.itemName = itemName;
-        this.initialValue = initialValue;
-        this.currentValue = initialValue;
+    BidOffer(Item item) {
+        this.item = item;
+        this.currentValue = item.getValue();
     }
 
-    String getName() {
-        return itemName;
-    }
-
-    double getInitialValue() {
-        return initialValue;
+    Item getItem() {
+        return item;
     }
 
     double getCurrentValue() {
         return currentValue;
     }
 
-    BidOffer increment(double increment) {
-        currentValue += increment;
+    BidOffer increment(double increment, User user) {
+        this.currentValue += increment;
+        this.user = user;
         return this;
+    }
+
+    void resolve() {
+        if (user != null) {
+            item.updateValue(currentValue);
+            user.buy(item);
+        }
     }
 }

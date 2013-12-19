@@ -1,16 +1,23 @@
 package bid;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import static java.util.Collections.unmodifiableSet;
+
 class User {
     private final String email;
     private final String key;
 
     private double balance;
+    private Set<Item> items;
 
     User(String key, String email) {
         this.email = email;
         this.key = key;
 
         this.balance = 1000;
+        this.items = new HashSet<>();
     }
 
     double getBalance() {
@@ -23,6 +30,15 @@ class User {
 
     String getKey() {
         return key;
+    }
+
+    Set<Item> getItems() {
+        return unmodifiableSet(items);
+    }
+
+    void buy(Item item) {
+        balance -= item.getValue();
+        items.add(item);
     }
 
     @Override

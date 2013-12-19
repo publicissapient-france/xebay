@@ -1,6 +1,5 @@
 package bid;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -14,18 +13,18 @@ public class BidTest {
 
     @Test
     public void server_should_give_a_bid_offer() {
-        BidServer bidServer = new BidServer(new BidOffer("an item", 4.3));
+        BidServer bidServer = new BidServer(new BidOffer(new Item("an item", 4.3)));
         String key = bidServer.register("email@provider.com");
 
         BidOffer bidOffer = bidServer.currentBidOffer(key);
 
-        assertThat(bidOffer.getName()).isEqualTo("an item");
-        assertThat(bidOffer.getInitialValue()).isEqualTo(4.3);
+        assertThat(bidOffer.getItem().getName()).isEqualTo("an item");
+        assertThat(bidOffer.getItem().getValue()).isEqualTo(4.3);
     }
 
     @Test
     public void when_no_bid_has_occured_current_value_is_equal_to_initial_value() {
-        BidServer bidServer = new BidServer(new BidOffer("an item", 4.3));
+        BidServer bidServer = new BidServer(new BidOffer(new Item("an item", 4.3)));
         String key = bidServer.register("email@provider.com");
 
         BidOffer bidOffer = bidServer.currentBidOffer(key);
@@ -35,18 +34,17 @@ public class BidTest {
 
     @Test
     public void a_bid_can_be_done() {
-        BidServer bidServer = new BidServer(new BidOffer("an item", 4.3));
+        BidServer bidServer = new BidServer(new BidOffer(new Item("an item", 4.3)));
         String key = bidServer.register("email@provider.com");
 
         BidOffer bidOffer = bidServer.bid(key, "an item", 4.3, 2.1);
 
-        assertThat(bidOffer.getName()).isEqualTo("an item");
         assertThat(bidOffer.getCurrentValue()).isEqualTo(6.4);
     }
 
     @Test
-    public void user_have_to_bid_with_current_item() {
-        BidServer bidServer = new BidServer(new BidOffer("an item", 4.3));
+    public void user_have_to_bid_on_current_item() {
+        BidServer bidServer = new BidServer(new BidOffer(new Item("an item", 4.3)));
         String key = bidServer.register("email@provider.com");
         expectedException.expect(BidException.class);
         expectedException.expectMessage("current item to bid is not \"another item\"");
@@ -55,8 +53,8 @@ public class BidTest {
     }
 
     @Test
-    public void user_have_to_bid_with_current_item_value() {
-        BidServer bidServer = new BidServer(new BidOffer("an item", 4.3));
+    public void user_have_to_bid_on_current_item_value() {
+        BidServer bidServer = new BidServer(new BidOffer(new Item("an item", 4.3)));
         String key = bidServer.register("email@provider.com");
         expectedException.expect(BidException.class);
         expectedException.expectMessage("value for \"an item\" is not 4.1 but 4.3");
@@ -66,7 +64,7 @@ public class BidTest {
 
     @Test
     public void should_not_bid_with_less_than_ten_percent_of_initial_value() {
-        BidServer bidServer = new BidServer(new BidOffer("an item", 4.3));
+        BidServer bidServer = new BidServer(new BidOffer(new Item("an item", 4.3)));
         String key = bidServer.register("email@provider.com");
         expectedException.expect(BidException.class);
         expectedException.expectMessage("increment 0.42 is less than ten percent of initial value 4.3 of item \"an item\"");
@@ -76,11 +74,26 @@ public class BidTest {
 
     @Test
     public void a_bid_is_valid_until_ten_tick() {
-        BidServer bidServer = new BidServer(new BidOffer("an item", 4.3), new BidOffer("another item", 2.4));
+        BidServer bidServer = new BidServer(new BidOffer(new Item("an item", 4.3)), new BidOffer(new Item("another item", 2.4)));
         String key = bidServer.register("email@provider.com");
 
         range(0, 10).forEach((i) -> bidServer.tick());
 
-        assertThat(bidServer.currentBidOffer(key).getName()).isEqualTo("another item");
+        assertThat(bidServer.currentBidOffer(key).getItem().getName()).isEqualTo("another item");
+    }
+
+    @Test
+    public void when_only_one_user_bid_he_wins() {
+        BidServer bidServer = new BidServer(new BidOffer(new Item("an item", 4.3)), new BidOffer(new Item("another item", 2.4)));
+        String key = bidServer.register("email@provider.com");
+        bidServer.bid(key, "an item", 4.3, 0.7);
+
+        range(0, 10).forEach((i) -> bidServer.tick());
+
+        User user = bidServer.user(key);
+        assertThat(user.getBalance()).isEqualTo(995);
+        Item purchasedItem = user.getItems().iterator().next();
+        assertThat(purchasedItem.getName()).isEqualTo("an item");
+        assertThat(purchasedItem.getValue()).isEqualTo(5.0);
     }
 }
