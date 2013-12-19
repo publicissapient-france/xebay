@@ -7,7 +7,7 @@ import java.util.Set;
 import static java.lang.String.format;
 import static java.util.stream.IntStream.range;
 
-public class Users {
+class Users {
     private static final String CHARS_IN_KEY = "" +
             "abcdefghijklmnopqrstuvwxyz" +
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
@@ -17,12 +17,12 @@ public class Users {
     private final Random random;
     private final Set<User> users;
 
-    public Users() {
+    Users() {
         this.users = new HashSet<>();
         this.random = new Random();
     }
 
-    public User create(String email) {
+    User create(String email) {
         if (containsEmail(email)) {
             throw new BidException(format("\"%s\" is already registered", email));
         }
@@ -37,7 +37,7 @@ public class Users {
         return newUser;
     }
 
-    public User findByKey(String key) throws BidException {
+    User findByKey(String key) throws BidException {
         return users.stream()
                 .filter((user) -> user.getKey().equals(key))
                 .findFirst()
