@@ -74,7 +74,7 @@ public class BidTest {
 
     @Test
     public void a_bid_is_valid_until_ten_tick() {
-        BidServer bidServer = new BidServer(new BidOffer(new Item("an item", 4.3)), new BidOffer(new Item("another item", 2.4)));
+        BidServer bidServer = new BidServer(new Item("an item", 4.3), new Item("another item", 2.4));
         String key = bidServer.register("email@provider.com");
 
         range(0, 10).forEach((i) -> bidServer.tick());
@@ -84,7 +84,7 @@ public class BidTest {
 
     @Test
     public void when_only_one_user_bids_then_he_wins() {
-        BidServer bidServer = new BidServer(new BidOffer(new Item("an item", 4.3)), new BidOffer(new Item("another item", 2.4)));
+        BidServer bidServer = new BidServer(new Item("an item", 4.3), new Item("another item", 2.4));
         String key = bidServer.register("email@provider.com");
         bidServer.bid(key, "an item", 4.3, 0.7);
 

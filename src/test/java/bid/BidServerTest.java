@@ -9,9 +9,9 @@ public class BidServerTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
-    public void should_not_be_instantiated_without_bid_offer() throws Exception {
+    public void should_not_be_instantiated_without_items() throws Exception {
         expectedException.expect(BidException.class);
 
-        new BidServer();
+        new BidServer(new Item[0]);
     }
 }
