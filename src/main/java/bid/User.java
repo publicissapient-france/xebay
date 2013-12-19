@@ -6,7 +6,7 @@ class User {
 
     private double balance;
 
-    User(String email, String key) {
+    User(String key, String email) {
         this.email = email;
         this.key = key;
 

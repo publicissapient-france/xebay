@@ -1,24 +1,14 @@
 package bid;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.Random;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-import static java.util.stream.IntStream.range;
 
 class BidServer {
-    private static final String CHARS_IN_KEY = "" +
-            "abcdefghijklmnopqrstuvwxyz" +
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-            "0123456789" +
-            "-_";
-
-    private final HashMap<String, User> authorized;
+    private final Users users;
     private final Iterator<BidOffer> bidOffersIterator;
-    private final Random random;
 
     private BidOffer current;
     private int tick;
@@ -27,32 +17,23 @@ class BidServer {
         if (bidOffers.length == 0) {
             throw new BidException();
         }
-        this.authorized = new HashMap<>();
+        this.users = new Users();
         this.bidOffersIterator = new LinkedHashSet<>(asList(bidOffers)).iterator();
-        this.random = new Random();
         this.current = bidOffersIterator.next();
         this.tick = 0;
     }
 
     String register(String email) throws BidException {
-        if (authorized.values().stream().anyMatch((user) -> user.getEmail().equals(email))) {
-            throw new BidException(format("\"%s\" is already registered", email));
-        }
-        StringBuilder key = new StringBuilder();
-        do {
-            range(0, 16).forEach((i) -> key.append(CHARS_IN_KEY.charAt(random.nextInt(CHARS_IN_KEY.length()))));
-        } while (authorized.containsKey(key.toString()));
-        authorized.put(key.toString(), new User(email, key.toString()));
-        return key.toString();
+        return users.create(email).getKey();
     }
 
     BidOffer currentBidOffer(String key) {
-        checkKey(key);
+        users.findByKey(key);
         return current;
     }
 
     BidOffer bid(String key, String name, double value, double increment) throws BidException {
-        checkKey(key);
+        users.findByKey(key);
         if (!current.getName().equals(name)) {
             throw new BidException(format("current item to bid is not \"%s\"", name));
         }
@@ -73,13 +54,6 @@ class BidServer {
     }
 
     User user(String key) {
-        checkKey(key);
-        return authorized.get(key);
-    }
-
-    private void checkKey(String key) {
-        if (!authorized.containsKey(key)) {
-            throw new BidException(format("key \"%s\" is unknown", key));
-        }
+        return users.findByKey(key);
     }
 }
