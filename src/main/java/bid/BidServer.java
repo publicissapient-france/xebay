@@ -1,23 +1,16 @@
 package bid;
 
-import java.util.Iterator;
-
-import static java.util.Arrays.asList;
-
 class BidServer {
     private final Users users;
+    private final Items items;
 
-    private Iterator<Item> itemsIterator;
     private BidOffer current;
     private int tick;
 
-    BidServer(Item... items) {
-        if (items.length == 0) {
-            throw new BidException();
-        }
+    BidServer(Items items) {
+        this.items = items;
         this.users = new Users();
-        this.itemsIterator = asList(items).iterator();
-        this.current = new BidOffer(itemsIterator.next());
+        this.current = new BidOffer(this.items.next());
         this.tick = 0;
     }
 
@@ -38,7 +31,7 @@ class BidServer {
         tick++;
         if (tick % 10 == 0) {
             current.resolve();
-            current = new BidOffer(itemsIterator.next());
+            current = new BidOffer(items.next());
         }
     }
 

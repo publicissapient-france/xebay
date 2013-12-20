@@ -12,6 +12,6 @@ public class BidServerTest {
     public void should_not_be_instantiated_without_items() throws Exception {
         expectedException.expect(BidException.class);
 
-        new BidServer(new Item[0]);
+        new BidServer(new Items());
     }
 }

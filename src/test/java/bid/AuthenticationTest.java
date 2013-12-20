@@ -13,16 +13,16 @@ public class AuthenticationTest {
     @Rule
     public ExpectedException excpectedException = ExpectedException.none();
 
-    private Item bidItem;
+    private Items items;
 
     @Before
     public void createBidOffer() {
-        bidItem = new Item("an item", 4.3);
+        items = new Items(new Item("an item", 4.3));
     }
 
     @Test
     public void a_key_is_emmitted_when_register() {
-        BidServer bidServer = new BidServer(bidItem);
+        BidServer bidServer = new BidServer(items);
 
         String key = bidServer.register("an-email@provider.com");
 
@@ -31,7 +31,7 @@ public class AuthenticationTest {
 
     @Test
     public void can_not_register_twice() {
-        BidServer bidServer = new BidServer(bidItem);
+        BidServer bidServer = new BidServer(items);
         bidServer.register("an-email@provider.com");
         excpectedException.expect(BidException.class);
         excpectedException.expectMessage("\"an-email@provider.com\" is already registered");
@@ -41,17 +41,15 @@ public class AuthenticationTest {
 
     @Test
     public void once_registered_key_allow_user_to_interact_with_server() {
-        BidServer bidServer = new BidServer(bidItem);
+        BidServer bidServer = new BidServer(items);
         String key = bidServer.register("an-email@provider.com");
 
-        BidOffer bidOffer = bidServer.currentBidOffer(key);
-
-        assertThat(bidOffer.getItem()).isEqualTo(bidItem);
+        bidServer.currentBidOffer(key);
     }
 
     @Test
     public void cant_get_current_bid_offer_if_key_is_not_correct() {
-        BidServer bidServer = new BidServer(bidItem);
+        BidServer bidServer = new BidServer(items);
         excpectedException.expect(BidException.class);
         excpectedException.expectMessage("key \"fake key\" is unknown");
 
@@ -60,7 +58,7 @@ public class AuthenticationTest {
 
     @Test
     public void cant_bid_if_key_is_not_correct() {
-        BidServer bidServer = new BidServer(bidItem);
+        BidServer bidServer = new BidServer(items);
         excpectedException.expect(BidException.class);
         excpectedException.expectMessage("key \"fake key\" is unknown");
 
