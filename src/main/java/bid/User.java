@@ -41,6 +41,11 @@ class User {
         items.add(item);
     }
 
+    public void sell(Item item) {
+        balance += item.getValue();
+        items.remove(item);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -54,5 +59,10 @@ class User {
     @Override
     public int hashCode() {
         return email.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return email;
     }
 }

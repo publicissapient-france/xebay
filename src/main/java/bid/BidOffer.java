@@ -6,7 +6,7 @@ class BidOffer {
     private final Item item;
 
     private double currentValue;
-    private User user;
+    private User buyer;
 
     BidOffer(Item item) {
         this.item = item;
@@ -22,11 +22,10 @@ class BidOffer {
     }
 
     void resolve() {
-        if (user == null) {
+        if (buyer == null) {
             item.depreciate();
         } else {
-            item.updateValue(currentValue);
-            user.buy(item);
+            item.concludeTransaction(currentValue, buyer);
         }
     }
 
@@ -46,7 +45,7 @@ class BidOffer {
 
     private BidOffer increment(double increment, User user) {
         this.currentValue += increment;
-        this.user = user;
+        this.buyer = user;
         return this;
     }
 }

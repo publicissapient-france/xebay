@@ -95,10 +95,27 @@ public class BidTest {
         Item purchasedItem = user.getItems().iterator().next();
         assertThat(purchasedItem.getName()).isEqualTo("an item");
         assertThat(purchasedItem.getValue()).isEqualTo(5.0);
+        assertThat(purchasedItem.getOwner()).isEqualTo(user);
     }
 
     @Test
-    public void when_nobody_bid_then_item_value_loose_ten_percent_of_his_value() {
+    public void when_a_bid_is_won_seller_increase_money() {
+        BidServer bidServer = new BidServer(new Items(new Item("an item", 4.3)));
+        String sellerKey = bidServer.register("seller@host.com");
+        bidServer.bid(sellerKey, "an item", 4.3, 0.7);
+        range(0, 10).forEach((i) -> bidServer.tick());
+        String buyerKey = bidServer.register("buyer@host.com");
+        bidServer.bid(buyerKey, "an item", 5.0, 0.8);
+
+        range(0, 10).forEach((i) -> bidServer.tick());
+
+        User user = bidServer.user(sellerKey);
+        assertThat(user.getItems()).isEmpty();
+        assertThat(user.getBalance()).isEqualTo(1000.8);
+    }
+
+    @Test
+    public void when_nobody_bid_then_item_value_loose_ten_percent_of_its_value() {
         BidServer bidServer = new BidServer(new Items(new Item("an item", 4.33), new Item("another item", 2.4)));
         String key = bidServer.register("email@provider.com");
         Item item = bidServer.currentBidOffer(key).getItem();
