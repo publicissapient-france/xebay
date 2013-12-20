@@ -1,6 +1,7 @@
 package bid;
 
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.Set;
 
@@ -37,14 +38,14 @@ class Users {
         return newUser;
     }
 
-    User findByKey(String key) throws BidException {
+    User findByKey(String key) throws NoSuchElementException {
         return users.stream()
                 .filter((user) -> user.getKey().equals(key))
                 .findFirst()
-                .orElseThrow(() -> new BidException(format("key \"%s\" is unknown", key)));
+                .get();
     }
 
-    private boolean containsKey(String key) {
+    boolean containsKey(String key) {
         return users.stream().anyMatch((user) -> user.getKey().equals(key));
     }
 

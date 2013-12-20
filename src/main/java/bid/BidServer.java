@@ -1,16 +1,18 @@
 package bid;
 
+import static java.lang.String.format;
+
 class BidServer {
     private final Users users;
     private final Items items;
 
-    private BidOffer current;
+    private BidOffer bidOffer;
     private int tick;
 
     BidServer(Items items) {
         this.items = items;
         this.users = new Users();
-        this.current = new BidOffer(this.items.next());
+        this.bidOffer = new BidOffer(this.items.next());
         this.tick = 0;
     }
 
@@ -19,23 +21,30 @@ class BidServer {
     }
 
     BidOffer currentBidOffer(String key) {
-        users.findByKey(key);
-        return current;
+        checkUserKey(key);
+        return bidOffer;
     }
 
     BidOffer bid(String key, String name, double value, double increment) throws BidException {
-        return current.increment(name, value, increment, users.findByKey(key));
+        return bidOffer.increment(name, value, increment, user(key));
     }
 
     void tick() {
         tick++;
         if (tick % 10 == 0) {
-            current.resolve();
-            current = new BidOffer(items.next());
+            bidOffer.resolve();
+            bidOffer = new BidOffer(items.next());
         }
     }
 
     User user(String key) {
+        checkUserKey(key);
         return users.findByKey(key);
+    }
+
+    private void checkUserKey(String key) throws BidException {
+        if (!users.containsKey(key)) {
+            throw new BidException(format("key \"%s\" is unknown", key));
+        }
     }
 }
