@@ -23,7 +23,7 @@ public class BidTest {
     }
 
     @Test
-    public void when_no_bid_has_occured_current_value_is_equal_to_initial_value() {
+    public void when_no_bid_has_occurred_current_value_is_equal_to_initial_value() {
         BidServer bidServer = new BidServer(new Items(new Item("an item", 4.3)));
         String key = bidServer.register("email@provider.com");
 
