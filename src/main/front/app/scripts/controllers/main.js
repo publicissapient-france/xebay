@@ -1,10 +1,6 @@
 'use strict';
 
-angular.module('webappApp')
+angular.module('bid')
   .controller('MainCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+    console.log('this is where we\'ll put some logic');
   });

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('webappApp', [
+angular.module('bid', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
