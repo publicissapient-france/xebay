@@ -14,9 +14,8 @@ public class BidTest {
     @Test
     public void server_should_give_a_bid_offer() {
         BidServer bidServer = new BidServer(new Items(new Item("an item", 4.3)));
-        String key = bidServer.register("email@provider.com");
 
-        BidOffer bidOffer = bidServer.currentBidOffer(key);
+        BidOffer bidOffer = bidServer.currentBidOffer();
 
         assertThat(bidOffer.getItem().getName()).isEqualTo("an item");
         assertThat(bidOffer.getItem().getValue()).isEqualTo(4.3);
@@ -25,9 +24,8 @@ public class BidTest {
     @Test
     public void when_no_bid_has_occurred_current_value_is_equal_to_initial_value() {
         BidServer bidServer = new BidServer(new Items(new Item("an item", 4.3)));
-        String key = bidServer.register("email@provider.com");
 
-        BidOffer bidOffer = bidServer.currentBidOffer(key);
+        BidOffer bidOffer = bidServer.currentBidOffer();
 
         assertThat(bidOffer.getCurrentValue()).isEqualTo(4.3);
     }
@@ -75,11 +73,10 @@ public class BidTest {
     @Test
     public void a_bid_is_valid_until_ten_tick() {
         BidServer bidServer = new BidServer(new Items(new Item("an item", 4.3), new Item("another item", 2.4)));
-        String key = bidServer.register("email@provider.com");
 
         range(0, 10).forEach((i) -> bidServer.tick());
 
-        assertThat(bidServer.currentBidOffer(key).getItem().getName()).isEqualTo("another item");
+        assertThat(bidServer.currentBidOffer().getItem().getName()).isEqualTo("another item");
     }
 
     @Test
@@ -117,8 +114,7 @@ public class BidTest {
     @Test
     public void when_nobody_bid_then_item_value_loose_ten_percent_of_its_value() {
         BidServer bidServer = new BidServer(new Items(new Item("an item", 4.33), new Item("another item", 2.4)));
-        String key = bidServer.register("email@provider.com");
-        Item item = bidServer.currentBidOffer(key).getItem();
+        Item item = bidServer.currentBidOffer().getItem();
 
         range(0, 10).forEach((i) -> bidServer.tick());
 

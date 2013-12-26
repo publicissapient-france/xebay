@@ -44,16 +44,16 @@ public class AuthenticationTest {
         BidServer bidServer = new BidServer(items);
         String key = bidServer.register("an-email@provider.com");
 
-        bidServer.currentBidOffer(key);
+        bidServer.user(key);
     }
 
     @Test
-    public void cant_get_current_bid_offer_if_key_is_not_correct() {
+    public void cant_get_user_if_key_is_not_correct() {
         BidServer bidServer = new BidServer(items);
         excpectedException.expect(BidException.class);
         excpectedException.expectMessage("key \"fake key\" is unknown");
 
-        bidServer.currentBidOffer("fake key");
+        bidServer.user("fake key");
     }
 
     @Test

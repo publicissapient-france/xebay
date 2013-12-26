@@ -20,8 +20,7 @@ class BidServer {
         return users.create(email).getKey();
     }
 
-    BidOffer currentBidOffer(String key) {
-        checkUserKey(key);
+    BidOffer currentBidOffer() {
         return bidOffer;
     }
 
