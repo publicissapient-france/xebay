@@ -2,7 +2,8 @@
 
 ### How to
 
-    $ mvn clean package
+    $ grunt --gruntfile src/main/front/Gruntfile.js --force build
+    $ mvn tomcat7:run
 
 ### TODO
 
