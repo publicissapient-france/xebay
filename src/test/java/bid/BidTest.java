@@ -13,9 +13,9 @@ public class BidTest {
 
     @Test
     public void server_should_give_a_bid_offer() {
-        BidServer bidServer = new BidServer(new Items(new Item("an item", 4.3)));
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3)));
 
-        BidOffer bidOffer = bidServer.currentBidOffer();
+        BidOffer bidOffer = bidEngine.currentBidOffer();
 
         assertThat(bidOffer.getItem().getName()).isEqualTo("an item");
         assertThat(bidOffer.getItem().getValue()).isEqualTo(4.3);
@@ -23,71 +23,71 @@ public class BidTest {
 
     @Test
     public void when_no_bid_has_occurred_current_value_is_equal_to_initial_value() {
-        BidServer bidServer = new BidServer(new Items(new Item("an item", 4.3)));
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3)));
 
-        BidOffer bidOffer = bidServer.currentBidOffer();
+        BidOffer bidOffer = bidEngine.currentBidOffer();
 
         assertThat(bidOffer.getCurrentValue()).isEqualTo(4.3);
     }
 
     @Test
     public void a_bid_can_be_done() {
-        BidServer bidServer = new BidServer(new Items(new Item("an item", 4.3)));
-        String key = bidServer.register("email@provider.com");
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3)));
+        String key = bidEngine.register("email@provider.com");
 
-        BidOffer bidOffer = bidServer.bid(key, "an item", 4.3, 2.1);
+        BidOffer bidOffer = bidEngine.bid(key, "an item", 4.3, 2.1);
 
         assertThat(bidOffer.getCurrentValue()).isEqualTo(6.4);
     }
 
     @Test
     public void user_have_to_bid_on_current_item() {
-        BidServer bidServer = new BidServer(new Items(new Item("an item", 4.3)));
-        String key = bidServer.register("email@provider.com");
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3)));
+        String key = bidEngine.register("email@provider.com");
         expectedException.expect(BidException.class);
         expectedException.expectMessage("current item to bid is not \"another item\"");
 
-        bidServer.bid(key, "another item", 4.3, 2.1);
+        bidEngine.bid(key, "another item", 4.3, 2.1);
     }
 
     @Test
     public void user_have_to_bid_on_current_item_value() {
-        BidServer bidServer = new BidServer(new Items(new Item("an item", 4.3)));
-        String key = bidServer.register("email@provider.com");
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3)));
+        String key = bidEngine.register("email@provider.com");
         expectedException.expect(BidException.class);
         expectedException.expectMessage("value for \"an item\" is not 4.1 but 4.3");
 
-        bidServer.bid(key, "an item", 4.1, 2.1);
+        bidEngine.bid(key, "an item", 4.1, 2.1);
     }
 
     @Test
     public void should_not_bid_with_less_than_ten_percent_of_initial_value() {
-        BidServer bidServer = new BidServer(new Items(new Item("an item", 4.3)));
-        String key = bidServer.register("email@provider.com");
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3)));
+        String key = bidEngine.register("email@provider.com");
         expectedException.expect(BidException.class);
         expectedException.expectMessage("increment 0.42 is less than ten percent of initial value 4.3 of item \"an item\"");
 
-        bidServer.bid(key, "an item", 4.3, 0.42);
+        bidEngine.bid(key, "an item", 4.3, 0.42);
     }
 
     @Test
     public void a_bid_is_valid_until_ten_tick() {
-        BidServer bidServer = new BidServer(new Items(new Item("an item", 4.3), new Item("another item", 2.4)));
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3), new Item("another item", 2.4)));
 
-        range(0, 10).forEach((i) -> bidServer.tick());
+        range(0, 10).forEach((i) -> bidEngine.tick());
 
-        assertThat(bidServer.currentBidOffer().getItem().getName()).isEqualTo("another item");
+        assertThat(bidEngine.currentBidOffer().getItem().getName()).isEqualTo("another item");
     }
 
     @Test
     public void when_only_one_user_bids_then_he_wins() {
-        BidServer bidServer = new BidServer(new Items(new Item("an item", 4.3), new Item("another item", 2.4)));
-        String key = bidServer.register("email@provider.com");
-        bidServer.bid(key, "an item", 4.3, 0.7);
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3), new Item("another item", 2.4)));
+        String key = bidEngine.register("email@provider.com");
+        bidEngine.bid(key, "an item", 4.3, 0.7);
 
-        range(0, 10).forEach((i) -> bidServer.tick());
+        range(0, 10).forEach((i) -> bidEngine.tick());
 
-        User user = bidServer.user(key);
+        User user = bidEngine.user(key);
         assertThat(user.getBalance()).isEqualTo(995);
         Item purchasedItem = user.getItems().iterator().next();
         assertThat(purchasedItem.getName()).isEqualTo("an item");
@@ -97,26 +97,26 @@ public class BidTest {
 
     @Test
     public void when_a_bid_is_won_seller_increase_money() {
-        BidServer bidServer = new BidServer(new Items(new Item("an item", 4.3)));
-        String sellerKey = bidServer.register("seller@host.com");
-        bidServer.bid(sellerKey, "an item", 4.3, 0.7);
-        range(0, 10).forEach((i) -> bidServer.tick());
-        String buyerKey = bidServer.register("buyer@host.com");
-        bidServer.bid(buyerKey, "an item", 5.0, 0.8);
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3)));
+        String sellerKey = bidEngine.register("seller@host.com");
+        bidEngine.bid(sellerKey, "an item", 4.3, 0.7);
+        range(0, 10).forEach((i) -> bidEngine.tick());
+        String buyerKey = bidEngine.register("buyer@host.com");
+        bidEngine.bid(buyerKey, "an item", 5.0, 0.8);
 
-        range(0, 10).forEach((i) -> bidServer.tick());
+        range(0, 10).forEach((i) -> bidEngine.tick());
 
-        User user = bidServer.user(sellerKey);
+        User user = bidEngine.user(sellerKey);
         assertThat(user.getItems()).isEmpty();
         assertThat(user.getBalance()).isEqualTo(1000.8);
     }
 
     @Test
     public void when_nobody_bid_then_item_value_loose_ten_percent_of_its_value() {
-        BidServer bidServer = new BidServer(new Items(new Item("an item", 4.33), new Item("another item", 2.4)));
-        Item item = bidServer.currentBidOffer().getItem();
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.33), new Item("another item", 2.4)));
+        Item item = bidEngine.currentBidOffer().getItem();
 
-        range(0, 10).forEach((i) -> bidServer.tick());
+        range(0, 10).forEach((i) -> bidEngine.tick());
 
         assertThat(item.getValue()).isEqualTo(3.90);
     }

@@ -12,16 +12,16 @@ import java.io.PrintWriter;
 
 @WebServlet("/currentBidOffer")
 public class CurrentBidOffer extends HttpServlet {
-    private final BidServer bidServer;
+    private final BidEngine bidEngine;
 
     public CurrentBidOffer() {
-        bidServer = new BidServer(new Items(new Item("an item", 4.3)));
+        bidEngine = new BidEngine(new Items(new Item("an item", 4.3)));
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try (PrintWriter writer = resp.getWriter()) {
-            writer.println(new Gson().toJson(bidServer.currentBidOffer()));
+            writer.println(new Gson().toJson(bidEngine.currentBidOffer()));
         }
     }
 }

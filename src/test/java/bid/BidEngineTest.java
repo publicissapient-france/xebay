@@ -4,7 +4,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-public class BidServerTest {
+public class BidEngineTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
@@ -12,6 +12,6 @@ public class BidServerTest {
     public void should_not_be_instantiated_without_items() throws Exception {
         expectedException.expect(BidException.class);
 
-        new BidServer(new Items());
+        new BidEngine(new Items());
     }
 }

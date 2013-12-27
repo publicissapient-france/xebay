@@ -2,14 +2,14 @@ package bid;
 
 import static java.lang.String.format;
 
-class BidServer {
+class BidEngine {
     private final Users users;
     private final Items items;
 
     private BidOffer bidOffer;
     private int tick;
 
-    BidServer(Items items) {
+    BidEngine(Items items) {
         this.items = items;
         this.users = new Users();
         this.bidOffer = new BidOffer(this.items.next());
