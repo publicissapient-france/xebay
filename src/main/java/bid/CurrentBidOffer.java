@@ -15,7 +15,7 @@ public class CurrentBidOffer extends HttpServlet {
     private final BidEngine bidEngine;
 
     public CurrentBidOffer() {
-        bidEngine = new BidEngine(new Items(new Item("an item", 4.3)));
+        bidEngine = new BidEngine(Items.load("items").get());
     }
 
     @Override
