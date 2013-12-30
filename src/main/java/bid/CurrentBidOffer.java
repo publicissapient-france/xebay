@@ -10,18 +10,20 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import static bid.BidServer.BID_SERVER;
+
 @WebServlet("/currentBidOffer")
 public class CurrentBidOffer extends HttpServlet {
-    private final BidEngine bidEngine;
+    private Gson gson;
 
     public CurrentBidOffer() {
-        bidEngine = new BidEngine(Items.load("items").get());
+        gson = new Gson();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try (PrintWriter writer = resp.getWriter()) {
-            writer.println(new Gson().toJson(bidEngine.currentBidOffer()));
+            writer.println(gson.toJson(BID_SERVER.bidEngine().currentBidOffer()));
         }
     }
 }
