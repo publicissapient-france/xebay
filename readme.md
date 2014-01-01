@@ -2,6 +2,7 @@
 
 ### How to
 
+    $ (cd src/main/front && npm install && bower install)
     $ grunt --gruntfile src/main/front/Gruntfile.js --force build
     $ mvn tomcat7:run
 
