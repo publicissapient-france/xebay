@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class Items {
+public class Items {
     private final Item[] items;
     private int currentItemIndex;
 

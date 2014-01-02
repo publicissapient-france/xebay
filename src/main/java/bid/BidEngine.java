@@ -2,7 +2,7 @@ package bid;
 
 import static java.lang.String.format;
 
-class BidEngine {
+public class BidEngine {
     private final Users users;
     private final Items items;
 
@@ -20,7 +20,7 @@ class BidEngine {
         return users.create(email).getKey();
     }
 
-    BidOffer currentBidOffer() {
+    public BidOffer currentBidOffer() {
         return bidOffer;
     }
 

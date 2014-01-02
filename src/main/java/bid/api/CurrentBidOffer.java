@@ -1,4 +1,4 @@
-package bid;
+package bid.api;
 
 import com.google.gson.Gson;
 
@@ -12,7 +12,7 @@ import java.io.PrintWriter;
 
 import static bid.BidServer.BID_SERVER;
 
-@WebServlet("/currentBidOffer")
+@WebServlet("/api/currentBidOffer")
 public class CurrentBidOffer extends HttpServlet {
     private Gson gson;
 

@@ -1,6 +1,6 @@
 package bid;
 
-enum BidServer {
+public enum BidServer {
     BID_SERVER;
 
     private BidEngine bidEngine;
@@ -9,7 +9,7 @@ enum BidServer {
         this.bidEngine = new BidEngine(Items.load("items").get());
     }
 
-    BidEngine bidEngine() {
+    public BidEngine bidEngine() {
         return bidEngine;
     }
 }
