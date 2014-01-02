@@ -6,14 +6,18 @@ var bidApp = angular.module('bidApp', [
   'bidControllers'
 ]);
 
-bidApp.config(['$routeProvider',
-  function ($routeProvider) {
+bidApp.config(['$routeProvider', '$locationProvider',
+  function ($routeProvider, $locationProvider) {
     $routeProvider.
         when('/', {
-          templateUrl: 'views/main.html',
-          controller: 'MainCtrl'
+          templateUrl: 'views/main.html'
+        }).
+        when('/leaderboard', {
+          templateUrl: 'views/leaderboard.html',
+          controller: 'LeaderboardCtrl'
         }).
         otherwise({
           redirectTo: '/'
         });
+    $locationProvider.html5Mode(true).hashPrefix('!');
   }]);
