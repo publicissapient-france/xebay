@@ -11,6 +11,9 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <failOnMissingWebXml>false</failOnMissingWebXml>
+        <maven.tomcat.path>/</maven.tomcat.path>
+        <maven.tomcat.uriEncoding>UTF-8</maven.tomcat.uriEncoding>
     </properties>
 
     <dependencies>
