@@ -5,12 +5,12 @@ import bid.*;
 import javax.inject.Singleton;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
+@Singleton
 @Path("/bidEngine")
 @Produces(MediaType.APPLICATION_JSON)
-@Singleton
 public class BidEngineResource {
+
     private final BidEngine bidEngine;
 
     public BidEngineResource() {
@@ -19,30 +19,14 @@ public class BidEngineResource {
 
     @GET
     @Path("/register")
-    public String register(@QueryParam("email") String email){
-        try {
-            return bidEngine.register(email);
-        } catch (BidException e) {
-            throw new WebApplicationException(
-                    Response.status(Response.Status.FORBIDDEN)
-                            .entity(e.getMessage())
-                            .type("text/plain")
-                            .build());
-        }
+    public String register(@QueryParam("email") String email) throws BidException {
+        return bidEngine.register(email);
     }
 
     @GET
     @Path("/unregister/{email}")
-    public void unregister(@PathParam("email") String email, @QueryParam("key") String key){
-        try {
-            bidEngine.unregister(key, email);
-        } catch (BidException e) {
-            throw new WebApplicationException(
-                    Response.status(Response.Status.FORBIDDEN)
-                    .entity(e.getMessage())
-                    .type("text/plain")
-                    .build());
-        }
+    public void unregister(@PathParam("email") String email, @QueryParam("key") String key) throws BidException {
+        bidEngine.unregister(key, email);
     }
 
     @GET
@@ -61,7 +45,7 @@ public class BidEngineResource {
 
     @POST
     @Path("/{name}")
-    BidOffer bid(@PathParam("name") String name,
+    public BidOffer bid(@PathParam("name") String name,
                @QueryParam("key") String key,
                @QueryParam("value") Double value,
                @QueryParam("increment") Double increment){

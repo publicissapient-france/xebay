@@ -13,11 +13,11 @@ public class Item {
         this.value = rint(value * 100) / 100;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
-    double getValue() {
+    public double getValue() {
         return value;
     }
 
