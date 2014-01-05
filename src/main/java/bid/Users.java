@@ -38,6 +38,17 @@ class Users {
         return newUser;
     }
 
+    public void remove(String key, String email) {
+        if (!containsEmail(email)) {
+            throw new BidException(format("\"%s\" not registered", email));
+        }
+        User user = findByKey(key);
+        if(!user.getEmail().equals(email)){
+            throw new BidException(format("\"%s\" registered but bad email", email));
+        }
+        users.remove(user);
+    }
+
     User findByKey(String key) throws NoSuchElementException {
         return users.stream()
                 .filter((user) -> user.getKey().equals(key))

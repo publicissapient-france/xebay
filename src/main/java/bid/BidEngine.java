@@ -16,13 +16,22 @@ public class BidEngine {
         this.tick = 0;
     }
 
-    String register(String email) throws BidException {
+    public String register(String email) throws BidException {
         return users.create(email).getKey();
     }
+    public void unregister(String key, String email) throws BidException {
+        users.remove(key, email);
+    }
+
 
     public BidOffer currentBidOffer() {
         return bidOffer;
     }
+
+    public BidOffer getBidOffer(String name) {
+        return null;
+    }
+
 
     BidOffer bid(String key, String name, double value, double increment) throws BidException {
         return bidOffer.increment(name, value, increment, user(key));
