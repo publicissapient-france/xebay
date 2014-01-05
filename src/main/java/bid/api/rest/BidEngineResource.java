@@ -2,12 +2,14 @@ package bid.api.rest;
 
 import bid.*;
 
+import javax.inject.Singleton;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/bidEngine")
 @Produces(MediaType.APPLICATION_JSON)
+@Singleton
 public class BidEngineResource {
     private final BidEngine bidEngine;
 
@@ -23,9 +25,9 @@ public class BidEngineResource {
         } catch (BidException e) {
             throw new WebApplicationException(
                     Response.status(Response.Status.FORBIDDEN)
-                    .entity(e.getMessage())
-                    .type("text/plain")
-                    .build());
+                            .entity(e.getMessage())
+                            .type("text/plain")
+                            .build());
         }
     }
 
