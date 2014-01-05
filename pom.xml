@@ -152,9 +152,10 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>shutdown</id>
+                        <id>undeploy-then-shutdown</id>
                         <phase>post-integration-test</phase>
                         <goals>
+                            <goal>undeploy</goal>
                             <goal>shutdown</goal>
                         </goals>
                     </execution>
