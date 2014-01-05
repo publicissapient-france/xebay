@@ -9,7 +9,7 @@ public class BidEngine {
     private BidOffer bidOffer;
     private int tick;
 
-    BidEngine(Items items) {
+    public BidEngine(Items items) {
         this.items = items;
         this.users = new Users();
         this.bidOffer = new BidOffer(this.items.next());
@@ -33,7 +33,7 @@ public class BidEngine {
     }
 
 
-    BidOffer bid(String key, String name, double value, double increment) throws BidException {
+    public BidOffer bid(String key, String name, double value, double increment) throws BidException {
         return bidOffer.increment(name, value, increment, user(key));
     }
 

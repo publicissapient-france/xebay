@@ -2,13 +2,13 @@ package bid;
 
 import static java.lang.Math.rint;
 
-class Item {
+public class Item {
     private final String name;
 
     private double value;
     private User owner;
 
-    Item(String name, double value) {
+    public Item(String name, double value) {
         this.name = name;
         this.value = rint(value * 100) / 100;
     }

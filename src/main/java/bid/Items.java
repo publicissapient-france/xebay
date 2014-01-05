@@ -13,7 +13,7 @@ public class Items {
     private final Item[] items;
     private int currentItemIndex;
 
-    Items(Item... items) {
+    public Items(Item... items) {
         if (items.length == 0) {
             throw new BidException();
         }

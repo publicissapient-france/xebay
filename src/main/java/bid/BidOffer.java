@@ -2,7 +2,7 @@ package bid;
 
 import static java.lang.String.format;
 
-class BidOffer {
+public class BidOffer {
     private final Item item;
 
     private double currentValue;
