@@ -6,6 +6,10 @@
     $ grunt --gruntfile src/main/front/Gruntfile.js --force build
     $ mvn tomcat7:run
 
+### Lancer le serveur et déployer l'application web
+
+    $ mvn wildfly:run
+
 ### TODO
 
  - provide a mechanism to create bid offer by server or by clients
