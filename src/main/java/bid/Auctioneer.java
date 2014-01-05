@@ -31,7 +31,7 @@ public class Auctioneer {
 
     Integer scheduled = 0;
 
-    final List<Session> sessionList = synchronizedList(new ArrayList<>());
+    final List<Session> sessionList = synchronizedList(new ArrayList<Session>());
 
     // Test d'un Client WebSocket en Java
     // WebSocketContainer container = ContainerProvider.getWebSocketContainer();
