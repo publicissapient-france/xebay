@@ -4,7 +4,6 @@
 
     $ (cd src/main/front && npm install && bower install)
     $ grunt --gruntfile src/main/front/Gruntfile.js --force build
-    $ mvn tomcat7:run
 
 ### Lancer le serveur et déployer l'application web
 
