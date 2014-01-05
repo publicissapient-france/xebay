@@ -16,6 +16,10 @@ bidApp.config(['$routeProvider', '$locationProvider',
           templateUrl: 'views/leaderboard.html',
           controller: 'LeaderboardCtrl'
         }).
+        when('/register', {
+          templateUrl: 'views/register.html',
+          controller: 'RegisterCtrl'
+        }).
         otherwise({
           redirectTo: '/'
         });
