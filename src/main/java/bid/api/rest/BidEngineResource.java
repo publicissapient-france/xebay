@@ -2,47 +2,20 @@ package bid.api.rest;
 
 import bid.*;
 
-import javax.inject.Singleton;
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 @Path("/bidEngine")
 @Produces(MediaType.APPLICATION_JSON)
-@Singleton
 public class BidEngineResource {
     private final BidEngine bidEngine;
 
+    @Inject
+    Users users;
+
     public BidEngineResource() {
-        bidEngine = new BidEngine(new Items(new Item("an item", 4.3)));
-    }
-
-    @GET
-    @Path("/register")
-    public String register(@QueryParam("email") String email){
-        try {
-            return bidEngine.register(email);
-        } catch (BidException e) {
-            throw new WebApplicationException(
-                    Response.status(Response.Status.FORBIDDEN)
-                            .entity(e.getMessage())
-                            .type("text/plain")
-                            .build());
-        }
-    }
-
-    @GET
-    @Path("/unregister/{email}")
-    public void unregister(@PathParam("email") String email, @QueryParam("key") String key){
-        try {
-            bidEngine.unregister(key, email);
-        } catch (BidException e) {
-            throw new WebApplicationException(
-                    Response.status(Response.Status.FORBIDDEN)
-                    .entity(e.getMessage())
-                    .type("text/plain")
-                    .build());
-        }
+        bidEngine = new BidEngine(new Items(new Item("an item", 4.3)), users);
     }
 
     @GET

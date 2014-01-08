@@ -1,5 +1,7 @@
 package bid;
 
+import bid.api.rest.BidEngineResource;
+import bid.api.rest.UserResource;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -22,44 +24,49 @@ public class AuthenticationTest {
 
     @Test
     public void a_key_is_emmitted_when_register() {
-        BidEngine bidEngine = new BidEngine(items);
+        UserResource userResource = new UserResource(new Users());
 
-        String key = bidEngine.register("an-email@provider.com");
+        String key = userResource.register("an-email@provider.com");
 
         assertThat(key).matches(Pattern.compile("[\\w\\-_]+")).hasSize(16);
     }
 
     @Test
     public void can_not_register_twice() {
-        BidEngine bidEngine = new BidEngine(items);
-        bidEngine.register("an-email@provider.com");
+        UserResource userResource = new UserResource(new Users());
+        userResource.register("an-email@provider.com");
         excpectedException.expect(BidException.class);
         excpectedException.expectMessage("\"an-email@provider.com\" is already registered");
 
-        bidEngine.register("an-email@provider.com");
+        userResource.register("an-email@provider.com");
     }
 
+    //todo move
     @Test
     public void once_registered_key_allow_user_to_interact_with_server() {
-        BidEngine bidEngine = new BidEngine(items);
-        String key = bidEngine.register("an-email@provider.com");
+        UserResource userResource = new UserResource(new Users());
+        String key = userResource.register("an-email@provider.com");
 
-        bidEngine.user(key);
+        BidEngineResource bidEngineResource = new BidEngineResource();
+        BidOffer bidOffer = bidEngineResource.currentBidOffer();
+
+        //todo bidEngineResource.bid(key, bidOffer.getItem().getName(),);
     }
 
     @Test
     public void cant_get_user_if_key_is_not_correct() {
-        BidEngine bidEngine = new BidEngine(items);
-        excpectedException.expect(BidException.class);
+        UserResource userResource = new UserResource(new Users());
+        excpectedException.expect(UserNotAllowedException.class);
         excpectedException.expectMessage("key \"fake key\" is unknown");
 
-        bidEngine.user("fake key");
+        userResource.getUser("fake key");
     }
 
+    //todo move
     @Test
     public void cant_bid_if_key_is_not_correct() {
-        BidEngine bidEngine = new BidEngine(items);
-        excpectedException.expect(BidException.class);
+        BidEngine bidEngine = new BidEngine(items, new Users());
+        excpectedException.expect(UserNotAllowedException.class);
         excpectedException.expectMessage("key \"fake key\" is unknown");
 
         bidEngine.bid("fake key", null, 0, 0);
