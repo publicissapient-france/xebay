@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Title</title>
+</head>
+<body>
+	<script type="text/javascript">
+		var socket = new WebSocket("ws://" + window.location.host + "/ws/auctioneer/listen");
+		socket.onopen = function() {
+			console.log("Opened");
+			socket.send("Hello from client");
+		};
+		socket.onmessage = function(e) {
+			console.log(e.data);
+		};
+		socket.onclose = function(e) {
+			console.log("closed");
+		};
+		socket.onerror = function(e) {
+			console.log("error " + e);
+		};
+	</script>
+</body>
+</html>
