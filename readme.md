@@ -4,7 +4,9 @@
 
     $ mvn wildfly:run
 
+### Coding Style
 
+You can use [editorconfig](http://editorconfig.org) to synchronize this project coding style.
 
 ### TODO
 
