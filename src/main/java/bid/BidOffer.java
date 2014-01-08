@@ -8,16 +8,16 @@ public class BidOffer {
     private double currentValue;
     private User buyer;
 
-    BidOffer(Item item) {
+    public BidOffer(Item item) {
         this.item = item;
         this.currentValue = item.getValue();
     }
 
-    Item getItem() {
+    public Item getItem() {
         return item;
     }
 
-    double getCurrentValue() {
+    public double getCurrentValue() {
         return currentValue;
     }
 

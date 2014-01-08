@@ -1,13 +1,10 @@
 ## Bid
 
-### How to
-
-    $ (cd src/main/front && npm install && bower install)
-    $ grunt --gruntfile src/main/front/Gruntfile.js --force build
-
-### Lancer le serveur et déployer l'application web
+### Lanch server and deploy web application
 
     $ mvn wildfly:run
+
+
 
 ### TODO
 
