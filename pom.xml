@@ -19,18 +19,7 @@
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>2.2.4</version>
-    </dependency>
-    <dependency>
-      <groupId>org.wildfly</groupId>
-      <artifactId>wildfly-spec-api</artifactId>
-      <version>8.0.0.CR1</version>
-      <scope>provided</scope>
-      <type>pom</type>
-    </dependency>
+
     <!-- tests -->
     <dependency>
       <groupId>junit</groupId>
@@ -50,6 +39,20 @@
       <version>2.5.1</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.2.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.wildfly</groupId>
+      <artifactId>wildfly-spec-api</artifactId>
+      <version>8.0.0.CR1</version>
+      <scope>provided</scope>
+      <type>pom</type>
+    </dependency>
+    
   </dependencies>
 
   <build>

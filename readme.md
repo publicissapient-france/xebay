@@ -1,6 +1,6 @@
 ## Bid
 
-### Lanch server and deploy web application
+### Launch server and deploy web application
 
     $ mvn wildfly:run
 

@@ -1,7 +1,6 @@
 package bid;
 
-import bid.api.rest.BidEncoders.BidOfferDecoder;
-import bid.api.rest.BidEncoders.BidOfferEncoder;
+import com.google.gson.Gson;
 
 import static java.util.Collections.synchronizedList;
 
@@ -22,20 +21,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-@Singleton
 @Path("/auctioneer")
-@ServerEndpoint(value = "/ws/auctioneer/listen",
-        encoders = {BidOfferEncoder.class},
-        decoders = {BidOfferDecoder.class})
+@ServerEndpoint(value = "/ws/auctioneer")
 public class Auctioneer {
 
-    Integer scheduled = 0;
-
-    final List<Session> sessionList = synchronizedList(new ArrayList<Session>());
+    static final Gson gson = new Gson();
 
     // Test d'un Client WebSocket en Java
     // WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-    // container.connectToServer(Client.class, new URI("ws://localhost:8080/Test/WebSocket"));
+    // container.connectToServer(Client.class, new URI("ws://localhost:8080/ws/auctioneer"));
 
     @GET
     @Path("/register")
@@ -51,31 +45,23 @@ public class Auctioneer {
         return new Item("Test", 10);
     }
 
-    @OnOpen
-    public void onOpen(Session session) {
-        sessionList.add(session);
-    }
-
     @OnMessage
     public void onMessage(Session session, String message) {
-        // TODO Que faire des messages reçus des clients ?
-        System.out.println(message);
-    }
 
-    @Schedule(second = "*/5", minute = "*", hour = "*")
-    public void refresh() throws IOException, EncodeException {
-        ++scheduled;
-        synchronized (sessionList) {
-            List<Session> sessionClosedList = new ArrayList<>();
-            for (Session session : sessionList) {
-                if (session.isOpen()) {
-                    session.getBasicRemote().sendText("News from server #" + scheduled);
-                    session.getBasicRemote().sendObject(new BidOffer(new Item("Name", 10)));
-                } else {
-                    sessionClosedList.add(session);
+        BidOffer bidOffer = gson.fromJson(message, BidOffer.class);
+
+        // TODO vérifier la validité et le placement de l'offre
+
+        session.getOpenSessions().forEach(openedSession -> {
+
+            // TODO renvoyer le message à l'expéditeur également ?
+            if (openedSession.isOpen()) {
+                try {
+                    openedSession.getBasicRemote().sendText("message received");
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
-            sessionList.removeAll(sessionClosedList);
-        }
+        });
     }
 }
