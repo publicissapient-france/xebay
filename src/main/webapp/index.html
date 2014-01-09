@@ -18,17 +18,24 @@
 	<script type="text/javascript">
 		var socket = new WebSocket("ws://" + window.location.host + "/ws/auctioneer");
 		socket.onopen = function() {
-			console.log("Opened");
-			socket.send("Hello from client");
+            var bidOffer = JSON.stringify({
+                item:{
+                    name:"Name",
+                    value: 3
+                },
+                currentValue: 2
+            });
+			console.log("onOpen, sending: " + bidOffer);
+			socket.send(bidOffer);
 		};
 		socket.onmessage = function(e) {
-			console.log(e.data);
+            console.log("onMessage: " + e.data);
 		};
-		socket.onclose = function(e) {
-			console.log("closed");
+		socket.onclose = function() {
+			console.log("onClose");
 		};
 		socket.onerror = function(e) {
-			console.log("error " + e);
+			console.log("onError: " + e);
 		};
 	</script>
 </body>

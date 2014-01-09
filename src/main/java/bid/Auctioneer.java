@@ -49,15 +49,17 @@ public class Auctioneer {
     public void onMessage(Session session, String message) {
 
         BidOffer bidOffer = gson.fromJson(message, BidOffer.class);
+        bidOffer.setTimeToLive(10 * 1000);
 
         // TODO vérifier la validité et le placement de l'offre
 
         session.getOpenSessions().forEach(openedSession -> {
 
             // TODO renvoyer le message à l'expéditeur également ?
+
             if (openedSession.isOpen()) {
                 try {
-                    openedSession.getBasicRemote().sendText("message received");
+                    openedSession.getBasicRemote().sendText(gson.toJson(bidOffer));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

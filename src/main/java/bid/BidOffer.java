@@ -3,10 +3,12 @@ package bid;
 import static java.lang.String.format;
 
 public class BidOffer {
+
     private final Item item;
 
     private double currentValue;
     private User buyer;
+    private Integer timeToLive;
 
     public BidOffer(Item item) {
         this.item = item;
@@ -15,6 +17,14 @@ public class BidOffer {
 
     public Item getItem() {
         return item;
+    }
+
+    public int getTimeToLive() {
+        return timeToLive;
+    }
+
+    public void setTimeToLive(int timeToLive) {
+        this.timeToLive = timeToLive;
     }
 
     public double getCurrentValue() {
