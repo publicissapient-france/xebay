@@ -1,7 +1,6 @@
 .idea/
 target/
 *.iml
-src/main/webapp/
 /.settings
 /.classpath
 /.project

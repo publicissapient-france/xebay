@@ -7,6 +7,7 @@ public class BidOffer {
 
     private double currentValue;
     private User buyer;
+    private int timeToLive;
 
     BidOffer(Item item) {
         this.item = item;
@@ -47,5 +48,13 @@ public class BidOffer {
         this.currentValue += increment;
         this.buyer = user;
         return this;
+    }
+
+    public void setTimeToLive(int timeToLive) {
+        this.timeToLive = timeToLive;
+    }
+
+    public int getTimeToLive() {
+        return timeToLive;
     }
 }
