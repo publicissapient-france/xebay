@@ -5,7 +5,7 @@ import java.util.Set;
 
 import static java.util.Collections.unmodifiableSet;
 
-class User {
+public class User {
     private final String email;
     private final String key;
 
@@ -20,15 +20,15 @@ class User {
         this.items = new HashSet<>();
     }
 
-    double getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-    String getEmail() {
+    public String getEmail() {
         return email;
     }
 
-    String getKey() {
+    public String getKey() {
         return key;
     }
 

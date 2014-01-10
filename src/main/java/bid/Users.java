@@ -1,5 +1,6 @@
 package bid;
 
+import javax.inject.Singleton;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Random;
@@ -8,22 +9,23 @@ import java.util.Set;
 import static java.lang.String.format;
 import static java.util.stream.IntStream.range;
 
-class Users {
+@Singleton
+public class Users {
     private static final String CHARS_IN_KEY = "" +
             "abcdefghijklmnopqrstuvwxyz" +
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
             "0123456789" +
             "-_";
 
-    private final Random random;
-    private final Set<User> users;
+    private final Set<User> users = new HashSet<>();
 
-    Users() {
-        this.users = new HashSet<>();
+    private final Random random;
+
+    public Users() {
         this.random = new Random();
     }
 
-    User create(String email) {
+    public User create(String email) throws BidException {
         if (containsEmail(email)) {
             throw new BidException(format("\"%s\" is already registered", email));
         }
@@ -38,25 +40,36 @@ class Users {
         return newUser;
     }
 
-    public void remove(String key, String email) {
+    public void remove(String key, String email) throws UserNotAllowedException, BidException {
         if (!containsEmail(email)) {
             throw new BidException(format("\"%s\" not registered", email));
         }
-        User user = findByKey(key);
-        if(!user.getEmail().equals(email)){
+        User user = getUser(key);
+        if (!user.getEmail().equals(email)) {
             throw new BidException(format("\"%s\" registered but bad email", email));
         }
         users.remove(user);
     }
 
-    User findByKey(String key) throws NoSuchElementException {
+    public User getUser(String key) throws UserNotAllowedException {
+        checkUserKey(key);
+        return findByKey(key);
+    }
+
+    public void checkUserKey(String key) throws UserNotAllowedException {
+        if (!containsKey(key)) {
+            throw new UserNotAllowedException(format("key \"%s\" is unknown", key));
+        }
+    }
+
+    private User findByKey(String key) throws NoSuchElementException {
         return users.stream()
                 .filter((user) -> user.getKey().equals(key))
                 .findFirst()
                 .get();
     }
 
-    boolean containsKey(String key) {
+    private boolean containsKey(String key) {
         return users.stream().anyMatch((user) -> user.getKey().equals(key));
     }
 

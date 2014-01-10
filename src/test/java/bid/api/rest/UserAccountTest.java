@@ -1,16 +1,18 @@
-package bid;
+package bid.api.rest;
 
+import bid.User;
+import bid.Users;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AccountTest {
+public class UserAccountTest {
     @Test
     public void when_started_user_have_1000_bidpoints() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3)));
-        String key = bidEngine.register("email@provider.com");
+        UserResource userResource = new UserResource(new Users());
+        String key = userResource.register("email@provider.com");
 
-        User user = bidEngine.user(key);
+        User user = userResource.getUser(key);
 
         assertThat(user.getEmail()).isEqualTo("email@provider.com");
         assertThat(user.getKey()).isEqualTo(key);

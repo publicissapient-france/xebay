@@ -10,10 +10,8 @@ import javax.ws.rs.ext.Provider;
 
 @Provider
 public class BidExceptionMapper implements ExceptionMapper<BidException> {
-
     @Override
     public Response toResponse(BidException e) {
-        // Renvoyer un statut 400 lors de la levée d'une BidException
-        return Response.status(Status.FORBIDDEN).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
+        return Response.status(Status.FORBIDDEN.getStatusCode()).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
     }
 }
