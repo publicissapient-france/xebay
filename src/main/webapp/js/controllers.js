@@ -4,7 +4,7 @@ var bidControllers = angular.module('bidControllers', []);
 
 bidControllers.controller('LeaderboardCtrl', ['$scope', '$resource',
   function ($scope, $resource) {
-    $scope.currentBidOffer = $resource('rs/bidEngine').get();
+    $scope.currentBidOffer = $resource('rest/bidEngine').get();
   }]);
 
 bidControllers.controller('RegisterCtrl', ['$scope',

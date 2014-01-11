@@ -1,9 +1,7 @@
 package bid.api.rest;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import bid.test.TomcatRule;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 
 import javax.ws.rs.client.Client;
@@ -16,6 +14,9 @@ import static org.junit.Assert.assertEquals;
 public class UserResourceIT {
     private WebTarget target;
     private String key ;
+
+    @ClassRule
+    public static TomcatRule tomcatRule = new TomcatRule();
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
