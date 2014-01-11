@@ -6,6 +6,10 @@
     $ grunt --gruntfile src/main/front/Gruntfile.js --force build
     $ mvn tomcat7:run
 
+### Coding Style
+
+You can use [editorconfig](http://editorconfig.org) to synchronize this project coding style.
+
 ### TODO
 
  - provide a mechanism to create bid offer by server or by clients
