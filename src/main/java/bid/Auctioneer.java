@@ -18,9 +18,6 @@ public class Auctioneer {
 
     static final Gson gson = new Gson();
 
-    // Test d'un Client WebSocket en Java
-    // WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-    // container.connectToServer(Client.class, new URI("ws://localhost:8080/ws/auctioneer"));
 
     @GET
     @Path("/register")
