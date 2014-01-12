@@ -14,11 +14,11 @@ public class BidOffer {
         this.currentValue = item.getValue();
     }
 
-    Item getItem() {
+    public Item getItem() {
         return item;
     }
 
-    double getCurrentValue() {
+    public double getCurrentValue() {
         return currentValue;
     }
 
