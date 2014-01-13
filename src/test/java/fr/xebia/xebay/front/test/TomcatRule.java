@@ -45,4 +45,11 @@ public class TomcatRule extends ExternalResource {
         // maven builds put "localRepository" property to system properties
         return System.getProperty("localRepository") != null;
     }
+
+    public static void main(String[] args) throws Throwable {
+        TomcatRule webServer = new TomcatRule();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> webServer.after()));
+        webServer.before();
+        webServer.tomcat.getServer().await();
+    }
 }
