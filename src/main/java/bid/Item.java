@@ -3,10 +3,13 @@ package bid;
 import static java.lang.Math.rint;
 
 public class Item {
-    private final String name;
+    private String name;
 
     private double value;
     private User owner;
+
+    public Item() {
+    }
 
     public Item(String name, double value) {
         this.name = name;

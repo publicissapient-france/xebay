@@ -3,11 +3,14 @@ package bid;
 import static java.lang.String.format;
 
 public class BidOffer {
-    private final Item item;
+    private Item item;
 
     private double currentValue;
     private User buyer;
     private int timeToLive;
+
+    public BidOffer() {
+    }
 
     BidOffer(Item item) {
         this.item = item;
@@ -57,4 +60,9 @@ public class BidOffer {
     public int getTimeToLive() {
         return timeToLive;
     }
+
+//    public String getItemName() {
+//        return item.getName();
+//    }
+//    }
 }

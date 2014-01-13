@@ -44,10 +44,11 @@ public class AuthenticationTest {
     //todo move
     @Test
     public void once_registered_key_allow_user_to_interact_with_server() {
-        UserResource userResource = new UserResource(new Users());
+        Users users = new Users();
+        UserResource userResource = new UserResource(users);
         String key = userResource.register("an-email@provider.com");
 
-        BidEngineResource bidEngineResource = new BidEngineResource();
+        BidEngineResource bidEngineResource = new BidEngineResource(users);
         BidOffer bidOffer = bidEngineResource.currentBidOffer();
 
         //todo bidEngineResource.bid(key, bidOffer.getItem().getName(),);

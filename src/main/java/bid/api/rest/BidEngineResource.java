@@ -11,10 +11,11 @@ import javax.ws.rs.core.MediaType;
 public class BidEngineResource {
     private final BidEngine bidEngine;
 
-    @Inject
-    Users users;
 
-    public BidEngineResource() {
+    private Users users;
+
+    @Inject
+    public BidEngineResource(Users users) {
         bidEngine = new BidEngine(new Items(new Item("an item", 4.3)), users);
     }
 
@@ -25,20 +26,22 @@ public class BidEngineResource {
     }
 
 
-    @GET
-    @Path("/{name}")
-    public BidOffer getBidOffer(@PathParam("name") String name) {
-        return bidEngine.getBidOffer(name);
+    @POST
+    @Path("/bid")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public BidOffer bid(@FormParam("name") String name, @FormParam("value") Double curValue, @FormParam("increment") Double increment, @FormParam("key") String key){
+        return bidEngine.bid(key, name, curValue, increment);
     }
 
 
     @POST
-    @Path("/{name}")
-    BidOffer bid(@PathParam("name") String name,
-               @QueryParam("key") String key,
-               @QueryParam("value") Double value,
-               @QueryParam("increment") Double increment){
-        return bidEngine.bid(key, name, value, increment);
+    @Path("/bid/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public BidOffer bid(@PathParam("id") String id,
+                        BidOfferParam bidOfferParam,
+                        @HeaderParam("key") String key){
+        //todo
+        return bidEngine.bid(key, bidOfferParam.getName(), bidOfferParam.getCurValue(), bidOfferParam.getIncrement());
     }
 
 }
