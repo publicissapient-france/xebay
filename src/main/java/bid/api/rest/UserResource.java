@@ -36,8 +36,8 @@ public class UserResource {
     }
 
     @GET
-    @Path("/unregister/{email}")
-    public void unregister(@PathParam("email") String email, @QueryParam("key") String key){
+    @Path("/unregister")
+    public void unregister(@QueryParam("email") String email, @QueryParam("key") String key){
         try {
             users.remove(key, email);
         } catch (Exception e) { //TODO BidException(403) ou NotAllowedException (401)

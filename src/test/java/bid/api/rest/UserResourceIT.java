@@ -32,7 +32,7 @@ public class UserResourceIT {
     public void tearDown() throws Exception {
         if(null != key){
             target.path("unregister")
-                    .path("abc@def.ghi")
+                    .queryParam("email", "abc@def.ghi")
                     .queryParam("key", key).request().get();
         }
         target = null;
