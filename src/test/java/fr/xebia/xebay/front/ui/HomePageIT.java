@@ -7,6 +7,7 @@ import org.junit.ClassRule;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.fluentlenium.core.filter.FilterConstructor.withText;
 
 public class HomePageIT extends PhantomJsTest {
     @ClassRule
@@ -20,5 +21,14 @@ public class HomePageIT extends PhantomJsTest {
         goTo(homePage);
 
         assertThat($("#current-bid-offer").getText()).contains("an item");
+    }
+
+    @Test
+    public void should_go_to_register_page() {
+        goTo(homePage);
+
+        click($("a", withText("Sign up »")));
+
+        assertThat(title()).isEqualTo("Xebay - Signup");
     }
 }

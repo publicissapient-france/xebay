@@ -29,7 +29,10 @@
 
 <div class="jumbotron">
   <div class="container">
-  <p>A bid server to enjoy coding HTTP bid clients <span class="pull-right"><a class="btn btn-primary btn-lg">Sign up &raquo;</a></span></p>
+    <p>
+      A bid server to enjoy coding HTTP bid clients
+      <span class="pull-right"><a href="register.html" class="btn btn-primary btn-lg">Sign up &raquo;</a></span>
+    </p>
   </div>
 </div>
 
@@ -57,6 +60,11 @@
 
 <script src="js/jquery-1.10.2.js"></script>
 <script src="js/xebay.js"></script>
+<script type="text/javascript">
+  $(document).ready(function () {
+    xebay.initCurrentBidOffer();
+  });
+</script>
 <script type="text/javascript">
   $(document).ready(function () {
 
