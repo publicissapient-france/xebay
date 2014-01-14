@@ -12,6 +12,6 @@ public class BidEngineTest {
     public void should_not_be_instantiated_without_items() throws Exception {
         expectedException.expect(BidException.class);
 
-        new BidEngine(new Items(), new Users());
+        new BidEngine(new Items());
     }
 }

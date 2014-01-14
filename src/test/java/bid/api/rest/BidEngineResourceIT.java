@@ -13,6 +13,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -67,9 +68,10 @@ public class BidEngineResourceIT {
         form.param("name", currentBidOffer.getItem().getName());
         form.param("value", String.valueOf(currentBidOffer.getCurrentValue()));
         form.param("increment", "0.7");
-        form.param("key", key);
 
-        BidOffer bidOffer = target.path("/bid").request().post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), BidOffer.class);
+        BidOffer bidOffer = target.path("/bid").request()
+                .header(HttpHeaders.AUTHORIZATION, key)
+                .post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), BidOffer.class);
         assertThat(bidOffer.getItem().getName()).isEqualTo("an item");
         assertThat(bidOffer.getCurrentValue()).isEqualTo(5);
         assertThat(bidOffer.getTimeToLive()).isEqualTo(0);

@@ -6,7 +6,7 @@ public enum BidServer {
     private BidEngine bidEngine;
 
     BidServer() {
-        this.bidEngine = new BidEngine(Items.load("items").get(), new Users());
+        this.bidEngine = new BidEngine(Items.load("items").get());
     }
 
     public BidEngine bidEngine() {

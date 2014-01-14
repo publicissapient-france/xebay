@@ -1,15 +1,13 @@
 package bid;
 
 public class BidEngine {
-    private final Users users;
     private final Items items;
 
     private BidOffer bidOffer;
     private int tick;
 
-    public BidEngine(Items items, Users users) {
+    public BidEngine(Items items) {
         this.items = items;
-        this.users = users;
         this.bidOffer = new BidOffer(this.items.next());
         this.tick = 0;
     }
@@ -24,8 +22,8 @@ public class BidEngine {
     }
 
 
-    public BidOffer bid(String key, String name, double value, double increment) throws BidException, UserNotAllowedException {
-        return bidOffer.increment(name, value, increment, users.getUser(key));
+    public BidOffer bid(User user, String name, double value, double increment) throws BidException, UserNotAllowedException {
+        return bidOffer.increment(name, value, increment, user);
     }
 
     void tick() {

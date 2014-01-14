@@ -35,6 +35,7 @@ public class UserResource {
             return user.getKey();
     }
 
+    //@RolesAllowed("admin")
     @GET
     @Path("/unregister")
     public void unregister(@QueryParam("email") String email, @QueryParam("key") String key){

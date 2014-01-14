@@ -1,11 +1,12 @@
 package bid;
 
+import javax.security.auth.Subject;
 import java.util.HashSet;
 import java.util.Set;
 
 import static java.util.Collections.unmodifiableSet;
 
-public class User {
+public class User  implements java.security.Principal{
     private final String email;
     private final String key;
 
@@ -59,6 +60,16 @@ public class User {
     @Override
     public int hashCode() {
         return email.hashCode();
+    }
+
+    @Override
+    public String getName() {
+        return email;
+    }
+
+    @Override
+    public boolean implies(Subject subject) {
+        return false;
     }
 
     @Override

@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response;
 import static org.junit.Assert.assertEquals;
 
 public class UserResourceIT {
+    private Client client;
     private WebTarget target;
     private String key ;
 
@@ -24,7 +25,7 @@ public class UserResourceIT {
 
     @Before
     public void setUp() throws Exception {
-        Client client = ClientBuilder.newClient();
+        client = ClientBuilder.newClient();
         target = client.target("http://localhost:8080/rest/users/");
     }
 
@@ -36,6 +37,7 @@ public class UserResourceIT {
                     .queryParam("key", key).request().get();
         }
         target = null;
+        client.close();
     }
 
     @Test

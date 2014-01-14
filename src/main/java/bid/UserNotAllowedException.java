@@ -1,7 +1,7 @@
 package bid;
 
 public class UserNotAllowedException extends RuntimeException {
-    UserNotAllowedException(String message) {
+    public UserNotAllowedException(String message) {
         super(message);
     }
 

@@ -65,11 +65,11 @@ public class AuthenticationTest {
 
     //todo move
     @Test
-    public void cant_bid_if_key_is_not_correct() {
-        BidEngine bidEngine = new BidEngine(items, new Users());
+    public void cant_bid_if_no_user() {
+        BidEngine bidEngine = new BidEngine(items);
         excpectedException.expect(UserNotAllowedException.class);
-        excpectedException.expectMessage("key \"fake key\" is unknown");
+        excpectedException.expectMessage("bad user");
 
-        bidEngine.bid("fake key", null, 0, 0);
+        bidEngine.bid(null, "an item", 4.3, 5);//todo fake user without right
     }
 }
