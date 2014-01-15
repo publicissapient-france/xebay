@@ -28,6 +28,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
             throws IOException {
 
         String authToken = request.getHeaderString(HttpHeaders.AUTHORIZATION);
+        log.info("user token " + authToken);
         User user = authorize(authToken, request.getMethod(), request.getDate());
         request.setSecurityContext(new SecurityContextImpl(user));
     }
@@ -38,8 +39,6 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
                     .entity("User-Key header must be defined.")
                     .build());
         }
-
-
         User user = users.getUser(authToken);
         if (null == user) {
             throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED)

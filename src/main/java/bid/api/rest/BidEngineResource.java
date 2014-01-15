@@ -4,23 +4,21 @@ import bid.*;
 import bid.api.rest.security.UserAuthorization;
 
 import javax.annotation.security.PermitAll;
-import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
+import java.util.logging.Logger;
 
 @Path("/bidEngine")
 @PermitAll
 @Produces(MediaType.APPLICATION_JSON)
 public class BidEngineResource {
+    private static final Logger log = Logger.getLogger("BidEngineResource");
+
     private final BidEngine bidEngine;
 
-
-    private Users users;
-
-    @Inject
-    public BidEngineResource(Users users) {
+    public BidEngineResource() {
         bidEngine = new BidEngine(new Items(new Item("an item", 4.3)));
     }
 
@@ -42,13 +40,14 @@ public class BidEngineResource {
 
 
     @POST
-    @Path("/bid/{id}")
+    @Path("/bid")
     @Consumes(MediaType.APPLICATION_JSON)
-    public BidOffer bid(@PathParam("id") String id,
-                        BidOfferParam bidOfferParam,
+    @UserAuthorization
+    public BidOffer bid(
+                        BidParam bidParam,
                         @Context SecurityContext securityContext){
         User user = (User)securityContext.getUserPrincipal();
-        return bidEngine.bid(user, bidOfferParam.getName(), bidOfferParam.getCurValue(), bidOfferParam.getIncrement());
+        return bidEngine.bid(user, bidParam.getItemName(), bidParam.getCurValue(), bidParam.getIncrement());
     }
 
 }

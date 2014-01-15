@@ -35,7 +35,7 @@ public class BidOffer {
 
     BidOffer increment(String name, double value, double increment, User user) throws BidException {
         if((null == user) || (null == user.getEmail())){
-            throw new UserNotAllowedException("bad user");
+            throw new BidException("bad user");
         }
         if (!item.getName().equals(name)) {
             throw new BidException(format("current item to bid is not \"%s\"", name));

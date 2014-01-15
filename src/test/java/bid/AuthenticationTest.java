@@ -48,7 +48,7 @@ public class AuthenticationTest {
         UserResource userResource = new UserResource(users);
         String key = userResource.register("an-email@provider.com");
 
-        BidEngineResource bidEngineResource = new BidEngineResource(users);
+        BidEngineResource bidEngineResource = new BidEngineResource();
         BidOffer bidOffer = bidEngineResource.currentBidOffer();
 
         //todo bidEngineResource.bid(key, bidOffer.getItem().getName(),);
@@ -63,11 +63,10 @@ public class AuthenticationTest {
         userResource.getUser("fake key");
     }
 
-    //todo move
     @Test
     public void cant_bid_if_no_user() {
         BidEngine bidEngine = new BidEngine(items);
-        excpectedException.expect(UserNotAllowedException.class);
+        excpectedException.expect(BidException.class);
         excpectedException.expectMessage("bad user");
 
         bidEngine.bid(null, "an item", 4.3, 5);//todo fake user without right
