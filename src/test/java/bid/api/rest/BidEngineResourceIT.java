@@ -1,6 +1,8 @@
 package bid.api.rest;
 
-import bid.BidOffer;
+import bid.api.rest.dto.BidOfferInfo;
+import bid.api.rest.dto.BidParam;
+import bid.domain.BidOffer;
 import bid.test.TomcatRule;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.junit.*;
@@ -55,9 +57,9 @@ public class BidEngineResourceIT {
 
     @Test
     public void current_bidOffer_can_be_retrieved() throws Exception {
-        BidOffer bidOffer = target.request().get(BidOffer.class);
-        assertThat(bidOffer.getItem().getName()).isEqualTo("an item");
-        assertThat(bidOffer.getCurrentValue()).isEqualTo(4.3);
+        BidOfferInfo bidOffer= target.request().get(BidOfferInfo.class);
+        assertThat(bidOffer.getItemName()).isEqualTo("an item");
+        assertThat(bidOffer.getCurrentValue()).isNotNull();
         assertThat(bidOffer.getTimeToLive()).isEqualTo(0);
     }
 
@@ -66,17 +68,17 @@ public class BidEngineResourceIT {
     public void a_registered_user_can_post_form_bid() throws Exception {
         register();
 
-        BidOffer currentBidOffer = target.request().get(BidOffer.class);
+        BidOfferInfo currentBidOffer= target.request().get(BidOfferInfo.class);
 
         Form form = new Form();
-        form.param("name", currentBidOffer.getItem().getName());
+        form.param("name", currentBidOffer.getItemName());
         form.param("value", String.valueOf(currentBidOffer.getCurrentValue()));
         form.param("increment", "0.7");
 
-        BidOffer bidOffer = target.path("/bid").request()
+        BidOfferInfo bidOffer = target.path("/bid").request()
                 .header(HttpHeaders.AUTHORIZATION, key)
-                .post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), BidOffer.class);
-        assertThat(bidOffer.getItem().getName()).isEqualTo("an item");
+                .post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), BidOfferInfo.class);
+        assertThat(bidOffer.getItemName()).isEqualTo("an item");
         assertThat(bidOffer.getCurrentValue()).isEqualTo(5);
         assertThat(bidOffer.getTimeToLive()).isEqualTo(0);
 
@@ -87,9 +89,9 @@ public class BidEngineResourceIT {
     public void cant_bid_if_user_not_registered() {
         String fakeKey = "fake key";
 
-        BidOffer currentBidOffer = target.request().get(BidOffer.class);
+        BidOfferInfo currentBidOffer= target.request().get(BidOfferInfo.class);
         Form form = new Form();
-        form.param("name", currentBidOffer.getItem().getName());
+        form.param("name", currentBidOffer.getItemName());
         form.param("value", String.valueOf(currentBidOffer.getCurrentValue()));
         form.param("increment", "0.7");
 
@@ -106,15 +108,16 @@ public class BidEngineResourceIT {
         register();
         log.info("key"+ key);
 
-        BidOffer currentBidOffer = target.request().get(BidOffer.class);
+        BidOfferInfo currentBidOffer= target.request().get(BidOfferInfo.class);
+        double firstValue = currentBidOffer.getCurrentValue();
 
-        BidParam bidParam = new BidParam(currentBidOffer.getItem().getName(), currentBidOffer.getCurrentValue(), 0.7);
+        BidParam bidParam = new BidParam(currentBidOffer.getItemName(), currentBidOffer.getCurrentValue(), 0.7);
 
-        BidOffer bidOffer = target.path("/bid").request()
+        BidOfferInfo bidOffer = target.path("/bid").request()
                 .header(HttpHeaders.AUTHORIZATION, key)
-                .post(Entity.entity(bidParam, MediaType.APPLICATION_JSON_TYPE), BidOffer.class);
-        assertThat(bidOffer.getItem().getName()).isEqualTo("an item");
-        assertThat(bidOffer.getCurrentValue()).isEqualTo(5);
+                .post(Entity.entity(bidParam, MediaType.APPLICATION_JSON_TYPE), BidOfferInfo.class);
+        assertThat(bidOffer.getItemName()).isEqualTo("an item");
+        assertThat(bidOffer.getCurrentValue()).isEqualTo(firstValue + 0.7);
         assertThat(bidOffer.getTimeToLive()).isEqualTo(0);
 
         unregister();

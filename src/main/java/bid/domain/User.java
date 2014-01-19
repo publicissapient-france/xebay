@@ -1,4 +1,4 @@
-package bid;
+package bid.domain;
 
 import javax.security.auth.Subject;
 import java.util.HashSet;
@@ -13,7 +13,7 @@ public class User  implements java.security.Principal{
     private double balance;
     private Set<Item> items;
 
-    User(String key, String email) {
+    public User(String key, String email) {
         this.email = email;
         this.key = key;
 
@@ -33,7 +33,7 @@ public class User  implements java.security.Principal{
         return key;
     }
 
-    Set<Item> getItems() {
+    public Set<Item> getItems() {
         return unmodifiableSet(items);
     }
 

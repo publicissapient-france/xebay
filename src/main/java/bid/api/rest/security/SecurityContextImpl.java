@@ -1,6 +1,6 @@
 package bid.api.rest.security;
 
-import bid.User;
+import bid.domain.User;
 
 import javax.ws.rs.core.SecurityContext;
 import java.security.Principal;
@@ -12,6 +12,10 @@ public class SecurityContextImpl implements SecurityContext {
     public SecurityContextImpl(User user) {
         this.user = user;
     }
+    public SecurityContextImpl(String key, String userEmail) {
+        this.user = new User(key, userEmail);
+    }
+
 
     @Override
     public String getAuthenticationScheme() {

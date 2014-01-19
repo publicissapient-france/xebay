@@ -1,5 +1,7 @@
 package bid;
 
+import bid.domain.BidOffer;
+import bid.domain.Item;
 import bid.test.TomcatRule;
 import com.google.gson.Gson;
 import org.junit.*;

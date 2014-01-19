@@ -1,5 +1,8 @@
 package bid;
 
+import bid.domain.BidEngine;
+import bid.domain.Items;
+
 public enum BidServer {
     BID_SERVER;
 

@@ -1,4 +1,4 @@
-package bid;
+package bid.domain;
 
 import org.junit.After;
 import org.junit.Before;

@@ -1,5 +1,8 @@
 package bid;
 
+import bid.domain.BidEngine;
+import bid.domain.BidException;
+import bid.domain.Items;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

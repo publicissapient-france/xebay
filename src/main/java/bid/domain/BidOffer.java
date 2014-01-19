@@ -1,8 +1,12 @@
-package bid;
+package bid.domain;
+
+import java.util.logging.Logger;
 
 import static java.lang.String.format;
 
 public class BidOffer {
+    private static final Logger log = Logger.getLogger("BidOffer");
+
     private Item item;
 
     private double currentValue;
@@ -12,10 +16,15 @@ public class BidOffer {
     public BidOffer() {
     }
 
-    BidOffer(Item item) {
+    public BidOffer(Item item) {
         this.item = item;
         this.currentValue = item.getValue();
     }
+
+    public User getBuyer() {
+        return buyer;
+    }
+
 
     public Item getItem() {
         return item;
@@ -64,7 +73,17 @@ public class BidOffer {
         return timeToLive;
     }
 
-//    public String getItemName() {
+    @Override
+    public String toString() {
+        return "BidOffer{" +
+                "item=" + item.getName() +
+                ", currentValue=" + currentValue +
+                ", buyer=" + (buyer != null ? buyer.getEmail() : "") +
+                ", timeToLive=" + timeToLive +
+                '}';
+    }
+
+    //    public String getItemName() {
 //        return item.getName();
 //    }
 //    }

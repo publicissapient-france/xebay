@@ -1,4 +1,4 @@
-package bid.api.rest;
+package bid.api.rest.dto;
 
 public class BidParam {
 

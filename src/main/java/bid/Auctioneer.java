@@ -1,5 +1,7 @@
 package bid;
 
+import bid.domain.BidOffer;
+import bid.domain.Item;
 import com.google.gson.Gson;
 
 import javax.websocket.OnMessage;

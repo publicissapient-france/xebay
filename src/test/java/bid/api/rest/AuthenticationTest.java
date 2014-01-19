@@ -1,7 +1,8 @@
-package bid;
+package bid.api.rest;
 
-import bid.api.rest.BidEngineResource;
-import bid.api.rest.UserResource;
+import bid.api.rest.dto.BidOfferInfo;
+import bid.api.rest.security.SecurityContextImpl;
+import bid.domain.*;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -22,10 +23,15 @@ public class AuthenticationTest {
         items = new Items(new Item("an item", 4.3));
     }
 
+    private String register() {
+        UserResource userResource = new UserResource(new Users());
+        return userResource.register("an-email@provider.com");
+    }
+
+
     @Test
     public void a_key_is_emmitted_when_register() {
         UserResource userResource = new UserResource(new Users());
-
         String key = userResource.register("an-email@provider.com");
 
         assertThat(key).matches(Pattern.compile("[\\w\\-_]+")).hasSize(16);
@@ -41,22 +47,12 @@ public class AuthenticationTest {
         userResource.register("an-email@provider.com");
     }
 
-    //todo move
-    @Test
-    public void once_registered_key_allow_user_to_interact_with_server() {
-        Users users = new Users();
-        UserResource userResource = new UserResource(users);
-        String key = userResource.register("an-email@provider.com");
 
-        BidEngineResource bidEngineResource = new BidEngineResource();
-        BidOffer bidOffer = bidEngineResource.currentBidOffer();
-
-        //todo bidEngineResource.bid(key, bidOffer.getItem().getName(),);
-    }
 
     @Test
     public void cant_get_user_if_key_is_not_correct() {
         UserResource userResource = new UserResource(new Users());
+
         excpectedException.expect(UserNotAllowedException.class);
         excpectedException.expectMessage("key \"fake key\" is unknown");
 
@@ -69,6 +65,20 @@ public class AuthenticationTest {
         excpectedException.expect(BidException.class);
         excpectedException.expectMessage("bad user");
 
-        bidEngine.bid(null, "an item", 4.3, 5);//todo fake user without right
+        BidEngineResource bidEngineResource = new BidEngineResource();
+        BidOfferInfo bidOffer = bidEngineResource.currentBidOffer();
+
+        bidEngineResource.bid("an item", 4.3, 20.0, new SecurityContextImpl(null)); //todo fake user without right
     }
+
+    @Test
+    public void a_user_can_interact_with_server() {
+//        String key = register();
+
+        BidEngineResource bidEngineResource = new BidEngineResource();
+        BidOfferInfo bidOffer = bidEngineResource.currentBidOffer();
+
+        bidEngineResource.bid(bidOffer.getItemName(), bidOffer.getCurrentValue(), 20.0, new SecurityContextImpl(new User("abc", "an-email@provider.com")));
+    }
+
 }

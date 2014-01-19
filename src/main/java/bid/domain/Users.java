@@ -1,4 +1,4 @@
-package bid;
+package bid.domain;
 
 import java.util.HashSet;
 import java.util.NoSuchElementException;
@@ -23,7 +23,7 @@ public class Users {
         this.random = new Random();
     }
 
-    public User create(String email) throws BidException{
+    public User create(String email) throws BidException {
         if (containsEmail(email)) {
             throw new BidException(format("\"%s\" is already registered", email));
         }

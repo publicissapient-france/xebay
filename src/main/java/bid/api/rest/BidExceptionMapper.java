@@ -1,6 +1,6 @@
 package bid.api.rest;
 
-import bid.BidException;
+import bid.domain.BidException;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;

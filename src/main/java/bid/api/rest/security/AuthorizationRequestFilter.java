@@ -1,7 +1,7 @@
 package bid.api.rest.security;
 
-import bid.User;
-import bid.Users;
+import bid.domain.User;
+import bid.domain.Users;
 
 import javax.annotation.Priority;
 import javax.inject.Inject;

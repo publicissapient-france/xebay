@@ -1,4 +1,4 @@
-package bid;
+package bid.domain;
 
 public class UserNotAllowedException extends RuntimeException {
     public UserNotAllowedException(String message) {

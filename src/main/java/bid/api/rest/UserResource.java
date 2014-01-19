@@ -1,12 +1,16 @@
 package bid.api.rest;
 
-import bid.User;
-import bid.Users;
+import bid.api.rest.dto.UserInfo;
+import bid.api.rest.security.UserAuthorization;
+import bid.domain.User;
+import bid.domain.Users;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 @Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
@@ -20,12 +24,17 @@ public class UserResource {
     }
 
 
-    @GET
-    @Path("/{key}")
-    public User getUser(@PathParam("key") String key) {
+    User getUser(@PathParam("key") String key) {
             return users.getUser(key);
     }
 
+    @GET
+    @Path("/info")
+    @UserAuthorization
+    public UserInfo getUserInfo(@QueryParam("email") String email, @Context SecurityContext securityContext) {
+        User user = (User)securityContext.getUserPrincipal();
+        return UserInfo.newUserInfo(user);
+    }
 
 
     @GET

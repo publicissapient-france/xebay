@@ -1,6 +1,6 @@
 package bid.api.rest;
 
-import bid.UserNotAllowedException;
+import bid.domain.UserNotAllowedException;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;

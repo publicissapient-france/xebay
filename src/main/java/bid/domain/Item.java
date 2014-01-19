@@ -1,4 +1,4 @@
-package bid;
+package bid.domain;
 
 import static java.lang.Math.rint;
 
@@ -24,7 +24,7 @@ public class Item {
         return value;
     }
 
-    User getOwner() {
+    public User getOwner() {
         return owner;
     }
 

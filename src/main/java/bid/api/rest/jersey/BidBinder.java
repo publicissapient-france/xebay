@@ -1,6 +1,6 @@
 package bid.api.rest.jersey;
 
-import bid.Users;
+import bid.domain.Users;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 
 import javax.inject.Singleton;

@@ -1,4 +1,4 @@
-package bid;
+package bid.domain;
 
 import java.io.BufferedReader;
 import java.io.IOException;

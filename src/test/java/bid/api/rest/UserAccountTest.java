@@ -1,7 +1,7 @@
 package bid.api.rest;
 
-import bid.User;
-import bid.Users;
+import bid.domain.User;
+import bid.domain.Users;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

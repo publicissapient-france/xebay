@@ -1,6 +1,10 @@
-package bid;
+package bid.domain;
+
+import java.util.logging.Logger;
 
 public class BidEngine {
+    private static final Logger log = Logger.getLogger("BidEngine");
+
     private final Items items;
 
     private BidOffer bidOffer;
@@ -14,6 +18,7 @@ public class BidEngine {
 
 
     public BidOffer currentBidOffer() {
+        log.info("currentBidOffer " + bidOffer.toString());
         return bidOffer;
     }
 
