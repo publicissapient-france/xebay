@@ -135,4 +135,21 @@ public class BidTest {
 
         assertThat(item.getValue()).isEqualTo(3.90);
     }
+
+    @Test
+    public void user_cant_bid_without_enough_balance() {
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 900), new Item("another item", 5)));
+
+        assertThat(user.getBalance()).isEqualTo(1000);
+
+        expectedException.expect(BidException.class);
+        expectedException.expectMessage("User can't bid 1001.0, not enought money left.");
+
+        bidEngine.bid(user, "an item", 900, 101);
+
+        assertThat(user.getBalance()).isEqualTo(1000);
+        BidOffer bidOffer = bidEngine.currentBidOffer();
+        assertThat(bidOffer.getCurrentValue()).isEqualTo(900);
+    }
+
 }

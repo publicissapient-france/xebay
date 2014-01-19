@@ -76,4 +76,8 @@ public class User  implements java.security.Principal{
     public String toString() {
         return email;
     }
+
+    public boolean canBid(double cost) {
+        return this.balance > cost;
+    }
 }

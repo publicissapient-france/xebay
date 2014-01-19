@@ -56,6 +56,10 @@ public class BidOffer {
             throw new BidException(format("increment %s is less than ten percent of initial value %s of item \"%s\"", Double.toString(increment), Double.toString(item.getValue()), item.getName()));
         }
 
+        if (!user.canBid(currentValue + increment)){
+            throw new BidException(format("User can't bid %s, not enought money left.", Double.toString(currentValue + increment)));
+        }
+
         return increment(increment, user);
     }
 
