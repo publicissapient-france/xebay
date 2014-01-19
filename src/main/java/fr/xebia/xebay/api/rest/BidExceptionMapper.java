@@ -12,7 +12,7 @@ import javax.ws.rs.ext.Provider;
 public class BidExceptionMapper implements ExceptionMapper<BidException> {
     @Override
     public Response toResponse(BidException e) {
-            Response response = Response.status(Status.FORBIDDEN.getStatusCode()).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
+            Response response = Response.status(Status.BAD_REQUEST.getStatusCode()).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
         return response;
         }
     }

@@ -47,13 +47,13 @@ public class UserResourceIT {
     }
 
     @Test
-    public void register_should_throw_forbidden_exception_if_already_registered_user() throws Exception {
+    public void register_should_throw_exception_if_already_registered_user() throws Exception {
         key = target.path("register").queryParam("email", "abc@def.ghi").request().get(String.class);
         assertEquals(16, key.length());
 
         //expectedException.expect(ForbiddenException.class);
         //expectedException.expectMessage("\"abc@def.ghi\" is already registered");
         Response response = target.path("register").queryParam("email", "abc@def.ghi").request().get(Response.class);
-        assertEquals(403, response.getStatus());
+        assertEquals(400, response.getStatus());
     }
 }
