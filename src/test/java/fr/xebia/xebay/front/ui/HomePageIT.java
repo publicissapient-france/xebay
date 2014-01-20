@@ -1,7 +1,7 @@
 package fr.xebia.xebay.front.ui;
 
 import fr.xebia.xebay.front.test.PhantomJsTest;
-import fr.xebia.xebay.front.test.TomcatRule;
+import fr.xebia.xebay.utils.TomcatRule;
 import org.fluentlenium.core.annotation.Page;
 import org.junit.After;
 import org.junit.Before;

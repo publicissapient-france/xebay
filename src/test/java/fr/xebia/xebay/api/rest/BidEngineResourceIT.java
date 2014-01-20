@@ -3,7 +3,7 @@ package fr.xebia.xebay.api.rest;
 import fr.xebia.xebay.api.rest.dto.BidOfferInfo;
 import fr.xebia.xebay.api.rest.dto.BidParam;
 import fr.xebia.xebay.domain.BidOffer;
-import fr.xebia.xebay.front.test.TomcatRule;
+import fr.xebia.xebay.utils.TomcatRule;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
@@ -16,23 +16,19 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import java.util.logging.Logger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BidEngineResourceIT {
-    private static final Logger log = Logger.getLogger("BidEngineResourceIT");
-
     private Client client;
     private WebTarget target;
-    private String key ;
+    private String key;
 
     @ClassRule
     public static TomcatRule tomcatRule = new TomcatRule();
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
-
 
     @Before
     public void setUp() throws Exception {
@@ -51,24 +47,22 @@ public class BidEngineResourceIT {
     }
 
     private void unregister() throws Exception {
-       key = client.target("http://localhost:8080/rest/users/unregister").queryParam("email","aaa@eee.com").queryParam("key",key).request().get(String.class);
+        key = client.target("http://localhost:8080/rest/users/unregister").queryParam("email", "aaa@eee.com").queryParam("key", key).request().get(String.class);
     }
-
 
     @Test
     public void current_bidOffer_can_be_retrieved() throws Exception {
-        BidOfferInfo bidOffer= target.request().get(BidOfferInfo.class);
+        BidOfferInfo bidOffer = target.request().get(BidOfferInfo.class);
         assertThat(bidOffer.getItemName()).isEqualTo("an item");
         assertThat(bidOffer.getCurrentValue()).isNotNull();
         assertThat(bidOffer.getTimeToLive()).isEqualTo(0);
     }
 
-
     @Test
     public void a_registered_user_can_post_form_bid() throws Exception {
         register();
 
-        BidOfferInfo currentBidOffer= target.request().get(BidOfferInfo.class);
+        BidOfferInfo currentBidOffer = target.request().get(BidOfferInfo.class);
 
         Form form = new Form();
         form.param("name", currentBidOffer.getItemName());
@@ -82,14 +76,14 @@ public class BidEngineResourceIT {
         assertThat(bidOffer.getCurrentValue()).isEqualTo(5);
         assertThat(bidOffer.getTimeToLive()).isEqualTo(0);
 
-		unregister();
+        unregister();
     }
 
     @Test
     public void cant_bid_if_user_not_registered() {
         String fakeKey = "fake key";
 
-        BidOfferInfo currentBidOffer= target.request().get(BidOfferInfo.class);
+        BidOfferInfo currentBidOffer = target.request().get(BidOfferInfo.class);
         Form form = new Form();
         form.param("name", currentBidOffer.getItemName());
         form.param("value", String.valueOf(currentBidOffer.getCurrentValue()));
@@ -106,9 +100,8 @@ public class BidEngineResourceIT {
     @Test
     public void a_registered_user_can_bid() throws Exception {
         register();
-        log.info("key"+ key);
 
-        BidOfferInfo currentBidOffer= target.request().get(BidOfferInfo.class);
+        BidOfferInfo currentBidOffer = target.request().get(BidOfferInfo.class);
         double firstValue = currentBidOffer.getCurrentValue();
 
         BidParam bidParam = new BidParam(currentBidOffer.getItemName(), currentBidOffer.getCurrentValue(), 0.7);
@@ -121,7 +114,5 @@ public class BidEngineResourceIT {
         assertThat(bidOffer.getTimeToLive()).isEqualTo(0);
 
         unregister();
-
     }
-
 }

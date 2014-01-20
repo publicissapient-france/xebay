@@ -1,6 +1,5 @@
 package fr.xebia.xebay.api.rest;
 
-import fr.xebia.xebay.api.rest.UserResource;
 import fr.xebia.xebay.domain.User;
 import fr.xebia.xebay.domain.Users;
 import org.junit.Test;

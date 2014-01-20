@@ -1,6 +1,5 @@
 package fr.xebia.xebay.domain;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,22 +12,13 @@ public class BidTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
-
-    private String key;
     private Users users = new Users();
     private User user;
 
-
     @Before
     public void setUp() throws Exception {
-        user =users.create("email@provider.com");
-        key = user.getKey();
+        user = users.create("email@provider.com");
     }
-
-    @After
-    public void tearDown() throws Exception {
-    }
-
 
     @Test
     public void server_should_give_a_bid_offer() {
@@ -100,7 +90,6 @@ public class BidTest {
 
         range(0, 10).forEach((i) -> bidEngine.tick());
 
-       // User user = users.getUser(key);
         assertThat(user.getBalance()).isEqualTo(995);
         Item purchasedItem = user.getItems().iterator().next();
         assertThat(purchasedItem.getName()).isEqualTo("an item");

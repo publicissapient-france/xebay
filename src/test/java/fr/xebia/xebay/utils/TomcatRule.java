@@ -1,4 +1,4 @@
-package fr.xebia.xebay.front.test;
+package fr.xebia.xebay.utils;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
