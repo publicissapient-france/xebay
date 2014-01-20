@@ -1,4 +1,4 @@
-package fr.xebia.xebay.api;
+package fr.xebia.xebay.domain;
 
 import fr.xebia.xebay.domain.BidEngine;
 import fr.xebia.xebay.domain.BidException;

@@ -61,7 +61,6 @@ public class Users {
         }
     }
 
-
     private User findByKey(String key) throws NoSuchElementException {
         return users.stream()
                 .filter((user) -> user.getKey().equals(key))
