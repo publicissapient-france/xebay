@@ -9,29 +9,41 @@
 <body>
 
 <div class="navbar navbar-inverse navbar-fixed-top">
-  <div class="container">
     <div class="navbar-header">
       <span class="navbar-brand">Xebay</span>
     </div>
     <div class="navbar-collapse collapse">
-      <form class="navbar-form navbar-right">
+      <form id="register" class="navbar-form navbar-right">
         <div class="form-group">
-          <input type="text" placeholder="Email" class="form-control">
+          <input id="email" type="text" placeholder="Email" class="form-control">
         </div>
         <div class="form-group">
-          <input type="password" placeholder="API key" class="form-control">
+          <input id="key" type="password" placeholder="API key" class="form-control">
         </div>
-        <button type="submit" class="btn btn-success" disabled="disabled">Sign in</button>
+        <button type="button" class="btn btn-success" onclick="xebay.signin()">Sign in</button>
+        <button type="button" class="btn btn-primary" onclick="xebay.signup()">Sign up</button>
       </form>
+      <div id="unregister">
+        <form class="navbar-form navbar-right">
+          <button id="signout" type="button" class="btn btn-warning" onclick="xebay.signout()">Sign out</button>
+        </form>
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">My infos <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li class="my-infos">email: <span id="email-display"></span></li>
+              <li class="my-infos">API key: <span id="key-display"></span></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
 </div>
 
 <div class="jumbotron">
   <div class="container">
     <p>
       A bid server to enjoy coding HTTP bid clients
-      <span class="pull-right"><a href="register.html" class="btn btn-primary btn-lg">Sign up &raquo;</a></span>
     </p>
   </div>
 </div>
@@ -59,6 +71,7 @@
 </div>
 
 <script src="js/jquery-1.10.2.js"></script>
+<script src="js/bootstrap-3.0.3.min.js"></script>
 <script src="js/xebay.js"></script>
 <script type="text/javascript">
   $(document).ready(function () {

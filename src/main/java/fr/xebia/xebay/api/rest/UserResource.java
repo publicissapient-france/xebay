@@ -39,6 +39,7 @@ public class UserResource {
 
     @GET
     @Path("/register")
+    @Produces(MediaType.TEXT_PLAIN)
     public String register(@QueryParam("email") String email){
             User user = users.create(email);
             return user.getKey();

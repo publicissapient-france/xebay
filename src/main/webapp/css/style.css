@@ -3,3 +3,8 @@ body {
   padding-top: 50px;
   padding-bottom: 20px;
 }
+
+.my-infos {
+  padding: 3px 20px;
+  white-space: nowrap;
+}
