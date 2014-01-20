@@ -3,13 +3,10 @@ package fr.xebia.xebay.domain;
 import static java.lang.Math.rint;
 
 public class Item {
-    private String name;
+    private final String name;
 
     private double value;
     private User owner;
-
-    public Item() {
-    }
 
     public Item(String name, double value) {
         this.name = name;

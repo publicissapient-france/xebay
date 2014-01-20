@@ -1,20 +1,13 @@
 package fr.xebia.xebay.domain;
 
-import java.util.logging.Logger;
-
 import static java.lang.String.format;
 
 public class BidOffer {
-    private static final Logger log = Logger.getLogger("BidOffer");
-
-    private Item item;
+    private final Item item;
 
     private double currentValue;
     private User buyer;
     private int timeToLive;
-
-    public BidOffer() {
-    }
 
     public BidOffer(Item item) {
         this.item = item;
@@ -24,7 +17,6 @@ public class BidOffer {
     public User getBuyer() {
         return buyer;
     }
-
 
     public Item getItem() {
         return item;
@@ -43,7 +35,7 @@ public class BidOffer {
     }
 
     BidOffer increment(String name, double value, double increment, User user) throws BidException {
-        if((null == user) || (null == user.getEmail())){
+        if (null == user || (null == user.getEmail())) {
             throw new BidException("bad user");
         }
         if (!item.getName().equals(name)) {
@@ -56,7 +48,7 @@ public class BidOffer {
             throw new BidException(format("increment %s is less than ten percent of initial value %s of item \"%s\"", Double.toString(increment), Double.toString(item.getValue()), item.getName()));
         }
 
-        if (!user.canBid(currentValue + increment)){
+        if (!user.canBid(currentValue + increment)) {
             throw new BidException(format("User can't bid %s, not enought money left.", Double.toString(currentValue + increment)));
         }
 
@@ -76,19 +68,4 @@ public class BidOffer {
     public int getTimeToLive() {
         return timeToLive;
     }
-
-    @Override
-    public String toString() {
-        return "BidOffer{" +
-                "item=" + item.getName() +
-                ", currentValue=" + currentValue +
-                ", buyer=" + (buyer != null ? buyer.getEmail() : "") +
-                ", timeToLive=" + timeToLive +
-                '}';
-    }
-
-    //    public String getItemName() {
-//        return item.getName();
-//    }
-//    }
 }

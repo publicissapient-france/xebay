@@ -1,12 +1,13 @@
 package fr.xebia.xebay.domain;
 
 import javax.security.auth.Subject;
+import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
 
 import static java.util.Collections.unmodifiableSet;
 
-public class User  implements java.security.Principal{
+public class User implements Principal {
     private final String email;
     private final String key;
 

@@ -1,10 +1,6 @@
 package fr.xebia.xebay.domain;
 
-import java.util.logging.Logger;
-
 public class BidEngine {
-    private static final Logger log = Logger.getLogger("BidEngine");
-
     private final Items items;
 
     private BidOffer bidOffer;
@@ -16,16 +12,9 @@ public class BidEngine {
         this.tick = 0;
     }
 
-
     public BidOffer currentBidOffer() {
-        log.info("currentBidOffer " + bidOffer.toString());
         return bidOffer;
     }
-
-    public BidOffer getBidOffer(String name) {
-        return null;
-    }
-
 
     public BidOffer bid(User user, String name, double value, double increment) throws BidException, UserNotAllowedException {
         return bidOffer.increment(name, value, increment, user);
@@ -38,5 +27,4 @@ public class BidEngine {
             bidOffer = new BidOffer(items.next());
         }
     }
-
 }

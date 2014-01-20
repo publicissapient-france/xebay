@@ -38,22 +38,21 @@ public class Users {
         return newUser;
     }
 
-    public void remove(String key, String email)   throws UserNotAllowedException, BidException{
+    public void remove(String key, String email) throws UserNotAllowedException, BidException {
         if (!containsEmail(email)) {
             throw new BidException(format("\"%s\" not registered", email));
         }
         User user = getUser(key);
-        if(!user.getEmail().equals(email)){
+        if (!user.getEmail().equals(email)) {
             throw new BidException(format("\"%s\" registered but bad email", email));
         }
         users.remove(user);
     }
 
-    public User getUser(String key)  throws UserNotAllowedException {
+    public User getUser(String key) throws UserNotAllowedException {
         checkUserKey(key);
         return findByKey(key);
     }
-
 
     public void checkUserKey(String key) throws UserNotAllowedException {
         if (!containsKey(key)) {
@@ -75,6 +74,4 @@ public class Users {
     private boolean containsEmail(String email) {
         return users.stream().anyMatch((user) -> user.getEmail().equals(email));
     }
-
-
 }
