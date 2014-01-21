@@ -1,6 +1,7 @@
 var xebay = {
   "init": function () {
     $("#unregister").hide();
+    this.initCurrentBidOffer();
   },
   "email": "",
   "key": "",
@@ -55,5 +56,3 @@ var xebay = {
         });
   }
 };
-
-xebay.init();
