@@ -1,16 +1,22 @@
 package fr.xebia.xebay.domain;
 
+import java.util.Date;
+
+import static java.lang.Math.max;
 import static java.lang.String.format;
 
 public class BidOffer {
     private final Item item;
+    private long initialTimeToLive;
+    private final long created;
 
     private double currentValue;
     private User buyer;
-    private int timeToLive;
 
-    public BidOffer(Item item) {
+    public BidOffer(Item item, long initialTimeToLive) {
         this.item = item;
+        this.initialTimeToLive = initialTimeToLive;
+        this.created = new Date().getTime();
         this.currentValue = item.getValue();
     }
 
@@ -61,11 +67,12 @@ public class BidOffer {
         return this;
     }
 
-    public void setTimeToLive(int timeToLive) {
-        this.timeToLive = timeToLive;
+    public long getTimeToLive() {
+        long millisecondsSinceCreated = new Date().getTime() - created;
+        return max(0, initialTimeToLive - millisecondsSinceCreated);
     }
 
-    public int getTimeToLive() {
-        return timeToLive;
+    boolean isExpired() {
+        return getTimeToLive() == 0;
     }
 }

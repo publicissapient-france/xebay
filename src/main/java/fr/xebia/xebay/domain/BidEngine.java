@@ -1,30 +1,42 @@
 package fr.xebia.xebay.domain;
 
 public class BidEngine {
-    private final Items items;
+    private static final int DEFAULT_TIME_TO_LIVE = 10000;
 
+    private final Items items;
+    private final Expirable bidOfferExpiration;
+
+    private int timeToLive;
     private BidOffer bidOffer;
-    private int tick;
 
     public BidEngine(Items items) {
         this.items = items;
-        this.bidOffer = new BidOffer(this.items.next());
-        this.tick = 0;
+        this.bidOfferExpiration = () -> bidOffer.isExpired();
+        this.timeToLive = DEFAULT_TIME_TO_LIVE;
+        this.bidOffer = new BidOffer(this.items.next(), timeToLive);
+    }
+
+    public BidEngine(Items items, Expirable bidOfferExpiration) {
+        this.items = items;
+        this.bidOfferExpiration = bidOfferExpiration;
+        this.timeToLive = DEFAULT_TIME_TO_LIVE;
+        this.bidOffer = new BidOffer(this.items.next(), timeToLive);
     }
 
     public BidOffer currentBidOffer() {
+        nextBidOfferIfExpired();
         return bidOffer;
     }
 
-    public BidOffer bid(User user, String name, double value, double increment) throws BidException, UserNotAllowedException {
+    public BidOffer bid(User user, String name, double value, double increment) throws BidException {
+        nextBidOfferIfExpired();
         return bidOffer.increment(name, value, increment, user);
     }
 
-    void tick() {
-        tick++;
-        if (tick % 10 == 0) {
+    private void nextBidOfferIfExpired() {
+        if (bidOfferExpiration.isExpired()) {
             bidOffer.resolve();
-            bidOffer = new BidOffer(items.next());
+            bidOffer = new BidOffer(items.next(), timeToLive);
         }
     }
 }

@@ -31,7 +31,7 @@ public class BidEngineResourceIT {
     public ExpectedException expectedException = ExpectedException.none();
 
     @Before
-    public void setUp() throws Exception {
+    public void initializeRestClient() throws Exception {
         client = ClientBuilder.newBuilder().register(JacksonFeature.class).build();
         target = client.target("http://localhost:8080/rest/bidEngine");
     }
@@ -55,7 +55,7 @@ public class BidEngineResourceIT {
         BidOfferInfo bidOffer = target.request().get(BidOfferInfo.class);
         assertThat(bidOffer.getItemName()).isEqualTo("an item");
         assertThat(bidOffer.getCurrentValue()).isNotNull();
-        assertThat(bidOffer.getTimeToLive()).isEqualTo(0);
+        assertThat(bidOffer.getTimeToLive()).isLessThan(10000).isNotNegative();
     }
 
     @Test
@@ -74,7 +74,7 @@ public class BidEngineResourceIT {
                 .post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), BidOfferInfo.class);
         assertThat(bidOffer.getItemName()).isEqualTo("an item");
         assertThat(bidOffer.getCurrentValue()).isEqualTo(5);
-        assertThat(bidOffer.getTimeToLive()).isEqualTo(0);
+        assertThat(bidOffer.getTimeToLive()).isLessThan(10000).isNotNegative();
 
         unregister();
     }
@@ -111,7 +111,7 @@ public class BidEngineResourceIT {
                 .post(Entity.entity(bidParam, MediaType.APPLICATION_JSON_TYPE), BidOfferInfo.class);
         assertThat(bidOffer.getItemName()).isEqualTo("an item");
         assertThat(bidOffer.getCurrentValue()).isEqualTo(firstValue + 0.7);
-        assertThat(bidOffer.getTimeToLive()).isEqualTo(0);
+        assertThat(bidOffer.getTimeToLive()).isLessThan(10000).isNotNegative();
 
         unregister();
     }

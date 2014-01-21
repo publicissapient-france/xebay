@@ -2,22 +2,18 @@ package fr.xebia.xebay.api.rest.dto;
 
 import fr.xebia.xebay.domain.BidOffer;
 
-import java.util.logging.Logger;
-
 public class BidOfferInfo {
-    private static final Logger log = Logger.getLogger("BidOffer");
-
     private String itemName;
     private double currentValue;
     private String buyerEmail;
-    private int timeToLive;
+    private long timeToLive;
 
     public BidOfferInfo() {
     }
 
-    public BidOfferInfo(String itemName, double currentValue, String buyerEmail, int timeToLive) {
+    public BidOfferInfo(String itemName, double currentValue, String buyerEmail, long timeToLive) {
         this.itemName = itemName;
-        this.currentValue =currentValue;
+        this.currentValue = currentValue;
         this.buyerEmail = buyerEmail;
         this.timeToLive = timeToLive;
     }
@@ -27,27 +23,12 @@ public class BidOfferInfo {
         return new BidOfferInfo(bidOffer.getItem().getName(), bidOffer.getCurrentValue(), buyerEmail, bidOffer.getTimeToLive());
     }
 
-
     public double getCurrentValue() {
         return currentValue;
     }
 
-    public void setTimeToLive(int timeToLive) {
-        this.timeToLive = timeToLive;
-    }
-
-    public int getTimeToLive() {
+    public long getTimeToLive() {
         return timeToLive;
-    }
-
-    @Override
-    public String toString() {
-        return "BidOffer{" +
-                "item=" + itemName +
-                ", currentValue=" + currentValue +
-                ", buyer=" + (buyerEmail != null ? buyerEmail : "") +
-                ", timeToLive=" + timeToLive +
-                '}';
     }
 
     public String getItemName() {

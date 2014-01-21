@@ -1,8 +1,5 @@
 package fr.xebia.xebay.domain;
 
-import fr.xebia.xebay.domain.BidEngine;
-import fr.xebia.xebay.domain.BidException;
-import fr.xebia.xebay.domain.Items;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

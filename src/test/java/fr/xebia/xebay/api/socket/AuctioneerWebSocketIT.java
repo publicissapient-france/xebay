@@ -16,7 +16,6 @@ import java.net.URISyntaxException;
 @Ignore // FIXME désactivé le temps de faire le branchement sur bidengine
 @ClientEndpoint
 public class AuctioneerWebSocketIT {
-
     @ClassRule
     public static TomcatRule tomcatRule = new TomcatRule();
 
@@ -41,7 +40,7 @@ public class AuctioneerWebSocketIT {
     @Test(timeout = 5000)
     public void test_bidoffer_is_notified() throws InterruptedException, IOException {
         Item itemSent = new Item("Test", 2);
-        BidOffer offerSent = new BidOffer(itemSent);
+        BidOffer offerSent = new BidOffer(itemSent, 10000);
         String message = gson.toJson(offerSent);
 
         session.getBasicRemote().sendText(message);
@@ -52,6 +51,7 @@ public class AuctioneerWebSocketIT {
         Assertions.assertThat(offerReceived.getItem()).isNotNull();
         Assertions.assertThat(offerReceived.getItem().getName()).isEqualTo("Test");
         Assertions.assertThat(offerReceived.getItem().getValue()).isEqualTo(2d, Offset.offset(0d));
+        Assertions.assertThat(offerReceived.getTimeToLive()).isLessThan(10000).isNotNegative();
     }
 
     @After
@@ -60,6 +60,5 @@ public class AuctioneerWebSocketIT {
         session = null;
         offerReceived = null;
     }
-
 }
 

@@ -4,20 +4,32 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
-import static java.util.stream.IntStream.range;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class BidTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
+
+    @Mock
+    private Expirable expiration;
 
     private Users users = new Users();
     private User user;
 
     @Before
-    public void setUp() throws Exception {
+    public void createUser() {
         user = users.create("email@provider.com");
+    }
+
+    @Before
+    public void bidOffersNeverExpires() {
+        when(expiration.isExpired()).thenReturn(false);
     }
 
     @Test
@@ -28,6 +40,7 @@ public class BidTest {
 
         assertThat(bidOffer.getItem().getName()).isEqualTo("an item");
         assertThat(bidOffer.getItem().getValue()).isEqualTo(4.3);
+        assertThat(bidOffer.getItem().getOwner()).isNull();
     }
 
     @Test
@@ -75,20 +88,20 @@ public class BidTest {
     }
 
     @Test
-    public void a_bid_is_valid_until_ten_tick() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3), new Item("another item", 2.4)));
+    public void a_bid_is_valid_until_bid_offer_expires() throws InterruptedException {
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3), new Item("another item", 2.4)), () -> true);
 
-        range(0, 10).forEach((i) -> bidEngine.tick());
+        BidOffer bidOffer = bidEngine.currentBidOffer();
 
-        assertThat(bidEngine.currentBidOffer().getItem().getName()).isEqualTo("another item");
+        assertThat(bidOffer.getItem().getName()).isEqualTo("another item");
     }
 
     @Test
-    public void when_only_one_user_bids_then_he_wins() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3), new Item("another item", 2.4)));
+    public void when_only_one_user_bids_then_he_wins() throws InterruptedException {
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3), new Item("another item", 2.4)), expiration);
         bidEngine.bid(user, "an item", 4.3, 0.7);
 
-        range(0, 10).forEach((i) -> bidEngine.tick());
+        resolvesBidOffer(bidEngine);
 
         assertThat(user.getBalance()).isEqualTo(995);
         Item purchasedItem = user.getItems().iterator().next();
@@ -101,15 +114,14 @@ public class BidTest {
     public void when_a_bid_is_won_seller_increase_money() {
         User seller = users.create("seller@host.com");
         User buyer = users.create("buyer@host.com");
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3)), expiration);
 
-        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3)));
-
+        // let seller buy "an item"
         bidEngine.bid(seller, "an item", 4.3, 0.7);
-        range(0, 10).forEach((i) -> bidEngine.tick());
-
+        resolvesBidOffer(bidEngine);
+        // let buyer buy "an item" owned by seller
         bidEngine.bid(buyer, "an item", 5.0, 0.8);
-
-        range(0, 10).forEach((i) -> bidEngine.tick());
+        resolvesBidOffer(bidEngine);
 
         assertThat(seller.getItems()).isEmpty();
         assertThat(seller.getBalance()).isEqualTo(1000.8);
@@ -117,10 +129,10 @@ public class BidTest {
 
     @Test
     public void when_nobody_bid_then_item_value_loose_ten_percent_of_its_value() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.33), new Item("another item", 2.4)));
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.33), new Item("another item", 2.4)), expiration);
         Item item = bidEngine.currentBidOffer().getItem();
 
-        range(0, 10).forEach((i) -> bidEngine.tick());
+        resolvesBidOffer(bidEngine);
 
         assertThat(item.getValue()).isEqualTo(3.90);
     }
@@ -141,4 +153,10 @@ public class BidTest {
         assertThat(bidOffer.getCurrentValue()).isEqualTo(900);
     }
 
+    private void resolvesBidOffer(BidEngine bidEngine) {
+        boolean previousExpirationState = expiration.isExpired();
+        when(expiration.isExpired()).thenReturn(true);
+        bidEngine.currentBidOffer();
+        when(expiration.isExpired()).thenReturn(previousExpirationState);
+    }
 }
