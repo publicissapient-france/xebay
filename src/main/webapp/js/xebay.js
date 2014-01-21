@@ -1,19 +1,25 @@
 var xebay = {
   "init": function () {
     $("#unregister").hide();
+    $.cookie.json = true;
     this.initCurrentBidOffer();
+    var cookie = $.cookie("xebay");
+    if (cookie) {
+      this.signinWith(cookie.email, cookie.key);
+    }
   },
-  "email": "",
-  "key": "",
   "signup": function () {
-    var email = $("#email").val();
+    this.signupWith($("#email").val());
+  },
+  "signupWith": function (email) {
     $.get("/rest/users/register", {"email": email}, function (key) {
       xebay.signedin(email, key);
     });
   },
   "signin": function () {
-    var email = $("#email").val();
-    var key = $("#key").val();
+    this.signinWith($("#email").val(), $("#key").val());
+  },
+  "signinWith": function (email, key) {
     $.ajax("/rest/users/info", {
       "headers": {"Authorization": key},
       "data": {"email": email},
@@ -31,19 +37,17 @@ var xebay = {
     });
   },
   "signedin": function (email, key) {
-    this.email = email;
-    this.key = key;
     $("#email-display").text(email);
     $("#key-display").text(key);
     $("#unregister").show();
     $("#register").hide();
+    $.cookie("xebay", {"email": email, "key": key});
   },
   "signedout": function () {
-    email = "";
-    key = "";
     $("#key-display").text("");
     $("#register").show();
     $("#unregister").hide();
+    $.removeCookie("xebay");
   },
   "initCurrentBidOffer": function () {
     $.getJSON("/rest/bidEngine",function (currentBidOffer) {
