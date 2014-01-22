@@ -148,6 +148,9 @@
                         </goals>
                         <configuration>
                             <fork>true</fork>
+                            <systemProperties>
+                                <xebay.test>true</xebay.test>
+                            </systemProperties>
                         </configuration>
                     </execution>
                     <execution>
