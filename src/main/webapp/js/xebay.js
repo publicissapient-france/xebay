@@ -2,7 +2,7 @@ var xebay = {
   "init": function () {
     $("#unregister").hide();
     $.cookie.json = true;
-    this.initCurrentBidOffer();
+    this.displayBidOffer();
     var cookie = $.cookie("xebay");
     if (cookie) {
       this.signinWith(cookie.email, cookie.key);
@@ -49,11 +49,12 @@ var xebay = {
     $("#unregister").hide();
     $.removeCookie("xebay");
   },
-  "initCurrentBidOffer": function () {
+  "displayBidOffer": function () {
     $.getJSON("/rest/bidEngine",function (currentBidOffer) {
       $("#current-bid-offer").html("" +
           "<p>" + currentBidOffer["itemName"] + "</p>" +
           "<p>current value: " + currentBidOffer["currentValue"] + " bid points</p>");
+      setTimeout(xebay.displayBidOffer, currentBidOffer["timeToLive"]);
     }).fail(function () {
           $("#current-bid-offer").html("" +
               "<p>There is no bid offer.</p>");
