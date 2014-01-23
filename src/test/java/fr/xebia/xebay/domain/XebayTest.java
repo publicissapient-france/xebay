@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BidTest {
+public class XebayTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
