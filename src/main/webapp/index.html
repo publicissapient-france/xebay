@@ -13,7 +13,7 @@
       <span class="navbar-brand">Xebay</span>
     </div>
     <div class="navbar-collapse collapse">
-      <form id="register" class="navbar-form navbar-right">
+      <form id="register" class="navbar-form navbar-right unregistered">
         <div class="form-group">
           <input id="email" type="text" placeholder="Email" class="form-control">
         </div>
@@ -23,7 +23,7 @@
         <button type="button" class="btn btn-success" onclick="xebay.signin()">Sign in</button>
         <button type="button" class="btn btn-primary" onclick="xebay.signup()">Sign up</button>
       </form>
-      <div id="unregister">
+      <div id="unregister" class="registered">
         <form class="navbar-form navbar-right">
           <button id="signout" type="button" class="btn btn-warning" onclick="xebay.signout()">Sign out</button>
         </form>
@@ -64,8 +64,20 @@
 
     <div class="col-md-4">
       <h2>Interact</h2>
-
-      <p>An interactive bid client will comes here.</p>
+      <div class="unregistered">
+        <p>Please sign in to start bidding !</p>
+      </div>
+      <div class="registered">
+        <p>An interactive bid client is progressively coming here...</p>
+        <div class="alert alert-danger disconnected">Connected <span class="glyphicon glyphicon-flash"></span></div>
+        <div class="alert alert-success connected">
+          <span>Connected <span class="glyphicon glyphicon-flash"></span></span>
+          <button type="button" class="btn btn-success btn-bid" onclick="xebay.sendOffer(1)">+1</button>
+          <button type="button" class="btn btn-info btn-bid" onclick="xebay.sendOffer(5)">+5</button>
+          <button type="button" class="btn btn-warning btn-bid" onclick="xebay.sendOffer(10)">+10</button>
+          <button type="button" class="btn btn-danger btn-bid" onclick="xebay.sendOffer(50)">+50</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -77,33 +89,6 @@
 <script type="text/javascript">
   $(document).ready(function () {
     xebay.init();
-  });
-</script>
-<script type="text/javascript">
-  $(document).ready(function () {
-
-    var socket = new WebSocket("ws://" + window.location.host + "/ws/auctioneer");
-    socket.onopen = function () {
-      var bidOffer = JSON.stringify({
-        item: {
-          name: "Name",
-          value: 3
-        },
-        currentValue: 2
-      });
-      console.log("onOpen, sending: " + bidOffer);
-      socket.send(bidOffer);
-    };
-    socket.onmessage = function (e) {
-      console.log("onMessage: " + e.data);
-    };
-    socket.onclose = function () {
-      console.log("onClose");
-    };
-    socket.onerror = function (e) {
-      console.log("onError: " + e);
-    };
-
   });
 </script>
 </body>

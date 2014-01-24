@@ -8,7 +8,7 @@ import javax.websocket.EndpointConfig;
 
 import com.google.gson.Gson;
 
-import fr.xebia.xebay.domain.BidOffer;
+import fr.xebia.xebay.api.rest.dto.BidParam;
 
 public abstract class WebSocketCoder implements Encoder, Decoder {
 
@@ -22,19 +22,19 @@ public abstract class WebSocketCoder implements Encoder, Decoder {
 	public void destroy() {
 	}
 
-	public static class BidOfferEncoder extends WebSocketCoder implements Encoder.Text<BidOffer> {
+	public static class BidParamEncoder extends WebSocketCoder implements Encoder.Text<BidParam> {
 
 		@Override
-		public String encode(BidOffer bidOffer) throws EncodeException {
-			return gson.toJson(bidOffer);
+		public String encode(BidParam bidParam) throws EncodeException {
+			return gson.toJson(bidParam);
 		}
 	}
 
-	public static class WebSocketMessageDecoder extends WebSocketCoder implements Decoder.Text<WebSocketMessage> {
+	public static class BidParamDecoder extends WebSocketCoder implements Decoder.Text<BidParam> {
 
 		@Override
-		public WebSocketMessage decode(String message) throws DecodeException {
-			return gson.fromJson(message, WebSocketMessage.class);
+		public BidParam decode(String message) throws DecodeException {
+			return gson.fromJson(message, BidParam.class);
 		}
 
 		@Override

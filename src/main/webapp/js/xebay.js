@@ -1,6 +1,6 @@
 var xebay = {
   "init": function () {
-    $("#unregister").hide();
+    $(".registered").hide();
     $.cookie.json = true;
     this.displayBidOffer();
     var cookie = $.cookie("xebay");
@@ -32,21 +32,22 @@ var xebay = {
     this.signedout();
   },
   "unregister": function () {
-    $.get("/rest/users/unregister", {"email": this.email, "key": this.key}, function () {
+    $.get("/rest/users/unregister", {"email": $.cookie("xebay").email, "key": $.cookie("xebay").key}, function () {
       xebay.signedout();
     });
   },
   "signedin": function (email, key) {
     $("#email-display").text(email);
     $("#key-display").text(key);
-    $("#unregister").show();
-    $("#register").hide();
+    $(".registered").show();
+    $(".unregistered").hide();
     $.cookie("xebay", {"email": email, "key": key});
+    this.connect(key);
   },
   "signedout": function () {
     $("#key-display").text("");
-    $("#register").show();
-    $("#unregister").hide();
+    $(".unregistered").show();
+    $(".registered").hide();
     $.removeCookie("xebay");
   },
   "displayBidOffer": function () {
@@ -58,6 +59,32 @@ var xebay = {
     }).fail(function () {
           $("#current-bid-offer").html("" +
               "<p>There is no bid offer.</p>");
-        });
+    });
+  },
+  "connect": function (key) {
+      this.socket = new WebSocket("ws://" + window.location.host + "/socket/auctioneer/" + key);
+      this.socket.onmessage = this.listenBidOffers;
+      this.socket.onopen = this.connected;
+      this.socket.onclose = this.disconnected;
+      this.socket.onerror = this.disconnected;
+  },
+  "connected" : function() {
+    $(".connected").show();
+    $(".disconnected").hide();
+  },
+  "disconnected" : function() {
+    $(".connected").hide();
+    $(".disconnected").show();
+  },
+  "sendOffer" : function (increment) {
+      this.socket.send(JSON.stringify({
+          itemName: "test",
+          curValue: 3,
+          increment: increment
+      }));
+  },
+  "listenBidOffers": function (message) {
+      var bidOffer = JSON.parse(message.data);
+      console.log("received bidOffer: " + bidOffer);
   }
 };
