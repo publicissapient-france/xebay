@@ -111,6 +111,52 @@ public class XebayTest {
     }
 
     @Test
+    public void should_makes_offer() {
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3), new Item("another item", 2.4)), expiration);
+        bidEngine.bid(user, "an item", 4.3, 0.7);
+        resolvesBidOffer(bidEngine);
+
+        bidEngine.offer(user, "an item", 5.9);
+
+        resolvesBidOffer(bidEngine);
+        BidOffer bidOffer = bidEngine.currentBidOffer();
+        assertThat(bidOffer.getItem().getName()).isEqualTo("an item");
+        assertThat(bidOffer.getItem().getValue()).isEqualTo(5.0);
+        assertThat(bidOffer.getItem().getOwner()).isEqualTo(user);
+        assertThat(bidOffer.getInitialValue()).isEqualTo(5.9);
+    }
+
+    @Test
+    public void should_not_makes_offer_if_item_doesnt_belong_to_user() {
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3), new Item("another item", 2.4)), expiration);
+        expectedException.expect(BidException.class);
+        expectedException.expectMessage("item \"another item\" doesn't belong to user \"email@provider.com\"");
+
+        bidEngine.offer(user, "another item", 5.9);
+    }
+
+    @Test
+    public void should_not_makes_offer_if_item_is_current_offer() {
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3), new Item("another item", 2.4)), expiration);
+        bidEngine.bid(user, "an item", 4.3, 2.1);
+        resolvesBidOffer(bidEngine);
+        resolvesBidOffer(bidEngine);
+        expectedException.expect(BidException.class);
+        expectedException.expectMessage("item \"an item\" is the current offer thus can't be offered");
+
+        bidEngine.offer(user, "an item", 5.9);
+    }
+
+    @Test
+    public void should_not_makes_offer_if_item_doesnt_exists() {
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3)), expiration);
+        expectedException.expect(BidException.class);
+        expectedException.expectMessage("item \"inexistant\" doesn't exists");
+
+        bidEngine.offer(user, "inexistant", 5.9);
+    }
+
+    @Test
     public void when_a_bid_is_won_seller_increase_money() {
         User seller = users.create("seller@host.com");
         User buyer = users.create("buyer@host.com");
@@ -141,7 +187,7 @@ public class XebayTest {
     public void user_cant_bid_without_enough_balance() {
         BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 900), new Item("another item", 5)));
         expectedException.expect(BidException.class);
-        expectedException.expectMessage("User can't bid 1001.0, not enought money left.");
+        expectedException.expectMessage("user can't bid 1001.0, not enought money left.");
 
         bidEngine.bid(user, "an item", 900, 101);
     }

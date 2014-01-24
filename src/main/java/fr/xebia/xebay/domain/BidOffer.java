@@ -7,6 +7,7 @@ import static java.lang.String.format;
 
 public class BidOffer {
     private final Item item;
+    private final double initialValue;
     private long initialTimeToLive;
     private final long created;
 
@@ -14,7 +15,12 @@ public class BidOffer {
     private User buyer;
 
     public BidOffer(Item item, long initialTimeToLive) {
+        this(item, item.getValue(), initialTimeToLive);
+    }
+
+    public BidOffer(Item item, double initialValue, long initialTimeToLive) {
         this.item = item;
+        this.initialValue = initialValue;
         this.initialTimeToLive = initialTimeToLive;
         this.created = new Date().getTime();
         this.currentValue = item.getValue();
@@ -26,6 +32,10 @@ public class BidOffer {
 
     public Item getItem() {
         return item;
+    }
+
+    public double getInitialValue() {
+        return initialValue;
     }
 
     public double getCurrentValue() {
@@ -55,7 +65,7 @@ public class BidOffer {
         }
 
         if (!user.canBid(currentValue + increment)) {
-            throw new BidException(format("User can't bid %s, not enought money left.", Double.toString(currentValue + increment)));
+            throw new BidException(format("user can't bid %s, not enought money left.", Double.toString(currentValue + increment)));
         }
 
         return increment(increment, user);

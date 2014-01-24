@@ -4,10 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedHashSet;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.util.Arrays.stream;
 
 public class Items {
     private final Item[] items;
@@ -27,6 +30,13 @@ public class Items {
             currentItemIndex = 0;
         }
         return items[currentItemIndex];
+    }
+
+    Item get(String name) {
+        return stream(items)
+                .filter((item) -> item.getName().equals(name))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException());
     }
 
     public static Optional<Items> load(String resource) {
