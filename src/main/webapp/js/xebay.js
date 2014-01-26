@@ -32,6 +32,7 @@ var xebay = {
   "signout": function () {
     this.signedout();
   },
+  // TODO unregister is never used
   "unregister": function () {
     $.get("/rest/users/unregister", {"email": $.cookie("xebay").email, "key": $.cookie("xebay").key}, function () {
       xebay.signedout();
