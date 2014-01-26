@@ -16,6 +16,7 @@ import static fr.xebia.xebay.BidServer.BID_SERVER;
 @Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
+
     private Users users;
 
     public UserResource(Users users) {
@@ -46,17 +47,11 @@ public class UserResource {
         return user.getKey();
     }
 
-    @GET
+    @DELETE
     @Path("/unregister")
-    public void unregister(@QueryParam("email") String email, @QueryParam("key") String key) {
-        try {
-            users.remove(key, email);
-        } catch (Exception e) { //TODO BidException(403) ou NotAllowedException (401)
-            throw new WebApplicationException(
-                    Response.status(Response.Status.FORBIDDEN)
-                            .entity(e.getMessage())
-                            .type("text/plain")
-                            .build());
-        }
+    @UserAuthorization
+    public void unregister(@Context SecurityContext securityContext) {
+        User user = (User) securityContext.getUserPrincipal();
+        users.remove(user.getKey(), user.getEmail());
     }
 }

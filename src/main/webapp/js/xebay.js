@@ -30,12 +30,16 @@ var xebay = {
     });
   },
   "signout": function () {
-    this.signedout();
+    var cookie = $.cookie("xebay");
+    this.signoutWith(cookie.key);
   },
-  // TODO unregister is never used
-  "unregister": function () {
-    $.get("/rest/users/unregister", {"email": $.cookie("xebay").email, "key": $.cookie("xebay").key}, function () {
-      xebay.signedout();
+  "signoutWith": function (key) {
+    $.ajax("/rest/users/unregister", {
+        "headers": {"Authorization": key},
+        "type":"DELETE",
+        "success": function () {
+            xebay.signedout();
+        }
     });
   },
   "signedin": function (email, key) {
