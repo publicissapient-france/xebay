@@ -39,9 +39,9 @@ public class BidEngine {
 
     public BidOffer bid(User user, String name, double value, double increment) throws BidException {
         nextBidOfferIfExpired();
-        BidOffer nextBidOffer = bidOffer.increment(name, value, increment, user);
-        listenerList.forEach(bidEngineListener -> bidEngineListener.onBidOffer(nextBidOffer));
-        return nextBidOffer;
+        bidOffer.increment(name, value, increment, user);
+        listenerList.forEach(bidEngineListener -> bidEngineListener.onBidOffer(bidOffer));
+        return bidOffer;
     }
 
     public void offer(User user, String itemName, double initialValue) {
@@ -66,10 +66,12 @@ public class BidEngine {
         if (bidOfferExpiration.isExpired()) {
             bidOffer.resolve();
             if (bidOffersToSell.isEmpty()) {
+                // FIXME gérer le cas où il n'y a plus d'items
                 bidOffer = new BidOffer(items.next(), timeToLive);
             } else {
                 bidOffer = bidOffersToSell.poll().toBidOffer(timeToLive);
             }
+            listenerList.forEach(bidEngineListener -> bidEngineListener.onBidOffer(bidOffer));
         }
     }
 

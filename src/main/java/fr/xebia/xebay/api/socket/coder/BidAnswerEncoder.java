@@ -1,13 +1,13 @@
 package fr.xebia.xebay.api.socket.coder;
 
 import com.google.gson.Gson;
-import fr.xebia.xebay.domain.BidOffer;
+import fr.xebia.xebay.api.socket.dto.BidAnswer;
 
 import javax.websocket.EncodeException;
 import javax.websocket.Encoder;
 import javax.websocket.EndpointConfig;
 
-public class BidOfferEncoder  implements Encoder.Text<BidOffer> {
+public class BidAnswerEncoder implements Encoder.Text<BidAnswer> {
 
   final Gson gson = new Gson();
 
@@ -17,8 +17,8 @@ public class BidOfferEncoder  implements Encoder.Text<BidOffer> {
   }
 
   @Override
-  public String encode(BidOffer bidOffer) throws EncodeException {
-    return gson.toJson(bidOffer);
+  public String encode(BidAnswer bidAnswer) throws EncodeException {
+    return gson.toJson(bidAnswer);
   }
 
   @Override
