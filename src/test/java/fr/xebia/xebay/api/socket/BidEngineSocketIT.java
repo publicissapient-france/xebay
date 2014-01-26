@@ -50,7 +50,7 @@ public class BidEngineSocketIT {
     sendCallAndWait("ws://localhost:8080/socket/bidEngine/badkey", bidCall, 1);
 
     BidAnswer bidAnswer = bidAnswerList.get(0);
-    Assertions.assertThat(bidAnswer.getType()).isEqualTo(BidAnswerType.BID_FAILURE);
+    Assertions.assertThat(bidAnswer.getType()).isEqualTo(BidAnswerType.REJECTED);
     Assertions.assertThat(bidAnswer.getName()).isEqualTo("an item");
     Assertions.assertThat(bidAnswer.getValue()).isEqualTo(4.3, Offset.offset(0d));
     Assertions.assertThat(bidAnswer.getIncrement()).isEqualTo(10, Offset.offset(0d));
@@ -64,7 +64,7 @@ public class BidEngineSocketIT {
     sendCallAndWait("ws://localhost:8080/socket/bidEngine/" + key, bidCall, 1);
 
     BidAnswer bidAnswer = bidAnswerList.get(0);
-    Assertions.assertThat(bidAnswer.getType()).isEqualTo(BidAnswerType.BID_FAILURE);
+    Assertions.assertThat(bidAnswer.getType()).isEqualTo(BidAnswerType.REJECTED);
     Assertions.assertThat(bidAnswer.getName()).isEqualTo("not a valid item");
     Assertions.assertThat(bidAnswer.getValue()).isEqualTo(4.5, Offset.offset(0d));
     Assertions.assertThat(bidAnswer.getIncrement()).isEqualTo(10, Offset.offset(0d));
@@ -76,16 +76,10 @@ public class BidEngineSocketIT {
     BidOfferInfo currentBidOffer = target.path("bidEngine/current").request().get(BidOfferInfo.class);
     BidCall bidCall = new BidCall(currentBidOffer.getItemName(), currentBidOffer.getCurrentValue(), 10);
 
-    sendCallAndWait("ws://localhost:8080/socket/bidEngine/" + key, bidCall, 2);
+    sendCallAndWait("ws://localhost:8080/socket/bidEngine/" + key, bidCall, 1);
 
-    BidAnswer successAnswer = bidAnswerList.stream().filter(answer -> answer.getType().equals(BidAnswerType.BID_SUCCESS)).findFirst().get();
-    Assertions.assertThat(successAnswer.getType()).isEqualTo(BidAnswerType.BID_SUCCESS);
-    Assertions.assertThat(successAnswer.getName()).isEqualTo("an item");
-    Assertions.assertThat(successAnswer.getValue()).isEqualTo(currentBidOffer.getCurrentValue(), Offset.offset(0d));
-    Assertions.assertThat(successAnswer.getIncrement()).isEqualTo(10, Offset.offset(0d));
-
-    BidAnswer infoAnswer = bidAnswerList.stream().filter(answer -> answer.getType().equals(BidAnswerType.BID_INFO)).findFirst().get();
-    Assertions.assertThat(infoAnswer.getType()).isEqualTo(BidAnswerType.BID_INFO);
+    BidAnswer infoAnswer = bidAnswerList.get(0);
+    Assertions.assertThat(infoAnswer.getType()).isEqualTo(BidAnswerType.ACCEPTED);
     Assertions.assertThat(infoAnswer.getName()).isEqualTo("an item");
     Assertions.assertThat(infoAnswer.getValue()).isEqualTo(currentBidOffer.getCurrentValue() + 10, Offset.offset(0d));
 

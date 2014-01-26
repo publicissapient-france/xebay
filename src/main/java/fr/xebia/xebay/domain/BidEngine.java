@@ -51,7 +51,7 @@ public class BidEngine {
         try {
             item = items.get(itemName);
         } catch (NoSuchElementException e) {
-            throw new BidException(format("item \"%s\" doesn't exists", itemName));
+            throw new BidException(format("item \"%s\" doesn't exist", itemName));
         }
         if (bidOffer.getItem().equals(item)) {
             throw new BidException(format("item \"%s\" is the current offer thus can't be offered", itemName));

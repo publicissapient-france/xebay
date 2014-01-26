@@ -13,6 +13,9 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,47 +26,41 @@ public class BidEngineSocket implements BidEngineListener {
 
   static final Logger log = Logger.getLogger("BidEngineSocket");
 
-  private Session session = null;
+  final Set<Session> sessions = Collections.synchronizedSet(new HashSet<Session>());
+
+  {
+    BID_SERVER.bidEngine.addListener(this);
+  }
 
   @OnOpen
   public void onOpen(Session session) {
-    if (this.session == null) {
-      this.session = session;
-      BID_SERVER.bidEngine.addListener(this);
-    }
+    sessions.add(session);
   }
 
   @OnMessage
   public void onMessage(Session session, @PathParam("authToken") String authToken, BidCall bidCall) throws IOException, EncodeException {
 
-    BidAnswer bidAnswer;
     try {
 
       User user = BID_SERVER.users.getUser(authToken);
       BID_SERVER.bidEngine.bid(user, bidCall.getItemName(), bidCall.getCurValue(), bidCall.getIncrement());
-      bidAnswer = BidAnswer.newSuccess(bidCall);
 
-    } catch (UserNotAllowedException e) {
-      bidAnswer = BidAnswer.newFailure("Invalid key", bidCall);
-      log.log(Level.SEVERE, "Invalid key", e);
-    } catch (BidException e) {
-      bidAnswer = BidAnswer.newFailure("Invalid call", bidCall);
-      log.log(Level.SEVERE, "Invalid call", e);
+    } catch (UserNotAllowedException | BidException e) {
+      BidAnswer bidAnswer = BidAnswer.newRejected(e.getMessage(), bidCall);
+      session.getBasicRemote().sendObject(bidAnswer);
     }
-    session.getBasicRemote().sendObject(bidAnswer);
   }
 
   @Override
   public void onBidOffer(BidOffer bidOffer) {
-    if (this.session != null) {
-      BidAnswer bidAnswer = BidAnswer.newInfo(bidOffer);
-      session.getOpenSessions().forEach(openedSession -> {
-        try {
-          openedSession.getBasicRemote().sendObject(bidAnswer);
-        } catch (IOException | EncodeException e) {
-          log.log(Level.SEVERE, "BidInfo notification in error", e);
-        }
-      });
-    }
+
+    BidAnswer bidAnswer = BidAnswer.newAccepted(bidOffer);
+    sessions.stream().filter(session -> session.isOpen()).forEach(session -> {
+      try {
+        session.getBasicRemote().sendObject(bidAnswer);
+      } catch (IOException | EncodeException e) {
+        log.log(Level.SEVERE, "BidInfo notification in error", e);
+      }
+    });
   }
 }

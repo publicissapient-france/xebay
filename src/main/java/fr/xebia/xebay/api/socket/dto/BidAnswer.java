@@ -31,16 +31,12 @@ public class BidAnswer {
     this.timeToLive = bidOffer.getTimeToLive();
   }
 
-  public static BidAnswer newInfo(BidOffer bidOffer) {
-    return new BidAnswer(BidAnswerType.BID_INFO, bidOffer);
+  public static BidAnswer newAccepted(BidOffer bidOffer) {
+    return new BidAnswer(BidAnswerType.ACCEPTED, bidOffer);
   }
 
-  public static BidAnswer newSuccess(BidCall bidCall) {
-    return new BidAnswer(BidAnswerType.BID_SUCCESS, null, bidCall);
-  }
-
-  public static BidAnswer newFailure(String cause, BidCall bidCall) {
-    return new BidAnswer(BidAnswerType.BID_FAILURE, cause, bidCall);
+  public static BidAnswer newRejected(String cause, BidCall bidCall) {
+    return new BidAnswer(BidAnswerType.REJECTED, cause, bidCall);
   }
 
   public BidAnswerType getType() {

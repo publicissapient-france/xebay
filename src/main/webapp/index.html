@@ -67,30 +67,58 @@
         <p>Please sign in to start bidding !</p>
       </div>
       <div class="registered">
-        <p class="alert alert-danger text-center disconnected">
-          Disconnected <span class="glyphicon glyphicon-flash"></span>
-        </p>
-        <p class="alert alert-success text-center connected">
-          Connected <span class="glyphicon glyphicon-transfer"></span>
-        </p>
-        <div class="text-center connected">
-            <button type="button" class="btn btn-success btn-lg" onclick="xebay.sendBidCall(1)">+1</button>
-            <button type="button" class="btn btn-info btn-lg" onclick="xebay.sendBidCall(5)">+5</button>
-            <button type="button" class="btn btn-warning btn-sm" onclick="xebay.sendBidCall(10)">+10</button>
-            <button type="button" class="btn btn-danger btn-xs" onclick="xebay.sendBidCall(50)">+50</button>
-        </div>
+        <span class="row disconnected">
+          <button class="btn btn-success col-md-4 col-md-offset-8 disconnected" onclick="xebay.connect()">
+            Connect <span class="glyphicon glyphicon-transfer"></span>
+          </button>
+        </span>
+        <span class="row connected">
+          <button class="btn btn-success btn-lg col-md-3" onclick="xebay.sendBidCall(1)">+1</button>
+          <button class="btn btn-info btn-lg col-md-3 col-md-offset-1" onclick="xebay.sendBidCall(5)">+5</button>
+          <button class="btn btn-warning btn-sm col-md-2 col-md-offset-1" onclick="xebay.sendBidCall(10)">+10</button>
+          <button class="btn btn-danger btn-xs col-md-1 col-md-offset-1" onclick="xebay.sendBidCall(50)">+50</button>
+        </span>
+        <span class="row connected">
+          <button class="btn col-md-7" onclick="xebay.clearLogs()">
+            Clear <span class="glyphicon glyphicon-trash"></span>
+          </button>
+          <button class="btn btn-danger col-md-4 col-md-offset-1" onclick="xebay.disconnect()">
+            Disconnect <span class="glyphicon glyphicon-flash"></span>
+          </button>
+        </span>
+        <span id="bidAnswerLog" class="row connected"></span>
+      </div>
     </div>
 
   </div>
 </div>
 
-<script src="js/jquery-1.10.2.js"></script>
-<script src="js/jquery.cookie-1.4.0.js"></script>
-<script src="js/bootstrap-3.0.3.min.js"></script>
-<script src="js/xebay.js"></script>
+<script type="text/javascript" src="js/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="js/jquery.cookie-1.4.0.js"></script>
+<script type="text/javascript" src="js/bootstrap-3.0.3.min.js"></script>
+<script type="text/javascript" src="js/handlebars-v1.3.0.js"></script>
+<script id="currentBidOfferTemplate" type="text/template">
+  {{#if itemName}}
+  <p>{{itemName}}</p>
+  <p>current value: {{currentValue}} bid points</p>
+  {{else}}
+  <p>There is no bid offer.</p>
+  {{/if}}
+</script>
+<script id="bidAnswerAcceptedTemplate" type="text/template">
+  <p class="alert alert-info col-md-12">Bid on {{name}} value is currently at {{value}} bid points.</p>
+</script>
+<script id="bidAnswerRejectedTemplate" type="text/template">
+  <p class="alert alert-danger col-md-12">Bid on {{name}} with an increment of {{increment}} rejected with following cause : {{cause}}.</p>
+</script>
+<script type="text/javascript" src="js/xebay.js"></script>
 <script type="text/javascript">
   $(document).ready(function () {
-    xebay.init();
+      xebay.currentBidOfferTemplate = Handlebars.compile($("#currentBidOfferTemplate").html());
+      xebay.bidAnswerTemplate = [];
+      xebay.bidAnswerTemplate["ACCEPTED"] = Handlebars.compile($("#bidAnswerAcceptedTemplate").html());
+      xebay.bidAnswerTemplate["REJECTED"] = Handlebars.compile($("#bidAnswerRejectedTemplate").html());
+      xebay.init();
   });
 </script>
 </body>

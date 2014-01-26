@@ -151,7 +151,7 @@ public class XebayTest {
     public void should_not_makes_offer_if_item_doesnt_exists() {
         BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3)), expiration);
         expectedException.expect(BidException.class);
-        expectedException.expectMessage("item \"inexistant\" doesn't exists");
+        expectedException.expectMessage("item \"inexistant\" doesn't exist");
 
         bidEngine.offer(user, "inexistant", 5.9);
     }

@@ -36,7 +36,7 @@ var xebay = {
   "signoutWith": function (key) {
     $.ajax("/rest/users/unregister", {
       "headers": {"Authorization": key},
-      "type":"DELETE",
+      "type": "DELETE",
       "success": function () {
         xebay.signedout();
       }
@@ -48,7 +48,7 @@ var xebay = {
     $(".registered").show();
     $(".unregistered").hide();
     $.cookie("xebay", {"email": email, "key": key});
-    this.connect(key);
+    this.connect();
   },
   "signedout": function () {
     $("#key-display").text("");
@@ -59,40 +59,53 @@ var xebay = {
   "displayBidOffer": function () {
     $.getJSON("/rest/bidEngine/current",function (bidOfferInfo) {
       xebay.bidOfferInfo = bidOfferInfo;
-      $("#current-bid-offer").html("" +
-          "<p>" + bidOfferInfo["itemName"] + "</p>" +
-          "<p>current value: " + bidOfferInfo["currentValue"] + " bid points</p>");
+      $("#current-bid-offer").html(xebay.currentBidOfferTemplate(xebay.bidOfferInfo));
       setTimeout(xebay.displayBidOffer, bidOfferInfo["timeToLive"]);
     }).fail(function () {
-          xebay.bidOfferInfo = {};
-          $("#current-bid-offer").html("" +
-              "<p>There is no bid offer.</p>");
-    });
+        xebay.bidOfferInfo = {};
+        $("#current-bid-offer").html(xebay.currentBidOfferTemplate(xebay.bidOfferInfo));
+      });
   },
-  "connect": function (key) {
-      this.socket = new WebSocket("ws://" + window.location.host + "/socket/bidEngine/" + key);
-      this.socket.onmessage = this.listenBidOffer;
-      this.socket.onopen = this.connected;
-      this.socket.onclose = this.disconnected;
-      this.socket.onerror = this.disconnected;
+  "connect": function () {
+    var cookie = $.cookie("xebay");
+    this.socket = new WebSocket("ws://" + window.location.host + "/socket/bidEngine/" + cookie.key);
+    this.socket.onmessage = this.readBidAnswer;
+    this.socket.onopen = this.connected;
+    this.socket.onclose = this.disconnected;
+    this.socket.onerror = this.disconnected;
   },
-  "connected" : function() {
+  "connected": function () {
     $(".connected").show();
     $(".disconnected").hide();
   },
-  "disconnected" : function() {
+  "disconnect": function () {
+    this.socket.close();
+    this.clearLogs();
+  },
+  "disconnected": function () {
     $(".connected").hide();
     $(".disconnected").show();
   },
-  "sendBidCall" : function (increment) {
-      this.socket.send(JSON.stringify({
+  "sendBidCall": function (increment) {
+    this.socket.send(JSON.stringify({
       itemName: xebay.bidOfferInfo["itemName"],
       curValue: xebay.bidOfferInfo["currentValue"],
       increment: increment
-      }));
+    }));
   },
-  "listenBidOffer": function (message) {
-      var bidOffer = JSON.parse(message.data);
-      console.log("received bidOffer: ", bidOffer);
+  "readBidAnswer": function (message) {
+    var bidAnswer = JSON.parse(message.data);
+    if (bidAnswer.type === "ACCEPTED") {
+      xebay.bidOfferInfo.currentValue = bidAnswer.value;
+      xebay.bidOfferInfo.timeToLive = bidAnswer.timeToLive;
+    }
+    $("#bidAnswerLog").prepend(xebay.bidAnswerTemplate[bidAnswer.type](bidAnswer));
+    xebay.clearLogs(3);
+  },
+  "clearLogs": function (count) {
+    if (!count) {
+      count = 0;
+    }
+    $("#bidAnswerLog p").slice(count).remove();
   }
 };
