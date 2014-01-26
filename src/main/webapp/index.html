@@ -67,18 +67,17 @@
         <p>Please sign in to start bidding !</p>
       </div>
       <div class="registered">
-        <p>An interactive bid client is progressively coming here...</p>
         <p class="alert alert-danger text-center disconnected">
           Disconnected <span class="glyphicon glyphicon-flash"></span>
         </p>
         <p class="alert alert-success text-center connected">
-            Connected <span class="glyphicon glyphicon-transfer"></span>
+          Connected <span class="glyphicon glyphicon-transfer"></span>
         </p>
         <div class="text-center connected">
-            <button type="button" class="btn btn-success btn-lg" onclick="xebay.sendOffer(1)">+1</button>
-            <button type="button" class="btn btn-info btn-lg" onclick="xebay.sendOffer(5)">+5</button>
-            <button type="button" class="btn btn-warning btn-sm" onclick="xebay.sendOffer(10)">+10</button>
-            <button type="button" class="btn btn-danger btn-xs" onclick="xebay.sendOffer(50)">+50</button>
+            <button type="button" class="btn btn-success btn-lg" onclick="xebay.sendBidCall(1)">+1</button>
+            <button type="button" class="btn btn-info btn-lg" onclick="xebay.sendBidCall(5)">+5</button>
+            <button type="button" class="btn btn-warning btn-sm" onclick="xebay.sendBidCall(10)">+10</button>
+            <button type="button" class="btn btn-danger btn-xs" onclick="xebay.sendBidCall(50)">+50</button>
         </div>
     </div>
 

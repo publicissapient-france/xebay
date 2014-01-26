@@ -1,13 +1,13 @@
 package fr.xebia.xebay.domain;
 
-import java.util.ArrayDeque;
-import java.util.NoSuchElementException;
-import java.util.Queue;
+import java.util.*;
 
 import static java.lang.String.format;
 
 public class BidEngine {
     private static final int DEFAULT_TIME_TO_LIVE = 10000;
+
+    final List<BidEngineListener> listenerList = new ArrayList<>();
 
     private final Items items;
     private final Expirable bidOfferExpiration;
@@ -39,7 +39,9 @@ public class BidEngine {
 
     public BidOffer bid(User user, String name, double value, double increment) throws BidException {
         nextBidOfferIfExpired();
-        return bidOffer.increment(name, value, increment, user);
+        BidOffer nextBidOffer = bidOffer.increment(name, value, increment, user);
+        listenerList.forEach(bidEngineListener -> bidEngineListener.onBidOffer(nextBidOffer));
+        return nextBidOffer;
     }
 
     public void offer(User user, String itemName, double initialValue) {
@@ -70,4 +72,9 @@ public class BidEngine {
             }
         }
     }
+
+    public void addListener(BidEngineListener bidEngineListener) {
+        listenerList.add(bidEngineListener);
+    }
+
 }

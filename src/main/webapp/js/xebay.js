@@ -70,8 +70,8 @@ var xebay = {
     });
   },
   "connect": function (key) {
-      this.socket = new WebSocket("ws://" + window.location.host + "/socket/auctioneer/" + key);
-      this.socket.onmessage = this.listenBidOffers;
+      this.socket = new WebSocket("ws://" + window.location.host + "/socket/bidEngine/" + key);
+      this.socket.onmessage = this.listenBidOffer;
       this.socket.onopen = this.connected;
       this.socket.onclose = this.disconnected;
       this.socket.onerror = this.disconnected;
@@ -84,15 +84,15 @@ var xebay = {
     $(".connected").hide();
     $(".disconnected").show();
   },
-  "sendOffer" : function (increment) {
+  "sendBidCall" : function (increment) {
       this.socket.send(JSON.stringify({
       itemName: xebay.bidOfferInfo["itemName"],
       curValue: xebay.bidOfferInfo["currentValue"],
       increment: increment
       }));
   },
-  "listenBidOffers": function (message) {
+  "listenBidOffer": function (message) {
       var bidOffer = JSON.parse(message.data);
-    console.log("received bidOffer: ", bidOffer);
+      console.log("received bidOffer: ", bidOffer);
   }
 };
