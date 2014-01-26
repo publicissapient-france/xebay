@@ -20,7 +20,7 @@ import static fr.xebia.xebay.BidServer.BID_SERVER;
 @Produces(MediaType.APPLICATION_JSON)
 public class BidEngineResource {
     @GET
-    @Path("/")
+    @Path("/current")
     public BidOfferInfo currentBidOffer() {
         return BidOfferInfo.newBidOfferInfo(BID_SERVER.bidEngine.currentBidOffer());
     }

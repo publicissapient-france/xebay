@@ -15,7 +15,7 @@ import java.net.URISyntaxException;
 
 @Ignore // FIXME désactivé le temps de faire le branchement sur bidengine
 @ClientEndpoint
-public class AuctioneerWebSocketIT {
+public class BidEngineSocketIT {
     @ClassRule
     public static TomcatRule tomcatRule = new TomcatRule();
 
@@ -28,7 +28,7 @@ public class AuctioneerWebSocketIT {
     @Before
     public void before() throws URISyntaxException, IOException, DeploymentException {
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-        URI uri = new URI("ws://localhost:8080/socket/auctioneer");
+        URI uri = new URI("ws://localhost:8080/socket/bidEngine");
         session = container.connectToServer(this, uri);
     }
 

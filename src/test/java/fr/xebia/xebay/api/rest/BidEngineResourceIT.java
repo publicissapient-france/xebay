@@ -47,12 +47,12 @@ public class BidEngineResourceIT {
     }
 
     private void unregister() throws Exception {
-        key = client.target("http://localhost:8080/rest/users/unregister").queryParam("email", "aaa@eee.com").queryParam("key", key).request().get(String.class);
+        key = client.target("http://localhost:8080/rest/users/unregister").request().header(HttpHeaders.AUTHORIZATION, key).delete(String.class);
     }
 
     @Test
     public void current_bidOffer_can_be_retrieved() throws Exception {
-        BidOfferInfo bidOffer = target.request().get(BidOfferInfo.class);
+        BidOfferInfo bidOffer = target.path("current").request().get(BidOfferInfo.class);
         assertThat(bidOffer.getItemName()).isEqualTo("an item");
         assertThat(bidOffer.getCurrentValue()).isNotNull();
         assertThat(bidOffer.getTimeToLive()).isLessThan(10000).isNotNegative();
@@ -62,7 +62,7 @@ public class BidEngineResourceIT {
     public void a_registered_user_can_post_form_bid() throws Exception {
         register();
 
-        BidOfferInfo currentBidOffer = target.request().get(BidOfferInfo.class);
+        BidOfferInfo currentBidOffer = target.path("current").request().get(BidOfferInfo.class);
 
         Form form = new Form();
         form.param("name", currentBidOffer.getItemName());
@@ -83,7 +83,7 @@ public class BidEngineResourceIT {
     public void cant_bid_if_user_not_registered() {
         String fakeKey = "fake key";
 
-        BidOfferInfo currentBidOffer = target.request().get(BidOfferInfo.class);
+        BidOfferInfo currentBidOffer = target.path("current").request().get(BidOfferInfo.class);
         Form form = new Form();
         form.param("name", currentBidOffer.getItemName());
         form.param("value", String.valueOf(currentBidOffer.getCurrentValue()));
@@ -101,7 +101,7 @@ public class BidEngineResourceIT {
     public void a_registered_user_can_bid() throws Exception {
         register();
 
-        BidOfferInfo currentBidOffer = target.request().get(BidOfferInfo.class);
+        BidOfferInfo currentBidOffer = target.path("current").request().get(BidOfferInfo.class);
         double firstValue = currentBidOffer.getCurrentValue();
 
         BidParam bidParam = new BidParam(currentBidOffer.getItemName(), currentBidOffer.getCurrentValue(), 0.7);

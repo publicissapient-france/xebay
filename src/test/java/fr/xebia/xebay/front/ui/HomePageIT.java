@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 
+import javax.ws.rs.core.HttpHeaders;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -35,6 +36,8 @@ public class HomePageIT extends PhantomJsTest {
             return;
         }
         HttpURLConnection urlConnection = (HttpURLConnection) new URL("http://localhost:8080/rest/users/unregister?email=abc@def.ghi&key=" + key).openConnection();
+        urlConnection.setRequestMethod("DELETE");
+        urlConnection.setRequestProperty(HttpHeaders.AUTHORIZATION, key);
         assertThat(urlConnection.getResponseCode()).as("HTTP response code when unregistering abc@def.ghi").isEqualTo(204);
     }
 

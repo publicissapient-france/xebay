@@ -35,11 +35,11 @@ var xebay = {
   },
   "signoutWith": function (key) {
     $.ajax("/rest/users/unregister", {
-        "headers": {"Authorization": key},
-        "type":"DELETE",
-        "success": function () {
-            xebay.signedout();
-        }
+      "headers": {"Authorization": key},
+      "type":"DELETE",
+      "success": function () {
+        xebay.signedout();
+      }
     });
   },
   "signedin": function (email, key) {
@@ -57,7 +57,7 @@ var xebay = {
     $.removeCookie("xebay");
   },
   "displayBidOffer": function () {
-    $.getJSON("/rest/bidEngine",function (bidOfferInfo) {
+    $.getJSON("/rest/bidEngine/current",function (bidOfferInfo) {
       xebay.bidOfferInfo = bidOfferInfo;
       $("#current-bid-offer").html("" +
           "<p>" + bidOfferInfo["itemName"] + "</p>" +

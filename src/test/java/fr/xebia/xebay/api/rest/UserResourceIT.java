@@ -7,6 +7,7 @@ import org.junit.rules.ExpectedException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.BufferedReader;
@@ -37,8 +38,7 @@ public class UserResourceIT {
     public void tearDown() throws Exception {
         if (null != key) {
             target.path("unregister")
-                    .queryParam("email", "abc@def.ghi")
-                    .queryParam("key", key).request().get();
+                    .request().header(HttpHeaders.AUTHORIZATION, key).delete();
         }
         target = null;
         client.close();
