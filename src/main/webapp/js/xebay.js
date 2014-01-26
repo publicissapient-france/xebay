@@ -1,4 +1,5 @@
 var xebay = {
+  "bidOfferInfo": {},
   "init": function () {
     $(".registered").hide();
     $.cookie.json = true;
@@ -23,7 +24,7 @@ var xebay = {
     $.ajax("/rest/users/info", {
       "headers": {"Authorization": key},
       "data": {"email": email},
-      "success": function (user) {
+      "success": function () {
         xebay.signedin(email, key);
       }
     });
@@ -51,12 +52,14 @@ var xebay = {
     $.removeCookie("xebay");
   },
   "displayBidOffer": function () {
-    $.getJSON("/rest/bidEngine",function (currentBidOffer) {
+    $.getJSON("/rest/bidEngine",function (bidOfferInfo) {
+      xebay.bidOfferInfo = bidOfferInfo;
       $("#current-bid-offer").html("" +
-          "<p>" + currentBidOffer["itemName"] + "</p>" +
-          "<p>current value: " + currentBidOffer["currentValue"] + " bid points</p>");
-      setTimeout(xebay.displayBidOffer, currentBidOffer["timeToLive"]);
+          "<p>" + bidOfferInfo["itemName"] + "</p>" +
+          "<p>current value: " + bidOfferInfo["currentValue"] + " bid points</p>");
+      setTimeout(xebay.displayBidOffer, bidOfferInfo["timeToLive"]);
     }).fail(function () {
+          xebay.bidOfferInfo = {};
           $("#current-bid-offer").html("" +
               "<p>There is no bid offer.</p>");
     });
@@ -78,13 +81,13 @@ var xebay = {
   },
   "sendOffer" : function (increment) {
       this.socket.send(JSON.stringify({
-          itemName: "test",
-          curValue: 3,
-          increment: increment
+      itemName: xebay.bidOfferInfo["itemName"],
+      curValue: xebay.bidOfferInfo["currentValue"],
+      increment: increment
       }));
   },
   "listenBidOffers": function (message) {
       var bidOffer = JSON.parse(message.data);
-      console.log("received bidOffer: " + bidOffer);
+    console.log("received bidOffer: ", bidOffer);
   }
 };
