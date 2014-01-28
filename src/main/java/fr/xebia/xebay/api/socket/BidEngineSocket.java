@@ -1,7 +1,7 @@
 package fr.xebia.xebay.api.socket;
 
-import fr.xebia.xebay.api.socket.coder.BidCallDecoder;
 import fr.xebia.xebay.api.socket.coder.BidAnswerEncoder;
+import fr.xebia.xebay.api.socket.coder.BidCallDecoder;
 import fr.xebia.xebay.api.socket.dto.BidAnswer;
 import fr.xebia.xebay.api.socket.dto.BidCall;
 import fr.xebia.xebay.domain.*;
@@ -24,43 +24,56 @@ import static fr.xebia.xebay.BidServer.BID_SERVER;
 @ServerEndpoint(value = "/socket/bidEngine/{authToken}", decoders = BidCallDecoder.class, encoders = BidAnswerEncoder.class)
 public class BidEngineSocket implements BidEngineListener {
 
-  static final Logger log = Logger.getLogger("BidEngineSocket");
+    static final Logger log = Logger.getLogger("BidEngineSocket");
 
-  final Set<Session> sessions = Collections.synchronizedSet(new HashSet<Session>());
+    final Set<Session> sessions = Collections.synchronizedSet(new HashSet<Session>());
 
-  {
-    BID_SERVER.bidEngine.addListener(this);
-  }
-
-  @OnOpen
-  public void onOpen(Session session) {
-    sessions.add(session);
-  }
-
-  @OnMessage
-  public void onMessage(Session session, @PathParam("authToken") String authToken, BidCall bidCall) throws IOException, EncodeException {
-
-    try {
-
-      User user = BID_SERVER.users.getUser(authToken);
-      BID_SERVER.bidEngine.bid(user, bidCall.getItemName(), bidCall.getCurValue(), bidCall.getIncrement());
-
-    } catch (UserNotAllowedException | BidException e) {
-      BidAnswer bidAnswer = BidAnswer.newRejected(e.getMessage(), bidCall);
-      session.getBasicRemote().sendObject(bidAnswer);
+    {
+        BID_SERVER.bidEngine.addListener(this);
     }
-  }
 
-  @Override
-  public void onBidOffer(BidOffer bidOffer) {
+    @OnOpen
+    public void onOpen(Session session) {
+        sessions.add(session);
+    }
 
-    BidAnswer bidAnswer = BidAnswer.newAccepted(bidOffer);
-    sessions.stream().filter(session -> session.isOpen()).forEach(session -> {
-      try {
-        session.getBasicRemote().sendObject(bidAnswer);
-      } catch (IOException | EncodeException e) {
-        log.log(Level.SEVERE, "BidInfo notification in error", e);
-      }
-    });
-  }
+    @OnMessage
+    public void onMessage(Session session, @PathParam("authToken") String authToken, BidCall bidCall) throws IOException, EncodeException {
+
+        try {
+
+            User user = BID_SERVER.users.getUser(authToken);
+            BID_SERVER.bidEngine.bid(user, bidCall.getItemName(), bidCall.getCurValue(), bidCall.getIncrement());
+
+        } catch (UserNotAllowedException | BidException e) {
+            BidAnswer bidAnswer = BidAnswer.newRejected(e.getMessage(), bidCall);
+            session.getBasicRemote().sendObject(bidAnswer);
+        }
+    }
+
+    @Override
+    public void onBidOfferBidded(BidOffer updatedBidOffer, User bidder) {
+        onBidOffer(updatedBidOffer);
+    }
+
+    @Override
+    public void onBidOfferResolved(BidOffer resolvedBidOffer, User buyer) {
+        onBidOffer(resolvedBidOffer);
+    }
+
+    @Override
+    public void onNewBidOffer(BidOffer newBidOffer) {
+        onBidOffer(newBidOffer);
+    }
+
+    private void onBidOffer(BidOffer bidOffer) {
+        BidAnswer bidAnswer = BidAnswer.newAccepted(bidOffer);
+        sessions.stream().filter(session -> session.isOpen()).forEach(session -> {
+            try {
+                session.getBasicRemote().sendObject(bidAnswer);
+            } catch (IOException | EncodeException e) {
+                log.log(Level.SEVERE, "BidInfo notification in error", e);
+            }
+        });
+    }
 }

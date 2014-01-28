@@ -7,8 +7,7 @@ import static java.lang.String.format;
 public class BidEngine {
     private static final int DEFAULT_TIME_TO_LIVE = 10000;
 
-    final List<BidEngineListener> listenerList = new ArrayList<>();
-
+    private final List<BidEngineListener> listeners = new ArrayList<>();
     private final Items items;
     private final Expirable bidOfferExpiration;
     private final Queue<BidOfferToSell> bidOffersToSell;
@@ -40,7 +39,7 @@ public class BidEngine {
     public BidOffer bid(User user, String name, double value, double increment) throws BidException {
         nextBidOfferIfExpired();
         bidOffer.increment(name, value, increment, user);
-        listenerList.forEach(bidEngineListener -> bidEngineListener.onBidOffer(bidOffer));
+        listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferBidded(bidOffer, user));
         return bidOffer;
     }
 
@@ -65,18 +64,18 @@ public class BidEngine {
     private void nextBidOfferIfExpired() {
         if (bidOfferExpiration.isExpired()) {
             bidOffer.resolve();
+            listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferResolved(bidOffer, bidOffer.getFutureBuyer()));
             if (bidOffersToSell.isEmpty()) {
                 // FIXME gérer le cas où il n'y a plus d'items
                 bidOffer = new BidOffer(items.next(), timeToLive);
             } else {
                 bidOffer = bidOffersToSell.poll().toBidOffer(timeToLive);
             }
-            listenerList.forEach(bidEngineListener -> bidEngineListener.onBidOffer(bidOffer));
+            listeners.forEach(bidEngineListener -> bidEngineListener.onNewBidOffer(bidOffer));
         }
     }
 
     public void addListener(BidEngineListener bidEngineListener) {
-        listenerList.add(bidEngineListener);
+        listeners.add(bidEngineListener);
     }
-
 }

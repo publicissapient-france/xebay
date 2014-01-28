@@ -12,7 +12,7 @@ public class BidOffer {
     private final long created;
 
     private double currentValue;
-    private User buyer;
+    private User futureBuyer;
 
     public BidOffer(Item item, long initialTimeToLive) {
         this(item, item.getValue(), initialTimeToLive);
@@ -26,8 +26,8 @@ public class BidOffer {
         this.currentValue = item.getValue();
     }
 
-    public User getBuyer() {
-        return buyer;
+    public User getFutureBuyer() {
+        return futureBuyer;
     }
 
     public Item getItem() {
@@ -43,10 +43,10 @@ public class BidOffer {
     }
 
     void resolve() {
-        if (buyer == null) {
+        if (futureBuyer == null) {
             item.depreciate();
         } else {
-            item.concludeTransaction(currentValue, buyer);
+            item.concludeTransaction(currentValue, futureBuyer);
         }
     }
 
@@ -73,7 +73,7 @@ public class BidOffer {
 
     private BidOffer increment(double increment, User user) {
         this.currentValue += increment;
-        this.buyer = user;
+        this.futureBuyer = user;
         return this;
     }
 

@@ -88,7 +88,7 @@ public class XebayTest {
     }
 
     @Test
-    public void a_bid_is_valid_until_bid_offer_expires() throws InterruptedException {
+    public void a_bid_is_valid_until_bid_offer_expires() {
         BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3), new Item("another item", 2.4)), () -> true);
 
         BidOffer bidOffer = bidEngine.currentBidOffer();
@@ -97,7 +97,7 @@ public class XebayTest {
     }
 
     @Test
-    public void when_only_one_user_bids_then_he_wins() throws InterruptedException {
+    public void when_only_one_user_bids_then_he_wins() {
         BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3), new Item("another item", 2.4)), expiration);
         bidEngine.bid(user, "an item", 4.3, 0.7);
 
