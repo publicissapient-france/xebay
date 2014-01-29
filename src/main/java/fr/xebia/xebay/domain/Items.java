@@ -21,15 +21,25 @@ public class Items {
             throw new BidException();
         }
         this.items = items;
-        this.currentItemIndex = -1;
+        this.currentItemIndex = items.length - 1;
     }
 
     Item next() {
-        currentItemIndex++;
+        return next(currentItemIndex + 1);
+    }
+
+    private Item next(int currentItemIndex) {
         if (currentItemIndex >= items.length) {
             currentItemIndex = 0;
         }
-        return items[currentItemIndex];
+        if (items[currentItemIndex].getOwner() == null) {
+            this.currentItemIndex = currentItemIndex;
+            return items[currentItemIndex];
+        }
+        if (currentItemIndex == this.currentItemIndex) {
+            return null;
+        }
+        return next(currentItemIndex + 1);
     }
 
     Item get(String name) {

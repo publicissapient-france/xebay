@@ -85,6 +85,31 @@ public class ItemsTest {
     }
 
     @Test
+    public void should_not_get_item_if_owned_by_a_user() {
+        Item item = new Item("an item", 4.3);
+        item.concludeTransaction(5, new User("", "email@provider.com"));
+        Items items = new Items(item);
+
+        Item nextItem = items.next();
+
+        assertThat(nextItem).isNull();
+    }
+
+    @Test
+    public void should_not_get_item_if_there_are_all_owned_by_a_user() {
+        User buyer = new User("", "email@provider.com");
+        Item firstItem = new Item("an item", 4.3);
+        firstItem.concludeTransaction(5, buyer);
+        Item secondItem = new Item("another item", 5);
+        secondItem.concludeTransaction(2.4, buyer);
+        Items items = new Items(firstItem, secondItem);
+
+        Item nextItem = items.next();
+
+        assertThat(nextItem).isNull();
+    }
+
+    @Test
     public void should_get_an_item_by_his_name() {
         Item item = new Item("an item", 4.3);
         Items items = new Items(item);

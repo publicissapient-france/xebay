@@ -17,7 +17,7 @@ public class BidEngine {
 
     public BidEngine(Items items) {
         this.items = items;
-        this.bidOfferExpiration = () -> bidOffer.isExpired();
+        this.bidOfferExpiration = () -> bidOffer == null || bidOffer.isExpired();
         this.bidOffersToSell = new ArrayDeque<>();
         this.timeToLive = DEFAULT_TIME_TO_LIVE;
         this.bidOffer = new BidOffer(this.items.next(), timeToLive);
@@ -38,6 +38,9 @@ public class BidEngine {
 
     public BidOffer bid(User user, String name, double value, double increment) throws BidException {
         nextBidOfferIfExpired();
+        if (bidOffer == null) {
+            throw new BidException(format("current item to bid is not \"%s\"", name));
+        }
         bidOffer.increment(name, value, increment, user);
         listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferBidded(bidOffer, user));
         return bidOffer;
@@ -52,7 +55,7 @@ public class BidEngine {
         } catch (NoSuchElementException e) {
             throw new BidException(format("item \"%s\" doesn't exist", itemName));
         }
-        if (bidOffer.getItem().equals(item)) {
+        if (bidOffer != null && bidOffer.getItem().equals(item)) {
             throw new BidException(format("item \"%s\" is the current offer thus can't be offered", itemName));
         }
         if (!user.equals(item.getOwner())) {
@@ -61,21 +64,28 @@ public class BidEngine {
         bidOffersToSell.offer(new BidOfferToSell(item, initialValue));
     }
 
+    public void addListener(BidEngineListener bidEngineListener) {
+        nextBidOfferIfExpired();
+        listeners.add(bidEngineListener);
+    }
+
     private void nextBidOfferIfExpired() {
         if (bidOfferExpiration.isExpired()) {
-            bidOffer.resolve();
-            listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferResolved(bidOffer, bidOffer.getFutureBuyer()));
+            if (bidOffer != null) {
+                bidOffer.resolve();
+                listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferResolved(bidOffer, bidOffer.getFutureBuyer()));
+            }
             if (bidOffersToSell.isEmpty()) {
-                // FIXME gérer le cas où il n'y a plus d'items
-                bidOffer = new BidOffer(items.next(), timeToLive);
+                Item nextItem = items.next();
+                if (nextItem == null) {
+                    bidOffer = null;
+                } else {
+                    bidOffer = new BidOffer(nextItem, timeToLive);
+                }
             } else {
                 bidOffer = bidOffersToSell.poll().toBidOffer(timeToLive);
             }
             listeners.forEach(bidEngineListener -> bidEngineListener.onNewBidOffer(bidOffer));
         }
-    }
-
-    public void addListener(BidEngineListener bidEngineListener) {
-        listeners.add(bidEngineListener);
     }
 }

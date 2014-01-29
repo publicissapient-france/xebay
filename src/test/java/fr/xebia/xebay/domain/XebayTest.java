@@ -140,6 +140,7 @@ public class XebayTest {
         BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3), new Item("another item", 2.4)), expiration);
         bidEngine.bid(user, "an item", 4.3, 2.1);
         resolvesBidOffer(bidEngine);
+        bidEngine.offer(user, "an item", 5.9);
         resolvesBidOffer(bidEngine);
         expectedException.expect(BidException.class);
         expectedException.expectMessage("item \"an item\" is the current offer thus can't be offered");
@@ -164,6 +165,9 @@ public class XebayTest {
 
         // let seller buy "an item"
         bidEngine.bid(seller, "an item", 4.3, 0.7);
+        resolvesBidOffer(bidEngine);
+        // let seller offer his item
+        bidEngine.offer(seller, "an item", 5.0);
         resolvesBidOffer(bidEngine);
         // let buyer buy "an item" owned by seller
         bidEngine.bid(buyer, "an item", 5.0, 0.8);
@@ -201,6 +205,17 @@ public class XebayTest {
             assertThat(user.getBalance()).isEqualTo(1000);
             assertThat(bidEngine.currentBidOffer().getCurrentValue()).isEqualTo(900);
         }
+    }
+
+    @Test
+    public void should_not_offer_item_that_is_owned_by_a_user() {
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3)), expiration);
+        bidEngine.bid(user, "an item", 4.3, 2.1);
+        resolvesBidOffer(bidEngine);
+
+        BidOffer noNewBidOffer = bidEngine.currentBidOffer();
+
+        assertThat(noNewBidOffer).isNull();
     }
 
     private void resolvesBidOffer(BidEngine bidEngine) {
