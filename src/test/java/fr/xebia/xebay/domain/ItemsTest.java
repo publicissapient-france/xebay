@@ -83,4 +83,14 @@ public class ItemsTest {
 
         assertThat(item.getName()).isEqualTo("an item");
     }
+
+    @Test
+    public void should_get_an_item_by_his_name() {
+        Item item = new Item("an item", 4.3);
+        Items items = new Items(item);
+
+        Item itemByName = items.get("an item");
+
+        assertThat(itemByName).isEqualTo(item);
+    }
 }
