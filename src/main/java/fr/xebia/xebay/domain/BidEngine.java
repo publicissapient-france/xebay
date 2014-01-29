@@ -13,14 +13,14 @@ public class BidEngine {
     private final Queue<BidOfferToSell> bidOffersToSell;
 
     private int timeToLive;
-    private BidOffer bidOffer;
+    private Optional<BidOffer> bidOffer;
 
     public BidEngine(Items items) {
         this.items = items;
-        this.bidOfferExpiration = () -> bidOffer == null || bidOffer.isExpired();
+        this.bidOfferExpiration = () -> !bidOffer.isPresent() || bidOffer.get().isExpired();
         this.bidOffersToSell = new ArrayDeque<>();
         this.timeToLive = DEFAULT_TIME_TO_LIVE;
-        this.bidOffer = new BidOffer(this.items.next(), timeToLive);
+        this.bidOffer = Optional.of(new BidOffer(this.items.next(), timeToLive));
     }
 
     public BidEngine(Items items, Expirable bidOfferExpiration) {
@@ -28,22 +28,20 @@ public class BidEngine {
         this.bidOfferExpiration = bidOfferExpiration;
         this.bidOffersToSell = new ArrayDeque<>();
         this.timeToLive = DEFAULT_TIME_TO_LIVE;
-        this.bidOffer = new BidOffer(this.items.next(), timeToLive);
+        this.bidOffer = Optional.of(new BidOffer(this.items.next(), timeToLive));
     }
 
     public BidOffer currentBidOffer() {
         nextBidOfferIfExpired();
-        return bidOffer;
+        return bidOffer.isPresent() ? bidOffer.get() : null;
     }
 
     public BidOffer bid(User user, String name, double value, double increment) throws BidException {
         nextBidOfferIfExpired();
-        if (bidOffer == null) {
-            throw new BidException(format("current item to bid is not \"%s\"", name));
-        }
-        bidOffer.increment(name, value, increment, user);
-        listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferBidded(bidOffer, user));
-        return bidOffer;
+        bidOffer.orElseThrow(() -> new BidException(format("current item to bid is not \"%s\"", name)))
+                .increment(name, value, increment, user);
+        listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferBidded(bidOffer.get(), user));
+        return bidOffer.get();
     }
 
     public void offer(User user, String itemName, double initialValue) {
@@ -55,7 +53,7 @@ public class BidEngine {
         } catch (NoSuchElementException e) {
             throw new BidException(format("item \"%s\" doesn't exist", itemName));
         }
-        if (bidOffer != null && bidOffer.getItem().equals(item)) {
+        if (bidOffer.isPresent() && bidOffer.get().getItem().equals(item)) {
             throw new BidException(format("item \"%s\" is the current offer thus can't be offered", itemName));
         }
         if (!user.equals(item.getOwner())) {
@@ -71,21 +69,24 @@ public class BidEngine {
 
     private void nextBidOfferIfExpired() {
         if (bidOfferExpiration.isExpired()) {
-            if (bidOffer != null) {
+            bidOffer.ifPresent((bidOffer) -> {
                 bidOffer.resolve();
                 listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferResolved(bidOffer, bidOffer.getFutureBuyer()));
-            }
-            if (bidOffersToSell.isEmpty()) {
-                Item nextItem = items.next();
-                if (nextItem == null) {
-                    bidOffer = null;
-                } else {
-                    bidOffer = new BidOffer(nextItem, timeToLive);
-                }
-            } else {
-                bidOffer = bidOffersToSell.poll().toBidOffer(timeToLive);
-            }
-            listeners.forEach(bidEngineListener -> bidEngineListener.onNewBidOffer(bidOffer));
+            });
+            bidOffer = nextBidOffer();
+            bidOffer.ifPresent((bidOffer) -> listeners.forEach(bidEngineListener -> bidEngineListener.onNewBidOffer(bidOffer)));
+        }
+    }
+
+    private Optional<BidOffer> nextBidOffer() {
+        if (!bidOffersToSell.isEmpty()) {
+            return Optional.of(bidOffersToSell.poll().toBidOffer(timeToLive));
+        }
+        Item nextItem = items.next();
+        if (nextItem == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(new BidOffer(nextItem, timeToLive));
         }
     }
 }
