@@ -1,88 +1,21 @@
 package fr.xebia.xebay.domain;
 
-import java.util.Date;
-
-import static java.lang.Math.max;
-import static java.lang.String.format;
+import java.util.Optional;
 
 public class BidOffer {
-    private final Item item;
-    private final double initialValue;
-    private long initialTimeToLive;
-    private final long created;
+    public final String itemName;
+    public final double initialValue;
+    public final double currentValue;
+    public final long timeToLive;
+    public final Optional<String> ownerEmail;
+    public final Optional<String> futureBuyerEmail;
 
-    private double currentValue;
-    private User futureBuyer;
-
-    public BidOffer(Item item, long initialTimeToLive) {
-        this(item, item.getValue(), initialTimeToLive);
-    }
-
-    public BidOffer(Item item, double initialValue, long initialTimeToLive) {
-        this.item = item;
+    public BidOffer(Item item, double initialValue, double currentValue, long timeToLive, User futureBuyer) {
+        this.timeToLive = timeToLive;
+        this.itemName = item.getName();
         this.initialValue = initialValue;
-        this.initialTimeToLive = initialTimeToLive;
-        this.created = new Date().getTime();
-        this.currentValue = item.getValue();
-    }
-
-    public User getFutureBuyer() {
-        return futureBuyer;
-    }
-
-    public Item getItem() {
-        return item;
-    }
-
-    public double getInitialValue() {
-        return initialValue;
-    }
-
-    public double getCurrentValue() {
-        return currentValue;
-    }
-
-    void resolve() {
-        if (futureBuyer == null) {
-            item.depreciate();
-        } else {
-            item.concludeTransaction(currentValue, futureBuyer);
-        }
-    }
-
-    BidOffer increment(String name, double value, double increment, User user) throws BidException {
-        if (null == user || (null == user.getEmail())) {
-            throw new BidException("bad user");
-        }
-        if (!item.getName().equals(name)) {
-            throw new BidException(format("current item to bid is not \"%s\"", name));
-        }
-        if (currentValue != value) {
-            throw new BidException(format("value for \"%s\" is not %s but %s", item.getName(), Double.toString(value), Double.toString(currentValue)));
-        }
-        if (currentValue / 10 > increment) {
-            throw new BidException(format("increment %s is less than ten percent of initial value %s of item \"%s\"", Double.toString(increment), Double.toString(item.getValue()), item.getName()));
-        }
-
-        if (!user.canBid(currentValue + increment)) {
-            throw new BidException(format("user can't bid %s, not enought money left.", Double.toString(currentValue + increment)));
-        }
-
-        return increment(increment, user);
-    }
-
-    private BidOffer increment(double increment, User user) {
-        this.currentValue += increment;
-        this.futureBuyer = user;
-        return this;
-    }
-
-    public long getTimeToLive() {
-        long millisecondsSinceCreated = new Date().getTime() - created;
-        return max(0, initialTimeToLive - millisecondsSinceCreated);
-    }
-
-    boolean isExpired() {
-        return getTimeToLive() == 0;
+        this.currentValue = currentValue;
+        this.ownerEmail = item.getOwner() == null ? Optional.empty() : Optional.of(item.getOwner().getEmail());
+        this.futureBuyerEmail = futureBuyer == null ? Optional.empty() : Optional.of(futureBuyer.getEmail());
     }
 }

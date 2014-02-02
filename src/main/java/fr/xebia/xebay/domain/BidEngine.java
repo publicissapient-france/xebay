@@ -13,14 +13,14 @@ public class BidEngine {
     private final Queue<BidOfferToSell> bidOffersToSell;
 
     private int timeToLive;
-    private Optional<BidOffer> bidOffer;
+    private Optional<MutableBidOffer> bidOffer;
 
     public BidEngine(Items items) {
         this.items = items;
         this.bidOfferExpiration = () -> !bidOffer.isPresent() || bidOffer.get().isExpired();
         this.bidOffersToSell = new ArrayDeque<>();
         this.timeToLive = DEFAULT_TIME_TO_LIVE;
-        this.bidOffer = Optional.of(new BidOffer(this.items.next(), timeToLive));
+        this.bidOffer = Optional.of(new MutableBidOffer(this.items.next(), timeToLive));
     }
 
     public BidEngine(Items items, Expirable bidOfferExpiration) {
@@ -28,20 +28,21 @@ public class BidEngine {
         this.bidOfferExpiration = bidOfferExpiration;
         this.bidOffersToSell = new ArrayDeque<>();
         this.timeToLive = DEFAULT_TIME_TO_LIVE;
-        this.bidOffer = Optional.of(new BidOffer(this.items.next(), timeToLive));
+        this.bidOffer = Optional.of(new MutableBidOffer(this.items.next(), timeToLive));
     }
 
     public BidOffer currentBidOffer() {
         nextBidOfferIfExpired();
-        return bidOffer.isPresent() ? bidOffer.get() : null;
+        return bidOffer.isPresent() ? bidOffer.get().toBidOffer() : null;
     }
 
     public BidOffer bid(User user, String name, double value, double increment) throws BidException {
         nextBidOfferIfExpired();
-        bidOffer.orElseThrow(() -> new BidException(format("current item to bid is not \"%s\"", name)))
-                .increment(name, value, increment, user);
-        listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferBidded(bidOffer.get(), user));
-        return bidOffer.get();
+        BidOffer updatedBidOffer = bidOffer.orElseThrow(() -> new BidException(format("current item to bid is not \"%s\"", name)))
+                .increment(name, value, increment, user)
+                .toBidOffer();
+        listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferBidded(updatedBidOffer));
+        return updatedBidOffer;
     }
 
     public void offer(User user, String itemName, double initialValue) {
@@ -71,14 +72,14 @@ public class BidEngine {
         if (bidOfferExpiration.isExpired()) {
             bidOffer.ifPresent((bidOffer) -> {
                 bidOffer.resolve();
-                listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferResolved(bidOffer, bidOffer.getFutureBuyer()));
+                listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferResolved(bidOffer.toBidOffer()));
             });
             bidOffer = nextBidOffer();
-            bidOffer.ifPresent((bidOffer) -> listeners.forEach(bidEngineListener -> bidEngineListener.onNewBidOffer(bidOffer)));
+            bidOffer.ifPresent((bidOffer) -> listeners.forEach(bidEngineListener -> bidEngineListener.onNewBidOffer(bidOffer.toBidOffer())));
         }
     }
 
-    private Optional<BidOffer> nextBidOffer() {
+    private Optional<MutableBidOffer> nextBidOffer() {
         if (!bidOffersToSell.isEmpty()) {
             return Optional.of(bidOffersToSell.poll().toBidOffer(timeToLive));
         }
@@ -86,7 +87,7 @@ public class BidEngine {
         if (nextItem == null) {
             return Optional.empty();
         } else {
-            return Optional.of(new BidOffer(nextItem, timeToLive));
+            return Optional.of(new MutableBidOffer(nextItem, timeToLive));
         }
     }
 }

@@ -9,7 +9,7 @@ public class BidOfferToSell {
         this.initialValue = initialValue;
     }
 
-    public BidOffer toBidOffer(int initialTimeToLive) {
-        return new BidOffer(item, initialValue, initialTimeToLive);
+    public MutableBidOffer toBidOffer(int initialTimeToLive) {
+        return new MutableBidOffer(item, initialValue, initialTimeToLive);
     }
 }

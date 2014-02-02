@@ -19,8 +19,7 @@ public class BidOfferInfo {
     }
 
     public static BidOfferInfo newBidOfferInfo(BidOffer bidOffer) {
-        String buyerEmail = bidOffer.getFutureBuyer() == null ? null : bidOffer.getFutureBuyer().getEmail();
-        return new BidOfferInfo(bidOffer.getItem().getName(), bidOffer.getCurrentValue(), buyerEmail, bidOffer.getTimeToLive());
+        return new BidOfferInfo(bidOffer.itemName, bidOffer.currentValue, bidOffer.futureBuyerEmail.orElse(null), bidOffer.timeToLive);
     }
 
     public double getCurrentValue() {

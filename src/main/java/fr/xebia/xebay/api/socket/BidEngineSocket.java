@@ -52,12 +52,12 @@ public class BidEngineSocket implements BidEngineListener {
     }
 
     @Override
-    public void onBidOfferBidded(BidOffer updatedBidOffer, User bidder) {
+    public void onBidOfferBidded(BidOffer updatedBidOffer) {
         onBidOffer(updatedBidOffer);
     }
 
     @Override
-    public void onBidOfferResolved(BidOffer resolvedBidOffer, User buyer) {
+    public void onBidOfferResolved(BidOffer resolvedBidOffer) {
         onBidOffer(resolvedBidOffer);
     }
 

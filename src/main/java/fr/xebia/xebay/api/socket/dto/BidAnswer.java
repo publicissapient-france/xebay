@@ -26,9 +26,9 @@ public class BidAnswer {
 
   BidAnswer(BidAnswerType type, BidOffer bidOffer) {
     this.type = type;
-    this.name = bidOffer.getItem().getName();
-    this.value = bidOffer.getCurrentValue();
-    this.timeToLive = bidOffer.getTimeToLive();
+    this.name = bidOffer.itemName;
+    this.value = bidOffer.currentValue;
+    this.timeToLive = bidOffer.timeToLive;
   }
 
   public static BidAnswer newAccepted(BidOffer bidOffer) {

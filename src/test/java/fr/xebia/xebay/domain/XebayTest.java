@@ -38,9 +38,9 @@ public class XebayTest {
 
         BidOffer bidOffer = bidEngine.currentBidOffer();
 
-        assertThat(bidOffer.getItem().getName()).isEqualTo("an item");
-        assertThat(bidOffer.getItem().getValue()).isEqualTo(4.3);
-        assertThat(bidOffer.getItem().getOwner()).isNull();
+        assertThat(bidOffer.itemName).isEqualTo("an item");
+        assertThat(bidOffer.initialValue).isEqualTo(4.3);
+        assertThat(bidOffer.ownerEmail.isPresent()).isFalse();
     }
 
     @Test
@@ -49,7 +49,7 @@ public class XebayTest {
 
         BidOffer bidOffer = bidEngine.currentBidOffer();
 
-        assertThat(bidOffer.getCurrentValue()).isEqualTo(4.3);
+        assertThat(bidOffer.currentValue).isEqualTo(4.3);
     }
 
     @Test
@@ -57,7 +57,8 @@ public class XebayTest {
         BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3)));
         BidOffer bidOffer = bidEngine.bid(user, "an item", 4.3, 2.1);
 
-        assertThat(bidOffer.getCurrentValue()).isEqualTo(6.4);
+        assertThat(bidOffer.currentValue).isEqualTo(6.4);
+        assertThat(bidOffer.futureBuyerEmail.get()).isEqualTo("email@provider.com");
     }
 
     @Test
@@ -93,7 +94,7 @@ public class XebayTest {
 
         BidOffer bidOffer = bidEngine.currentBidOffer();
 
-        assertThat(bidOffer.getItem().getName()).isEqualTo("another item");
+        assertThat(bidOffer.itemName).isEqualTo("another item");
     }
 
     @Test
@@ -120,10 +121,9 @@ public class XebayTest {
 
         resolvesBidOffer(bidEngine);
         BidOffer bidOffer = bidEngine.currentBidOffer();
-        assertThat(bidOffer.getItem().getName()).isEqualTo("an item");
-        assertThat(bidOffer.getItem().getValue()).isEqualTo(5.0);
-        assertThat(bidOffer.getItem().getOwner()).isEqualTo(user);
-        assertThat(bidOffer.getInitialValue()).isEqualTo(5.9);
+        assertThat(bidOffer.itemName).isEqualTo("an item");
+        assertThat(bidOffer.ownerEmail.get()).isEqualTo("email@provider.com");
+        assertThat(bidOffer.initialValue).isEqualTo(5.9);
     }
 
     @Test
@@ -179,12 +179,11 @@ public class XebayTest {
 
     @Test
     public void when_nobody_bid_then_item_value_loose_ten_percent_of_its_value() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.33), new Item("another item", 2.4)), expiration);
-        Item item = bidEngine.currentBidOffer().getItem();
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.33)), expiration);
 
         resolvesBidOffer(bidEngine);
 
-        assertThat(item.getValue()).isEqualTo(3.90);
+        assertThat(bidEngine.currentBidOffer().initialValue).isEqualTo(3.90);
     }
 
     @Test
@@ -203,7 +202,7 @@ public class XebayTest {
             bidEngine.bid(user, "an item", 900, 101);
         } finally {
             assertThat(user.getBalance()).isEqualTo(1000);
-            assertThat(bidEngine.currentBidOffer().getCurrentValue()).isEqualTo(900);
+            assertThat(bidEngine.currentBidOffer().currentValue).isEqualTo(900);
         }
     }
 
