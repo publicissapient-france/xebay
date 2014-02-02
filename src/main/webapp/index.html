@@ -9,35 +9,35 @@
 <body>
 
 <div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-header">
-      <span class="navbar-brand">Xebay</span>
-    </div>
-    <div class="navbar-collapse collapse">
-      <form id="register" class="navbar-form navbar-right unregistered">
-        <div class="form-group">
-          <input id="email" type="text" placeholder="Email" class="form-control">
-        </div>
-        <div class="form-group">
-          <input id="key" type="password" placeholder="API key" class="form-control">
-        </div>
-        <button type="button" class="btn btn-success" onclick="xebay.signin()">Sign in</button>
-        <button type="button" class="btn btn-primary" onclick="xebay.signup()">Sign up</button>
-      </form>
-      <div id="unregister" class="registered">
-        <form class="navbar-form navbar-right">
-          <button id="signout" type="button" class="btn btn-warning" onclick="xebay.signout()">Sign out</button>
-        </form>
-        <ul class="nav navbar-nav navbar-right">
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">My infos <b class="caret"></b></a>
-            <ul class="dropdown-menu">
-              <li class="my-infos">email: <span id="email-display"></span></li>
-              <li class="my-infos">API key: <span id="key-display"></span></li>
-            </ul>
-          </li>
-        </ul>
+  <div class="navbar-header">
+    <span class="navbar-brand">Xebay</span>
+  </div>
+  <div class="navbar-collapse collapse">
+    <form id="register" class="navbar-form navbar-right unregistered">
+      <div class="form-group">
+        <input id="email" type="text" placeholder="Email" class="form-control">
       </div>
+      <div class="form-group">
+        <input id="key" type="password" placeholder="API key" class="form-control">
+      </div>
+      <button type="button" class="btn btn-success" onclick="xebay.signin()">Sign in</button>
+      <button type="button" class="btn btn-primary" onclick="xebay.signup()">Sign up</button>
+    </form>
+    <div id="unregister" class="registered">
+      <form class="navbar-form navbar-right">
+        <button id="signout" type="button" class="btn btn-warning" onclick="xebay.signout()">Sign out</button>
+      </form>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">My infos <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li class="my-infos">email: <span id="email-display"></span></li>
+            <li class="my-infos">API key: <span id="key-display"></span></li>
+          </ul>
+        </li>
+      </ul>
     </div>
+  </div>
 </div>
 
 <div class="jumbotron">
@@ -100,7 +100,8 @@
 <script id="currentBidOfferTemplate" type="text/template">
   {{#if itemName}}
   <p>{{itemName}}</p>
-  <p>current value: {{currentValue}} bid points</p>
+  <div class="flipboard"><span class="flipboardchar">{{timeToLiveSeconds}}</span><span class="flipboardchar">{{timeToLiveMilliseconds}}</span><span>s</span></div>
+  <div class="flipboard"><span class="flipboardchar">{{currentValue}}</span><span>$</span></p>
   {{else}}
   <p>There is no bid offer.</p>
   {{/if}}
@@ -114,11 +115,11 @@
 <script type="text/javascript" src="js/xebay.js"></script>
 <script type="text/javascript">
   $(document).ready(function () {
-      xebay.currentBidOfferTemplate = Handlebars.compile($("#currentBidOfferTemplate").html());
-      xebay.bidAnswerTemplate = [];
-      xebay.bidAnswerTemplate["ACCEPTED"] = Handlebars.compile($("#bidAnswerAcceptedTemplate").html());
-      xebay.bidAnswerTemplate["REJECTED"] = Handlebars.compile($("#bidAnswerRejectedTemplate").html());
-      xebay.init();
+    xebay.currentBidOfferTemplate = Handlebars.compile($("#currentBidOfferTemplate").html());
+    xebay.bidAnswerTemplate = [];
+    xebay.bidAnswerTemplate["ACCEPTED"] = Handlebars.compile($("#bidAnswerAcceptedTemplate").html());
+    xebay.bidAnswerTemplate["REJECTED"] = Handlebars.compile($("#bidAnswerRejectedTemplate").html());
+    xebay.init();
   });
 </script>
 </body>

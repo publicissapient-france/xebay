@@ -59,12 +59,24 @@ var xebay = {
   "displayBidOffer": function () {
     $.getJSON("/rest/bidEngine/current",function (bidOfferInfo) {
       xebay.bidOfferInfo = bidOfferInfo;
-      $("#current-bid-offer").html(xebay.currentBidOfferTemplate(xebay.bidOfferInfo));
-      setTimeout(xebay.displayBidOffer, bidOfferInfo["timeToLive"]);
+      xebay.updateTimeToLive();
     }).fail(function () {
-        xebay.bidOfferInfo = {};
-        $("#current-bid-offer").html(xebay.currentBidOfferTemplate(xebay.bidOfferInfo));
-      });
+      xebay.bidOfferInfo = {};
+      setTimeout(xebay.displayBidOffer, 1000);
+      $("#current-bid-offer").html(xebay.currentBidOfferTemplate(xebay.bidOfferInfo));
+    });
+  },
+  "updateTimeToLive": function () {
+    var timeToLive = Number(xebay.bidOfferInfo["timeToLive"]);
+    if (timeToLive < 0) {
+      xebay.displayBidOffer();
+      return;
+    }
+    xebay.bidOfferInfo["timeToLiveSeconds"] = twoDigits(Math.floor(timeToLive / 1000));
+    xebay.bidOfferInfo["timeToLiveMilliseconds"] = Math.floor((timeToLive - (xebay.bidOfferInfo["timeToLiveSeconds"] * 1000)) / 100);
+    $("#current-bid-offer").html(xebay.currentBidOfferTemplate(xebay.bidOfferInfo));
+    setTimeout(xebay.updateTimeToLive, 100);
+    xebay.bidOfferInfo["timeToLive"] -= 100;
   },
   "connect": function () {
     var cookie = $.cookie("xebay");
@@ -109,3 +121,10 @@ var xebay = {
     $("#bidAnswerLog p").slice(count).remove();
   }
 };
+
+function twoDigits(value) {
+  if (value < 10) {
+    return "0" + value;
+  }
+  return value;
+}
