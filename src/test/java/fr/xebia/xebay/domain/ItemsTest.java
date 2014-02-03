@@ -16,7 +16,7 @@ public class ItemsTest {
 
     @Test
     public void load_two_items() {
-        Items items = Items.load("items").get();
+        Items items = Items.load("items-two").get();
         items.next();
 
         Item secondItem = items.next();
