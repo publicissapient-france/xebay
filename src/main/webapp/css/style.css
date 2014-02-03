@@ -10,8 +10,7 @@ body {
 }
 
 .flipboard {
-  display: block;
-  margin: 50px auto;
+  display: inline-block;
 }
 
 .flipboard span {

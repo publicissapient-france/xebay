@@ -51,14 +51,28 @@
 <div class="container">
   <div class="row">
 
-    <div class="col-md-4">
-      <h2>API</h2>
-      <p>There will be an API soon.</p>
-    </div>
-
-    <div class="col-md-4">
+    <div class="col-md-8">
       <h2>Current bid offer</h2>
       <div id="current-bid-offer"></div>
+
+      <h2>API</h2>
+      <p>
+        GET /rest/users/register?email=value<br>
+        200 response contains your key<br>
+        400 if something goes wrong<br>
+      </p>
+      <p>
+        GET /rest/bidEngine/current<br>
+        200 resonse contains json object<br>
+        <code>{"itemName":"name","currentValue":34.4,"timeToLive":3945}</code><br>
+        404 if no more bid offer is available
+      </p>
+      <p>
+        POST /rest/bidEngine/bid<br>
+        200 resonse contains json object<br>
+        <code>{"itemName":"name","currentValue":34.4,"timeToLive":3945}</code><br>
+        404 if no more bid offer is available
+      </p>
     </div>
 
     <div class="col-md-4">
