@@ -24,6 +24,9 @@ public class Users {
     }
 
     public User create(String email) throws BidException {
+        if (email == null || email.isEmpty()) {
+            throw new BidException("can't create user without email");
+        }
         if (containsEmail(email)) {
             throw new BidException(format("\"%s\" is already registered", email));
         }

@@ -4,6 +4,7 @@ import fr.xebia.xebay.utils.TomcatRule;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -68,6 +69,11 @@ public class UserResourceIT {
 
         assertThat(response.getStatus()).isEqualTo(400);
         assertThat(readFromResponse(response)).isEqualTo("\"abc@def.ghi\" is already registered");
+    }
+
+    @Test(expected = BadRequestException.class)
+    public void registering_without_email_is_a_bad_request() {
+        target.path("register").request().get(String.class);
     }
 
     private String readFromResponse(Response registerResponse) {
