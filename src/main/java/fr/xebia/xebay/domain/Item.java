@@ -61,4 +61,8 @@ public class Item {
     public String toString() {
         return name;
     }
+
+    public void userIsUnregistered() {
+        this.owner = null;
+    }
 }

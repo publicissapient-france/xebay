@@ -10,11 +10,16 @@ import java.io.File;
 
 public class TomcatRule extends ExternalResource {
     private Tomcat tomcat;
+    private boolean test = true;
 
     @Override
     protected void before() throws Throwable {
         if (launchedFromMaven()) {
             return;
+        }
+
+        if (test) {
+            System.setProperty("xebay.test", "true");
         }
 
         tomcat = new Tomcat();
@@ -49,6 +54,7 @@ public class TomcatRule extends ExternalResource {
     public static void main(String[] args) throws Throwable {
         TomcatRule webServer = new TomcatRule();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> webServer.after()));
+        webServer.test = false;
         webServer.before();
         webServer.tomcat.getServer().await();
     }

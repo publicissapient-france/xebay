@@ -52,5 +52,6 @@ public class UserResource {
     public void unregister(@Context SecurityContext securityContext) {
         User user = (User) securityContext.getUserPrincipal();
         users.remove(user.getKey(), user.getEmail());
+        BID_SERVER.bidEngine.userIsUnregistered(user);
     }
 }

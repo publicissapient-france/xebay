@@ -4,86 +4,98 @@ import fr.xebia.xebay.domain.BidOffer;
 
 public class BidAnswer {
 
-  BidAnswerType type;
+    BidAnswerType type;
 
-  String cause;
+    String cause;
 
-  String name;
+    String name;
 
-  double value;
+    double value;
 
-  double increment;
+    double increment;
 
-  long timeToLive;
+    long timeToLive;
 
-  BidAnswer(BidAnswerType type, String cause, BidCall bidCall) {
-    this.type = type;
-    this.cause = cause;
-    this.name = bidCall.getItemName();
-    this.value = bidCall.getCurValue();
-    this.increment = bidCall.getIncrement();
-  }
+    String futureBuyerEmail;
 
-  BidAnswer(BidAnswerType type, BidOffer bidOffer) {
-    this.type = type;
-    this.name = bidOffer.itemName;
-    this.value = bidOffer.currentValue;
-    this.timeToLive = bidOffer.timeToLive;
-  }
+    BidAnswer(BidAnswerType type, String cause, BidCall bidCall) {
+        this.type = type;
+        this.cause = cause;
+        this.name = bidCall.getItemName();
+        this.value = bidCall.getCurValue();
+        this.increment = bidCall.getIncrement();
+        this.futureBuyerEmail = null;
+    }
 
-  public static BidAnswer newAccepted(BidOffer bidOffer) {
-    return new BidAnswer(BidAnswerType.ACCEPTED, bidOffer);
-  }
+    BidAnswer(BidAnswerType type, BidOffer bidOffer) {
+        this.type = type;
+        this.name = bidOffer.itemName;
+        this.value = bidOffer.currentValue;
+        this.timeToLive = bidOffer.timeToLive;
+        this.futureBuyerEmail = bidOffer.futureBuyerEmail.orElse(null);
+    }
 
-  public static BidAnswer newRejected(String cause, BidCall bidCall) {
-    return new BidAnswer(BidAnswerType.REJECTED, cause, bidCall);
-  }
+    public static BidAnswer newAccepted(BidOffer bidOffer) {
+        return new BidAnswer(BidAnswerType.ACCEPTED, bidOffer);
+    }
 
-  public BidAnswerType getType() {
-    return type;
-  }
+    public static BidAnswer newRejected(String cause, BidCall bidCall) {
+        return new BidAnswer(BidAnswerType.REJECTED, cause, bidCall);
+    }
 
-  public void setType(BidAnswerType type) {
-    this.type = type;
-  }
+    public BidAnswerType getType() {
+        return type;
+    }
 
-  public String getCause() {
-    return cause;
-  }
+    public void setType(BidAnswerType type) {
+        this.type = type;
+    }
 
-  public void setCause(String cause) {
-    this.cause = cause;
-  }
+    public String getCause() {
+        return cause;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public void setCause(String cause) {
+        this.cause = cause;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public double getValue() {
-    return value;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public void setValue(double value) {
-    this.value = value;
-  }
+    public double getValue() {
+        return value;
+    }
 
-  public double getIncrement() {
-    return increment;
-  }
+    public void setValue(double value) {
+        this.value = value;
+    }
 
-  public void setIncrement(double increment) {
-    this.increment = increment;
-  }
+    public double getIncrement() {
+        return increment;
+    }
 
-  public long getTimeToLive() {
-    return timeToLive;
-  }
+    public void setIncrement(double increment) {
+        this.increment = increment;
+    }
 
-  public void setTimeToLive(long timeToLive) {
-    this.timeToLive = timeToLive;
-  }
+    public long getTimeToLive() {
+        return timeToLive;
+    }
+
+    public void setTimeToLive(long timeToLive) {
+        this.timeToLive = timeToLive;
+    }
+
+    public String getFutureBuyerEmail() {
+        return futureBuyerEmail;
+    }
+
+    public void setFutureBuyerEmail(String futureBuyerEmail) {
+        this.futureBuyerEmail = futureBuyerEmail;
+    }
 }

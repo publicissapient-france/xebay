@@ -109,6 +109,7 @@ var xebay = {
     var bidAnswer = JSON.parse(message.data);
     if (bidAnswer.type === "ACCEPTED") {
       xebay.bidOfferInfo.currentValue = bidAnswer.value;
+      xebay.bidOfferInfo.futureBuyerEmail = bidAnswer.futureBuyerEmail;
       xebay.bidOfferInfo.timeToLive = bidAnswer.timeToLive;
     }
     $("#bidAnswerLog").prepend(xebay.bidAnswerTemplate[bidAnswer.type](bidAnswer));

@@ -5,16 +5,16 @@ import fr.xebia.xebay.domain.BidOffer;
 public class BidOfferInfo {
     private String itemName;
     private double currentValue;
-    private String buyerEmail;
+    private String futureBuyerEmail;
     private long timeToLive;
 
     public BidOfferInfo() {
     }
 
-    public BidOfferInfo(String itemName, double currentValue, String buyerEmail, long timeToLive) {
+    public BidOfferInfo(String itemName, double currentValue, String futureBuyerEmail, long timeToLive) {
         this.itemName = itemName;
         this.currentValue = currentValue;
-        this.buyerEmail = buyerEmail;
+        this.futureBuyerEmail = futureBuyerEmail;
         this.timeToLive = timeToLive;
     }
 
@@ -32,5 +32,9 @@ public class BidOfferInfo {
 
     public String getItemName() {
         return itemName;
+    }
+
+    public String getFutureBuyerEmail() {
+        return futureBuyerEmail;
     }
 }

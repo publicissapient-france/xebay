@@ -113,7 +113,7 @@
 <script type="text/javascript" src="js/handlebars-v1.3.0.js"></script>
 <script id="currentBidOfferTemplate" type="text/template">
   {{#if itemName}}
-  <p>{{itemName}}</p>
+  <p>{{itemName}} {{futureBuyerEmail}}</p>
   <img src="images/{{itemName}}.png"/>
   <div class="flipboard"><span class="flipboardchar">{{timeToLiveSeconds}}</span><span class="flipboardchar">{{timeToLiveMilliseconds}}</span><span>s</span></div>
   <div class="flipboard"><span class="flipboardchar">{{currentValue}}</span><span>$</span></p>

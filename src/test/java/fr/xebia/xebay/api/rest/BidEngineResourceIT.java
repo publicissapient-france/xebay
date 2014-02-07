@@ -47,7 +47,7 @@ public class BidEngineResourceIT {
     }
 
     private void unregister() throws Exception {
-        key = client.target("http://localhost:8080/rest/users/unregister").request().header(HttpHeaders.AUTHORIZATION, key).delete(String.class);
+        client.target("http://localhost:8080/rest/users/unregister").request().header(HttpHeaders.AUTHORIZATION, key).delete();
     }
 
     @Test
@@ -56,6 +56,7 @@ public class BidEngineResourceIT {
         assertThat(bidOffer.getItemName()).isEqualTo("an item");
         assertThat(bidOffer.getCurrentValue()).isNotNull();
         assertThat(bidOffer.getTimeToLive()).isLessThan(10000).isNotNegative();
+        assertThat(bidOffer.getFutureBuyerEmail()).isNull();
     }
 
     @Test

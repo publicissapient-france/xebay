@@ -64,6 +64,12 @@ class MutableBidOffer {
         return getTimeToLive() == 0;
     }
 
+    void userIsUnregistered(User user) {
+        if (user == futureBuyer) {
+            futureBuyer = null;
+        }
+    }
+
     MutableBidOffer increment(String name, double value, double increment, User user) throws BidException {
         if (null == user || (null == user.getEmail())) {
             throw new BidException("bad user");

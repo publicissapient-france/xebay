@@ -68,6 +68,11 @@ public class BidEngine {
         listeners.add(bidEngineListener);
     }
 
+    public void userIsUnregistered(User user) {
+        bidOffer.ifPresent((bidOffer) -> bidOffer.userIsUnregistered(user));
+        items.userIsUnregistered(user);
+    }
+
     private void nextBidOfferIfExpired() {
         if (bidOfferExpiration.isExpired()) {
             bidOffer.ifPresent((bidOffer) -> {

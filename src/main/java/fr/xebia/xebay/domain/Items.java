@@ -3,10 +3,7 @@ package fr.xebia.xebay.domain;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedHashSet;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -69,5 +66,11 @@ public class Items {
             return Optional.empty();
         }
         return Optional.of(new Items(items.toArray(new Item[items.size()])));
+    }
+
+    public void userIsUnregistered(User user) {
+        Arrays.stream(items)
+                .filter((item) -> user.equals(item.getOwner()))
+                .forEach((item) -> item.userIsUnregistered());
     }
 }
