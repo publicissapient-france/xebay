@@ -115,20 +115,33 @@
   {{#if itemName}}
   <p>{{itemName}} {{futureBuyerEmail}}</p>
   <img src="images/{{itemName}}.png"/>
-  <div class="flipboard"><span class="flipboardchar">{{timeToLiveSeconds}}</span><span class="flipboardchar">{{timeToLiveMilliseconds}}</span><span>s</span></div>
+  <div class="flipboard">
+    <span id="timeToLiveSeconds" class="flipboardchar"></span>
+    <span id="timeToLiveMilliseconds" class="flipboardchar"></span><span>s</span>
+  </div>
   <div class="flipboard"><span class="flipboardchar">{{currentValue}}</span><span>$</span></p>
   {{else}}
   <p>There is no bid offer.</p>
   {{/if}}
 </script>
-<script id="bidOfferNotification" type="text/template">
+<script id="bidSuccessTemplate" type="text/template">
+  <p class="alert alert-success col-md-12">Your {{increment}} points bid on {{itemName}} at {{currentValue}} points has succeeded.</p>
+</script>
+<script id="bidFailTemplate" type="text/template">
+  <p class="alert alert-danger col-md-12">Your bid has failed because {{cause}}.</p>
+</script>
+<script id="bidOfferTemplate" type="text/template">
+  {{#if ownerEmail}}
   <p class="alert alert-info col-md-12">{{futureBuyerEmail}} has bid {{currentValue}} points for {{itemName}}.</p>
+  {{/if}}
 </script>
 <script type="text/javascript" src="js/xebay.js"></script>
 <script type="text/javascript">
   $(document).ready(function () {
     xebay.currentBidOfferTemplate = Handlebars.compile($("#currentBidOfferTemplate").html());
-    xebay.bidOfferNotificationTemplate = Handlebars.compile($("#bidOfferNotification").html());
+    xebay.bidSuccessTemplate = Handlebars.compile($("#bidSuccessTemplate").html());
+    xebay.bidFailTemplate = Handlebars.compile($("#bidFailTemplate").html());
+    xebay.bidOfferTemplate = Handlebars.compile($("#bidOfferTemplate").html());
     xebay.init();
   });
 </script>

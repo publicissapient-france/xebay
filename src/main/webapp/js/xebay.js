@@ -1,9 +1,10 @@
 var xebay = {
   "bidOfferInfo": {},
+  "timeout": null,
   "init": function () {
     $(".registered").hide();
     $.cookie.json = true;
-    this.displayBidOffer();
+    this.getCurrentBidOffer();
     var cookie = $.cookie("xebay");
     if (cookie) {
       this.signinWith(cookie.email, cookie.key);
@@ -56,27 +57,51 @@ var xebay = {
     $(".registered").hide();
     $.removeCookie("xebay");
   },
-  "displayBidOffer": function () {
-    $.getJSON("/rest/bidEngine/current",function (bidOfferInfo) {
-      xebay.bidOfferInfo = bidOfferInfo;
-      xebay.updateTimeToLive();
-    }).fail(function () {
-      xebay.bidOfferInfo = {};
-      setTimeout(xebay.displayBidOffer, 1000);
-      $("#current-bid-offer").html(xebay.currentBidOfferTemplate(xebay.bidOfferInfo));
+  "getCurrentBidOffer": function () {
+    $.getJSON("/rest/bidEngine/current").done(function(currentBidOffer) {
+      xebay.updateCurrentBidOffer(currentBidOffer);
+    }).fail(function (jqxhr) {
+      xebay.updateCurrentBidOffer({});
+      setTimeout(xebay.getCurrentBidOffer, 5000);
     });
   },
+  "updateCurrentBidOffer": function (currentBidOffer) {
+    xebay.bidOfferInfo = currentBidOffer;
+    $("#current-bid-offer").html(xebay.currentBidOfferTemplate(xebay.bidOfferInfo));
+    if (xebay.bidOfferInfo.timeToLive && !xebay.timeout) {
+      xebay.updateTimeToLive();
+    }
+  },
   "updateTimeToLive": function () {
-    var timeToLive = Number(xebay.bidOfferInfo["timeToLive"]);
+    var timeToLive = xebay.bidOfferInfo.timeToLive;
     if (timeToLive < 0) {
-      xebay.displayBidOffer();
+      xebay.timeout = null;
+      xebay.getCurrentBidOffer();
       return;
     }
-    xebay.bidOfferInfo["timeToLiveSeconds"] = twoDigits(Math.floor(timeToLive / 1000));
-    xebay.bidOfferInfo["timeToLiveMilliseconds"] = Math.floor((timeToLive - (xebay.bidOfferInfo["timeToLiveSeconds"] * 1000)) / 100);
-    $("#current-bid-offer").html(xebay.currentBidOfferTemplate(xebay.bidOfferInfo));
-    setTimeout(xebay.updateTimeToLive, 100);
-    xebay.bidOfferInfo["timeToLive"] -= 100;
+    var timeToLiveSeconds = twoDigits(Math.floor(timeToLive / 1000));
+    var timeToLiveMilliseconds = Math.floor((timeToLive - (timeToLiveSeconds * 1000)) / 100);
+    $("#timeToLiveSeconds").html(timeToLiveSeconds);
+    $("#timeToLiveMilliseconds").html(timeToLiveMilliseconds);
+    xebay.timeout = setTimeout(xebay.updateTimeToLive, 100);
+    xebay.bidOfferInfo.timeToLive -= 100;
+  },
+  "sendBidDemand": function (increment) {
+    var bidDemand = {
+      itemName: xebay.bidOfferInfo["itemName"],
+      curValue: xebay.bidOfferInfo["currentValue"],
+      increment: increment
+    };
+    $.ajax("/rest/bidEngine/bid", {
+      type: "POST",
+      headers: { "Authorization": $.cookie("xebay").key },
+      contentType : "application/json",
+      data: JSON.stringify(bidDemand)
+    }).done(function () {
+        $("#bidAnswerLog").prepend(xebay.bidSuccessTemplate(bidDemand));
+    }).fail(function(jqxhr) {
+        $("#bidAnswerLog").prepend(xebay.bidFailTemplate({ cause: jqxhr.responseText }));
+    });
   },
   "connect": function () {
     this.socket = new WebSocket("ws://" + window.location.host + "/socket/bidEngine");
@@ -97,27 +122,10 @@ var xebay = {
     $(".connected").hide();
     $(".disconnected").show();
   },
-  "sendBidDemand": function (increment) {
-    $.ajax("/rest/bidEngine/bid", {
-      headers: {
-        "Authorization": $.cookie("xebay").key
-      },
-      type: "POST",
-      contentType: "application/json",
-      data: JSON.stringify({
-        itemName: xebay.bidOfferInfo["itemName"],
-        curValue: xebay.bidOfferInfo["currentValue"],
-        increment: increment
-      }),
-      success: function () {
-        // TODO
-      }
-    })
-  },
   "onBidOffer": function (message) {
-    var bidOfferNotification = JSON.parse(message.data);
-    xebay.bidOfferInfo = bidOfferNotification; // TODO updateCurrentBidOffer
-    $("#bidAnswerLog").prepend(xebay.bidOfferNotificationTemplate(bidOfferNotification));
+    var currentBidOffer = JSON.parse(message.data);
+    xebay.updateCurrentBidOffer(currentBidOffer);
+    $("#bidAnswerLog").prepend(xebay.bidOfferTemplate(currentBidOffer));
     xebay.clearLogs(5);
   },
   "clearLogs": function (count) {
