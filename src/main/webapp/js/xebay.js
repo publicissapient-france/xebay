@@ -79,9 +79,8 @@ var xebay = {
     xebay.bidOfferInfo["timeToLive"] -= 100;
   },
   "connect": function () {
-    var cookie = $.cookie("xebay");
-    this.socket = new WebSocket("ws://" + window.location.host + "/socket/bidEngine/" + cookie.key);
-    this.socket.onmessage = this.readBidAnswer;
+    this.socket = new WebSocket("ws://" + window.location.host + "/socket/bidEngine");
+    this.socket.onmessage = this.onBidOffer;
     this.socket.onopen = this.connected;
     this.socket.onclose = this.disconnected;
     this.socket.onerror = this.disconnected;
@@ -98,22 +97,28 @@ var xebay = {
     $(".connected").hide();
     $(".disconnected").show();
   },
-  "sendBidCall": function (increment) {
-    this.socket.send(JSON.stringify({
-      itemName: xebay.bidOfferInfo["itemName"],
-      curValue: xebay.bidOfferInfo["currentValue"],
-      increment: increment
-    }));
+  "sendBidDemand": function (increment) {
+    $.ajax("/rest/bidEngine/bid", {
+      headers: {
+        "Authorization": $.cookie("xebay").key
+      },
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify({
+        itemName: xebay.bidOfferInfo["itemName"],
+        curValue: xebay.bidOfferInfo["currentValue"],
+        increment: increment
+      }),
+      success: function () {
+        // TODO
+      }
+    })
   },
-  "readBidAnswer": function (message) {
-    var bidAnswer = JSON.parse(message.data);
-    if (bidAnswer.type === "ACCEPTED") {
-      xebay.bidOfferInfo.currentValue = bidAnswer.value;
-      xebay.bidOfferInfo.futureBuyerEmail = bidAnswer.futureBuyerEmail;
-      xebay.bidOfferInfo.timeToLive = bidAnswer.timeToLive;
-    }
-    $("#bidAnswerLog").prepend(xebay.bidAnswerTemplate[bidAnswer.type](bidAnswer));
-    xebay.clearLogs(3);
+  "onBidOffer": function (message) {
+    var bidOfferNotification = JSON.parse(message.data);
+    xebay.bidOfferInfo = bidOfferNotification; // TODO updateCurrentBidOffer
+    $("#bidAnswerLog").prepend(xebay.bidOfferNotificationTemplate(bidOfferNotification));
+    xebay.clearLogs(5);
   },
   "clearLogs": function (count) {
     if (!count) {

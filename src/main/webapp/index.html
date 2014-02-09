@@ -57,20 +57,20 @@
 
       <h2>API</h2>
       <p>
-        GET /rest/users/register?email=value<br>
+        GET /rest/users/register?email=curValue<br>
         200 response contains your key<br>
         400 if something goes wrong<br>
       </p>
       <p>
         GET /rest/bidEngine/current<br>
         200 resonse contains json object<br>
-        <code>{"itemName":"name","currentValue":34.4,"timeToLive":3945}</code><br>
+        <code>{"itemName":"itemName","currentValue":34.4,"timeToLive":3945}</code><br>
         404 if no more bid offer is available
       </p>
       <p>
         POST /rest/bidEngine/bid<br>
         200 resonse contains json object<br>
-        <code>{"itemName":"name","currentValue":34.4,"timeToLive":3945}</code><br>
+        <code>{"itemName":"itemName","currentValue":34.4,"timeToLive":3945}</code><br>
         404 if no more bid offer is available
       </p>
     </div>
@@ -87,10 +87,10 @@
           </button>
         </span>
         <span class="row connected">
-          <button class="btn btn-success btn-lg col-md-3" onclick="xebay.sendBidCall(1)">+1</button>
-          <button class="btn btn-info btn-lg col-md-3 col-md-offset-1" onclick="xebay.sendBidCall(5)">+5</button>
-          <button class="btn btn-warning btn-sm col-md-2 col-md-offset-1" onclick="xebay.sendBidCall(10)">+10</button>
-          <button class="btn btn-danger btn-xs col-md-1 col-md-offset-1" onclick="xebay.sendBidCall(50)">+50</button>
+          <button class="btn btn-success btn-lg col-md-3" onclick="xebay.sendBidDemand(1)">+1</button>
+          <button class="btn btn-info btn-lg col-md-3 col-md-offset-1" onclick="xebay.sendBidDemand(5)">+5</button>
+          <button class="btn btn-warning btn-sm col-md-2 col-md-offset-1" onclick="xebay.sendBidDemand(10)">+10</button>
+          <button class="btn btn-danger btn-xs col-md-1 col-md-offset-1" onclick="xebay.sendBidDemand(50)">+50</button>
         </span>
         <span class="row connected">
           <button class="btn col-md-7" onclick="xebay.clearLogs()">
@@ -121,19 +121,14 @@
   <p>There is no bid offer.</p>
   {{/if}}
 </script>
-<script id="bidAnswerAcceptedTemplate" type="text/template">
-  <p class="alert alert-info col-md-12">Bid on {{name}} value is currently at {{value}} bid points.</p>
-</script>
-<script id="bidAnswerRejectedTemplate" type="text/template">
-  <p class="alert alert-danger col-md-12">Bid on {{name}} with an increment of {{increment}} rejected with following cause : {{cause}}.</p>
+<script id="bidOfferNotification" type="text/template">
+  <p class="alert alert-info col-md-12">{{futureBuyerEmail}} has bid {{currentValue}} points for {{itemName}}.</p>
 </script>
 <script type="text/javascript" src="js/xebay.js"></script>
 <script type="text/javascript">
   $(document).ready(function () {
     xebay.currentBidOfferTemplate = Handlebars.compile($("#currentBidOfferTemplate").html());
-    xebay.bidAnswerTemplate = [];
-    xebay.bidAnswerTemplate["ACCEPTED"] = Handlebars.compile($("#bidAnswerAcceptedTemplate").html());
-    xebay.bidAnswerTemplate["REJECTED"] = Handlebars.compile($("#bidAnswerRejectedTemplate").html());
+    xebay.bidOfferNotificationTemplate = Handlebars.compile($("#bidOfferNotification").html());
     xebay.init();
   });
 </script>
