@@ -5,6 +5,8 @@ import fr.xebia.xebay.api.socket.coder.BidCallDecoder;
 import fr.xebia.xebay.api.socket.dto.BidAnswer;
 import fr.xebia.xebay.api.socket.dto.BidCall;
 import fr.xebia.xebay.domain.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.websocket.EncodeException;
 import javax.websocket.OnMessage;
@@ -16,17 +18,15 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static fr.xebia.xebay.BidServer.BID_SERVER;
 
 @ServerEndpoint(value = "/socket/bidEngine/{authToken}", decoders = BidCallDecoder.class, encoders = BidAnswerEncoder.class)
 public class BidEngineSocket implements BidEngineListener {
 
-    static final Logger log = Logger.getLogger("BidEngineSocket");
+    static final Logger log = LoggerFactory.getLogger("BidEngineSocket");
 
-    final Set<Session> sessions = Collections.synchronizedSet(new HashSet<Session>());
+    final Set<Session> sessions = Collections.synchronizedSet(new HashSet<>());
 
     {
         BID_SERVER.bidEngine.addListener(this);
@@ -72,7 +72,7 @@ public class BidEngineSocket implements BidEngineListener {
             try {
                 session.getBasicRemote().sendObject(bidAnswer);
             } catch (IOException | EncodeException e) {
-                log.log(Level.SEVERE, "BidInfo notification in error", e);
+                log.error("BidInfo notification in error", e);
             }
         });
     }
