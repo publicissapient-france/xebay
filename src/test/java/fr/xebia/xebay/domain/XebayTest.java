@@ -40,7 +40,7 @@ public class XebayTest {
 
         assertThat(bidOffer.itemName).isEqualTo("an item");
         assertThat(bidOffer.initialValue).isEqualTo(4.3);
-        assertThat(bidOffer.ownerEmail.isPresent()).isFalse();
+        assertThat(bidOffer.ownerEmail).isNull();
     }
 
     @Test
@@ -58,7 +58,7 @@ public class XebayTest {
         BidOffer bidOffer = bidEngine.bid(user, "an item", 4.3, 2.1);
 
         assertThat(bidOffer.currentValue).isEqualTo(6.4);
-        assertThat(bidOffer.futureBuyerEmail.get()).isEqualTo("email@provider.com");
+        assertThat(bidOffer.futureBuyerEmail).isNotNull().isEqualTo("email@provider.com");
     }
 
     @Test
@@ -122,7 +122,7 @@ public class XebayTest {
         resolvesBidOffer(bidEngine);
         BidOffer bidOffer = bidEngine.currentBidOffer();
         assertThat(bidOffer.itemName).isEqualTo("an item");
-        assertThat(bidOffer.ownerEmail.get()).isEqualTo("email@provider.com");
+        assertThat(bidOffer.ownerEmail).isNotNull().isEqualTo("email@provider.com");
         assertThat(bidOffer.initialValue).isEqualTo(5.9);
     }
 
@@ -155,6 +155,17 @@ public class XebayTest {
         expectedException.expectMessage("item \"inexistant\" doesn't exist");
 
         bidEngine.offer(user, "inexistant", 5.9);
+    }
+
+    @Test
+    public void should_not_makes_offer_if_item_is_already_offered() {
+      BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3), new Item("another item", 2.4)), expiration);
+      bidEngine.bid(user, "an item", 4.3, 2.1);
+      resolvesBidOffer(bidEngine);
+      bidEngine.offer(user, "an item", 5.9);
+      expectedException.expect(BidException.class);
+      expectedException.expectMessage("item \"an item\" is already offered");
+      bidEngine.offer(user, "an item", 5.9);
     }
 
     @Test

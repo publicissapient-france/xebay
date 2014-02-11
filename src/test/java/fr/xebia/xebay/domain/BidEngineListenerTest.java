@@ -40,10 +40,10 @@ public class BidEngineListenerTest {
         ArgumentCaptor<BidOffer> argumentCaptor = ArgumentCaptor.forClass(BidOffer.class);
         verify(bidEngineListener).onBidOfferBidded(argumentCaptor.capture());
         BidOffer updatedBidOffer = argumentCaptor.getValue();
-        assertThat(updatedBidOffer.futureBuyerEmail.get()).isEqualTo("email@provider.com");
+        assertThat(updatedBidOffer.futureBuyerEmail).isNotNull().isEqualTo("email@provider.com");
         assertThat(updatedBidOffer.currentValue).isEqualTo(9.3);
         assertThat(updatedBidOffer.itemName).isEqualTo("an item");
-        assertThat(updatedBidOffer.ownerEmail).isEqualTo(empty());
+        assertThat(updatedBidOffer.ownerEmail).isNull();
         assertThat(updatedBidOffer.initialValue).isEqualTo(4.3);
     }
 
@@ -58,11 +58,11 @@ public class BidEngineListenerTest {
         ArgumentCaptor<BidOffer> argumentCaptor = ArgumentCaptor.forClass(BidOffer.class);
         verify(bidEngineListener).onBidOfferResolved(argumentCaptor.capture());
         BidOffer resolvedBidOffer = argumentCaptor.getValue();
-        assertThat(resolvedBidOffer.futureBuyerEmail).isEqualTo(empty());
+        assertThat(resolvedBidOffer.futureBuyerEmail).isNull();
         assertThat(resolvedBidOffer.initialValue).isEqualTo(4.3);
         assertThat(resolvedBidOffer.itemName).isEqualTo("an item");
         assertThat(resolvedBidOffer.currentValue).isEqualTo(3.87);
-        assertThat(resolvedBidOffer.ownerEmail).isEqualTo(empty());
+        assertThat(resolvedBidOffer.ownerEmail).isNull();
     }
 
     @Test
@@ -76,11 +76,11 @@ public class BidEngineListenerTest {
         ArgumentCaptor<BidOffer> argumentCaptor = ArgumentCaptor.forClass(BidOffer.class);
         verify(bidEngineListener).onNewBidOffer(argumentCaptor.capture());
         BidOffer newBidOffer = argumentCaptor.getValue();
-        assertThat(newBidOffer.futureBuyerEmail).isEqualTo(empty());
+        assertThat(newBidOffer.futureBuyerEmail).isNull();
         assertThat(newBidOffer.initialValue).isEqualTo(2.4);
         assertThat(newBidOffer.itemName).isEqualTo("another item");
         assertThat(newBidOffer.currentValue).isEqualTo(2.4);
-        assertThat(newBidOffer.ownerEmail).isEqualTo(empty());
+        assertThat(newBidOffer.ownerEmail).isNull();
     }
 
     private void resolvesBidOffer(BidEngine bidEngine) {

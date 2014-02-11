@@ -1,7 +1,6 @@
 package fr.xebia.xebay.api.rest;
 
-import fr.xebia.xebay.api.rest.dto.BidOfferInfo;
-import fr.xebia.xebay.api.rest.dto.BidParam;
+import fr.xebia.xebay.domain.BidDemand;
 import fr.xebia.xebay.domain.BidOffer;
 import fr.xebia.xebay.utils.TomcatRule;
 import org.glassfish.jersey.jackson.JacksonFeature;
@@ -52,7 +51,7 @@ public class BidEngineResourceIT {
 
     @Test
     public void current_bidOffer_can_be_retrieved() throws Exception {
-        BidOfferInfo bidOffer = target.path("current").request().get(BidOfferInfo.class);
+        BidOffer bidOffer = target.path("current").request().get(BidOffer.class);
         assertThat(bidOffer.getItemName()).isEqualTo("an item");
         assertThat(bidOffer.getCurrentValue()).isNotNull();
         assertThat(bidOffer.getTimeToLive()).isLessThan(10000).isNotNegative();
@@ -63,16 +62,16 @@ public class BidEngineResourceIT {
     public void a_registered_user_can_post_form_bid() throws Exception {
         register();
 
-        BidOfferInfo currentBidOffer = target.path("current").request().get(BidOfferInfo.class);
+        BidOffer currentBidOffer = target.path("current").request().get(BidOffer.class);
 
         Form form = new Form();
         form.param("name", currentBidOffer.getItemName());
         form.param("value", String.valueOf(currentBidOffer.getCurrentValue()));
         form.param("increment", "0.7");
 
-        BidOfferInfo bidOffer = target.path("/bid").request()
+        BidOffer bidOffer = target.path("/bid").request()
                 .header(HttpHeaders.AUTHORIZATION, key)
-                .post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), BidOfferInfo.class);
+                .post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), BidOffer.class);
         assertThat(bidOffer.getItemName()).isEqualTo("an item");
         assertThat(bidOffer.getCurrentValue()).isEqualTo(5);
         assertThat(bidOffer.getTimeToLive()).isLessThan(10000).isNotNegative();
@@ -84,7 +83,7 @@ public class BidEngineResourceIT {
     public void cant_bid_if_user_not_registered() {
         String fakeKey = "fake key";
 
-        BidOfferInfo currentBidOffer = target.path("current").request().get(BidOfferInfo.class);
+        BidOffer currentBidOffer = target.path("current").request().get(BidOffer.class);
         Form form = new Form();
         form.param("name", currentBidOffer.getItemName());
         form.param("value", String.valueOf(currentBidOffer.getCurrentValue()));
@@ -102,14 +101,14 @@ public class BidEngineResourceIT {
     public void a_registered_user_can_bid() throws Exception {
         register();
 
-        BidOfferInfo currentBidOffer = target.path("current").request().get(BidOfferInfo.class);
+        BidOffer currentBidOffer = target.path("current").request().get(BidOffer.class);
         double firstValue = currentBidOffer.getCurrentValue();
 
-        BidParam bidParam = new BidParam(currentBidOffer.getItemName(), currentBidOffer.getCurrentValue(), 0.7);
+        BidDemand bidDemand = new BidDemand(currentBidOffer.getItemName(), currentBidOffer.getCurrentValue(), 0.7);
 
-        BidOfferInfo bidOffer = target.path("/bid").request()
+        BidOffer bidOffer = target.path("/bid").request()
                 .header(HttpHeaders.AUTHORIZATION, key)
-                .post(Entity.entity(bidParam, MediaType.APPLICATION_JSON_TYPE), BidOfferInfo.class);
+                .post(Entity.entity(bidDemand, MediaType.APPLICATION_JSON_TYPE), BidOffer.class);
         assertThat(bidOffer.getItemName()).isEqualTo("an item");
         assertThat(bidOffer.getCurrentValue()).isEqualTo(firstValue + 0.7);
         assertThat(bidOffer.getTimeToLive()).isLessThan(10000).isNotNegative();

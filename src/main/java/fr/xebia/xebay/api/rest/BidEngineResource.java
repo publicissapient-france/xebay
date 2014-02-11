@@ -1,8 +1,7 @@
 package fr.xebia.xebay.api.rest;
 
-import fr.xebia.xebay.api.rest.dto.BidOfferInfo;
-import fr.xebia.xebay.api.rest.dto.BidParam;
 import fr.xebia.xebay.api.rest.security.UserAuthorization;
+import fr.xebia.xebay.domain.BidDemand;
 import fr.xebia.xebay.domain.BidEngine;
 import fr.xebia.xebay.domain.BidOffer;
 import fr.xebia.xebay.domain.User;
@@ -34,29 +33,29 @@ public class BidEngineResource {
 
     @GET
     @Path("/current")
-    public BidOfferInfo currentBidOffer() {
+    public BidOffer currentBidOffer() {
         BidOffer currentBidOffer = bidEngine.currentBidOffer();
         if (currentBidOffer == null) {
             throw new WebApplicationException(NOT_FOUND);
         }
-        return BidOfferInfo.newBidOfferInfo(currentBidOffer);
+        return currentBidOffer;
     }
 
     @POST
     @Path("/bid")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @UserAuthorization
-    public BidOfferInfo bid(@FormParam("name") String name, @FormParam("value") Double curValue, @FormParam("increment") Double increment, @Context SecurityContext securityContext) {
+    public BidOffer bid(@FormParam("name") String name, @FormParam("value") Double curValue, @FormParam("increment") Double increment, @Context SecurityContext securityContext) {
         User user = (User) securityContext.getUserPrincipal();
-        return BidOfferInfo.newBidOfferInfo(bidEngine.bid(user, name, curValue, increment));
+        return bidEngine.bid(user, name, curValue, increment);
     }
 
     @POST
     @Path("/bid")
     @Consumes(MediaType.APPLICATION_JSON)
     @UserAuthorization
-    public BidOfferInfo bid(BidParam bidParam, @Context SecurityContext securityContext) {
+    public BidOffer bid(BidDemand bidDemand, @Context SecurityContext securityContext) {
         User user = (User) securityContext.getUserPrincipal();
-        return BidOfferInfo.newBidOfferInfo(bidEngine.bid(user, bidParam.getItemName(), bidParam.getCurValue(), bidParam.getIncrement()));
+        return bidEngine.bid(user, bidDemand.getItemName(), bidDemand.getCurrentValue(), bidDemand.getIncrement());
     }
 }

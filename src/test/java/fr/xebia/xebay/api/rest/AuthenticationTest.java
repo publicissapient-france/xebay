@@ -1,11 +1,7 @@
 package fr.xebia.xebay.api.rest;
 
-import fr.xebia.xebay.api.rest.dto.BidOfferInfo;
 import fr.xebia.xebay.api.rest.security.SecurityContextImpl;
-import fr.xebia.xebay.domain.BidException;
-import fr.xebia.xebay.domain.User;
-import fr.xebia.xebay.domain.UserNotAllowedException;
-import fr.xebia.xebay.domain.Users;
+import fr.xebia.xebay.domain.*;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -59,7 +55,7 @@ public class AuthenticationTest {
     @Test
     public void a_user_can_interact_with_server() {
         BidEngineResource bidEngineResource = new BidEngineResource();
-        BidOfferInfo bidOffer = bidEngineResource.currentBidOffer();
+        BidOffer bidOffer = bidEngineResource.currentBidOffer();
 
         bidEngineResource.bid(bidOffer.getItemName(), bidOffer.getCurrentValue(), 20.0, new SecurityContextImpl(new User("abc", "an-email@provider.com")));
     }

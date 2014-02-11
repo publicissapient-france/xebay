@@ -60,7 +60,11 @@ public class BidEngine {
         if (!user.equals(item.getOwner())) {
             throw new BidException(format("item \"%s\" doesn't belong to user \"%s\"", item, user));
         }
-        bidOffersToSell.offer(new BidOfferToSell(item, initialValue));
+        BidOfferToSell bidOfferToSell = new BidOfferToSell(item, initialValue);
+        if (bidOffersToSell.contains(bidOfferToSell)) {
+            throw new BidException(format("item \"%s\" is already offered", item));
+        }
+        bidOffersToSell.offer(bidOfferToSell);
     }
 
     public void addListener(BidEngineListener bidEngineListener) {

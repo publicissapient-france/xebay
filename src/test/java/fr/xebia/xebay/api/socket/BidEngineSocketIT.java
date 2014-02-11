@@ -1,17 +1,21 @@
 package fr.xebia.xebay.api.socket;
 
 import com.google.gson.Gson;
-import fr.xebia.xebay.api.rest.dto.BidOfferInfo;
 import fr.xebia.xebay.domain.BidDemand;
 import fr.xebia.xebay.domain.BidOffer;
 import fr.xebia.xebay.utils.TomcatRule;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.data.Offset;
 import org.glassfish.jersey.jackson.JacksonFeature;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Test;
 
-import javax.websocket.*;
-import javax.ws.rs.client.Client;
+import javax.websocket.ClientEndpoint;
+import javax.websocket.ContainerProvider;
+import javax.websocket.DeploymentException;
+import javax.websocket.OnMessage;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -59,7 +63,7 @@ public class BidEngineSocketIT {
   @Test(timeout = 5000)
   public void test_good_demand_is_notified() throws Exception {
 
-    BidOfferInfo currentBidOffer = target.path("bidEngine/current").request().get(BidOfferInfo.class);
+    BidOffer currentBidOffer = target.path("bidEngine/current").request().get(BidOffer.class);
     BidDemand bidDemand = new BidDemand(currentBidOffer.getItemName(), currentBidOffer.getCurrentValue(), 10);
 
     target.path("bidEngine/bid").request().header(HttpHeaders.AUTHORIZATION, key)
@@ -69,8 +73,8 @@ public class BidEngineSocketIT {
     }
 
     BidOffer bidOffer = bidOfferList.get(0);
-    Assertions.assertThat(bidOffer.itemName).isEqualTo("an item");
-    Assertions.assertThat(bidOffer.currentValue).isEqualTo(currentBidOffer.getCurrentValue() + 10, Offset.offset(0d));
+    Assertions.assertThat(bidOffer.getItemName()).isEqualTo("an item");
+    Assertions.assertThat(bidOffer.getCurrentValue()).isEqualTo(currentBidOffer.getCurrentValue() + 10, Offset.offset(0d));
 
   }
 }
