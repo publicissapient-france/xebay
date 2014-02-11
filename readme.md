@@ -10,8 +10,10 @@ You can use [editorconfig](http://editorconfig.org) to synchronize this project 
 
 ### TODO
 
- - web : as a registered user, I want to unregister (delete cookie, items that I owned and my entry from server)
- - provide a mechanism to create bid offer by server or by clients
- - web : implement a web client to bid with buttons and forms.
- - web apis has to be as same as possible between rest and web socket
+ - dev : unify input and output types for apis (immutable views of state of BidEngine when requested)
+ - api : remove capabilities to signup
+ - web : provide an admin page to add or remove users
+ - web : provide a user page to update informations (name, avatar, etc.)
+ - api : developer wants to sell items that he owns
  - web : as a visitor, I should see graph of values of each items
+ - clients : implements selling items that are owned by a developper
