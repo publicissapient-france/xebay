@@ -5,7 +5,7 @@ import java.util.*;
 import static java.lang.String.format;
 
 public class BidEngine {
-    private static final int DEFAULT_TIME_TO_LIVE = 10000;
+    public static final int DEFAULT_TIME_TO_LIVE = 10000;
 
     private final List<BidEngineListener> listeners = new ArrayList<>();
     private final Items items;
