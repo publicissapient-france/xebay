@@ -75,7 +75,7 @@ public class BidEngineResourceIT {
                 .post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), BidOffer.class);
         assertThat(bidOffer.getItemName()).isEqualTo("an item");
         assertThat(bidOffer.getCurrentValue()).isEqualTo(5);
-        assertThat(bidOffer.getTimeToLive()).isLessThan(100000).isNotNegative();
+        assertThat(bidOffer.getTimeToLive()).isLessThan(BidEngine.DEFAULT_TIME_TO_LIVE).isNotNegative();
 
         unregister();
     }
