@@ -23,12 +23,12 @@ public class Users {
         this.random = new Random();
     }
 
-    public User create(String email) throws BidException {
-        if (email == null || email.isEmpty()) {
-            throw new BidException("can't create user without email");
+    public User create(String name) throws BidException {
+        if (name == null || name.isEmpty()) {
+            throw new BidException("can't create user without name");
         }
-        if (containsEmail(email)) {
-            throw new BidException(format("\"%s\" is already registered", email));
+        if (containsName(name)) {
+            throw new BidException(format("\"%s\" is already registered", name));
         }
         String key;
         do {
@@ -36,18 +36,18 @@ public class Users {
             range(0, 16).forEach((i) -> randomKey.append(CHARS_IN_KEY.charAt(random.nextInt(CHARS_IN_KEY.length()))));
             key = randomKey.toString();
         } while (containsKey(key));
-        User newUser = new User(key, email);
+        User newUser = new User(key, name);
         users.add(newUser);
         return newUser;
     }
 
-    public void remove(String key, String email) throws UserNotAllowedException, BidException {
-        if (!containsEmail(email)) {
-            throw new BidException(format("\"%s\" not registered", email));
+    public void remove(String key, String name) throws UserNotAllowedException, BidException {
+        if (!containsName(name)) {
+            throw new BidException(format("\"%s\" not registered", name));
         }
         User user = getUser(key);
-        if (!user.getEmail().equals(email)) {
-            throw new BidException(format("\"%s\" registered but bad email", email));
+        if (!user.getName().equals(name)) {
+            throw new BidException(format("\"%s\" registered but bad name", name));
         }
         users.remove(user);
     }
@@ -74,7 +74,7 @@ public class Users {
         return users.stream().anyMatch((user) -> user.getKey().equals(key));
     }
 
-    private boolean containsEmail(String email) {
-        return users.stream().anyMatch((user) -> user.getEmail().equals(email));
+    private boolean containsName(String name) {
+        return users.stream().anyMatch((user) -> user.getName().equals(name));
     }
 }

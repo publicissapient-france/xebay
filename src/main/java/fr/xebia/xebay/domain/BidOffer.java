@@ -1,14 +1,12 @@
 package fr.xebia.xebay.domain;
 
-import java.util.Optional;
-
 public class BidOffer {
     String itemName;
     double initialValue;
     double currentValue;
     long timeToLive;
-    String ownerEmail;
-    String futureBuyerEmail;
+    String ownerName;
+    String futureBuyerName;
 
     public BidOffer() {
     }
@@ -18,8 +16,8 @@ public class BidOffer {
         this.itemName = item.getName();
         this.initialValue = initialValue;
         this.currentValue = currentValue;
-        this.ownerEmail = item.getOwner() == null ? null : item.getOwner().getEmail();
-        this.futureBuyerEmail = futureBuyer == null ? null : futureBuyer.getEmail();
+        this.ownerName = item.getOwner() == null ? null : item.getOwner().getName();
+        this.futureBuyerName = futureBuyer == null ? null : futureBuyer.getName();
     }
 
     public String getItemName() {
@@ -54,19 +52,19 @@ public class BidOffer {
         this.timeToLive = timeToLive;
     }
 
-    public String getOwnerEmail() {
-        return ownerEmail;
+    public String getOwnerName() {
+        return ownerName;
     }
 
-    public void setOwnerEmail(String ownerEmail) {
-        this.ownerEmail = ownerEmail;
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
     }
 
-    public String getFutureBuyerEmail() {
-        return futureBuyerEmail;
+    public String getFutureBuyerName() {
+        return futureBuyerName;
     }
 
-    public void setFutureBuyerEmail(String futureBuyerEmail) {
-        this.futureBuyerEmail = futureBuyerEmail;
+    public void setFutureBuyerName(String futureBuyerName) {
+        this.futureBuyerName = futureBuyerName;
     }
 }

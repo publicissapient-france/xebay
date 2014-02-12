@@ -87,7 +87,7 @@ public class ItemsTest {
     @Test
     public void should_not_get_item_if_owned_by_a_user() {
         Item item = new Item("an item", 4.3);
-        item.concludeTransaction(5, new User("", "email@provider.com"));
+        item.concludeTransaction(5, new User("", "user1"));
         Items items = new Items(item);
 
         Item nextItem = items.next();
@@ -97,7 +97,7 @@ public class ItemsTest {
 
     @Test
     public void should_not_get_item_if_there_are_all_owned_by_a_user() {
-        User buyer = new User("", "email@provider.com");
+        User buyer = new User("", "user1");
         Item firstItem = new Item("an item", 4.3);
         firstItem.concludeTransaction(5, buyer);
         Item secondItem = new Item("another item", 5);

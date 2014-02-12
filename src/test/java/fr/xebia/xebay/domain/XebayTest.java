@@ -24,7 +24,7 @@ public class XebayTest {
 
     @Before
     public void createUser() {
-        user = users.create("email@provider.com");
+        user = users.create("user1");
     }
 
     @Before
@@ -40,7 +40,7 @@ public class XebayTest {
 
         assertThat(bidOffer.itemName).isEqualTo("an item");
         assertThat(bidOffer.initialValue).isEqualTo(4.3);
-        assertThat(bidOffer.ownerEmail).isNull();
+        assertThat(bidOffer.ownerName).isNull();
     }
 
     @Test
@@ -58,7 +58,7 @@ public class XebayTest {
         BidOffer bidOffer = bidEngine.bid(user, "an item", 4.3, 2.1);
 
         assertThat(bidOffer.currentValue).isEqualTo(6.4);
-        assertThat(bidOffer.futureBuyerEmail).isNotNull().isEqualTo("email@provider.com");
+        assertThat(bidOffer.futureBuyerName).isNotNull().isEqualTo("user1");
     }
 
     @Test
@@ -122,7 +122,7 @@ public class XebayTest {
         resolvesBidOffer(bidEngine);
         BidOffer bidOffer = bidEngine.currentBidOffer();
         assertThat(bidOffer.itemName).isEqualTo("an item");
-        assertThat(bidOffer.ownerEmail).isNotNull().isEqualTo("email@provider.com");
+        assertThat(bidOffer.ownerName).isNotNull().isEqualTo("user1");
         assertThat(bidOffer.initialValue).isEqualTo(5.9);
     }
 
@@ -130,7 +130,7 @@ public class XebayTest {
     public void should_not_makes_offer_if_item_doesnt_belong_to_user() {
         BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3), new Item("another item", 2.4)), expiration);
         expectedException.expect(BidException.class);
-        expectedException.expectMessage("item \"another item\" doesn't belong to user \"email@provider.com\"");
+        expectedException.expectMessage("item \"another item\" doesn't belong to user \"user1\"");
 
         bidEngine.offer(user, "another item", 5.9);
     }
@@ -159,19 +159,20 @@ public class XebayTest {
 
     @Test
     public void should_not_makes_offer_if_item_is_already_offered() {
-      BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3), new Item("another item", 2.4)), expiration);
-      bidEngine.bid(user, "an item", 4.3, 2.1);
-      resolvesBidOffer(bidEngine);
-      bidEngine.offer(user, "an item", 5.9);
-      expectedException.expect(BidException.class);
-      expectedException.expectMessage("item \"an item\" is already offered");
-      bidEngine.offer(user, "an item", 5.9);
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3), new Item("another item", 2.4)), expiration);
+        bidEngine.bid(user, "an item", 4.3, 2.1);
+        resolvesBidOffer(bidEngine);
+        bidEngine.offer(user, "an item", 5.9);
+        expectedException.expect(BidException.class);
+        expectedException.expectMessage("item \"an item\" is already offered");
+
+        bidEngine.offer(user, "an item", 5.9);
     }
 
     @Test
     public void when_a_bid_is_won_seller_increase_money() {
-        User seller = users.create("seller@host.com");
-        User buyer = users.create("buyer@host.com");
+        User seller = users.create("seller");
+        User buyer = users.create("buyer");
         BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3)), expiration);
 
         // let seller buy "an item"

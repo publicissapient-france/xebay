@@ -17,7 +17,7 @@ public class AuthenticationTest {
     @Test
     public void a_key_is_emmitted_when_register() {
         UserResource userResource = new UserResource(new Users());
-        String key = userResource.register("an-email@provider.com");
+        String key = userResource.register("user1");
 
         assertThat(key).matches(Pattern.compile("[\\w\\-_]+")).hasSize(16);
     }
@@ -25,11 +25,11 @@ public class AuthenticationTest {
     @Test
     public void can_not_register_twice() {
         UserResource userResource = new UserResource(new Users());
-        userResource.register("an-email@provider.com");
+        userResource.register("user1");
         excpectedException.expect(BidException.class);
-        excpectedException.expectMessage("\"an-email@provider.com\" is already registered");
+        excpectedException.expectMessage("\"user1\" is already registered");
 
-        userResource.register("an-email@provider.com");
+        userResource.register("user1");
     }
 
     @Test
@@ -57,6 +57,6 @@ public class AuthenticationTest {
         BidEngineResource bidEngineResource = new BidEngineResource();
         BidOffer bidOffer = bidEngineResource.currentBidOffer();
 
-        bidEngineResource.bid(bidOffer.getItemName(), bidOffer.getCurrentValue(), 20.0, new SecurityContextImpl(new User("abc", "an-email@provider.com")));
+        bidEngineResource.bid(bidOffer.getItemName(), bidOffer.getCurrentValue(), 20.0, new SecurityContextImpl(new User("abc", "user1")));
     }
 }

@@ -41,8 +41,8 @@ public class UserResource {
     @GET
     @Path("/register")
     @Produces(MediaType.TEXT_PLAIN)
-    public String register(@QueryParam("email") String email) {
-        User user = users.create(email);
+    public String register(@QueryParam("name") String name) {
+        User user = users.create(name);
         return user.getKey();
     }
 
@@ -51,7 +51,7 @@ public class UserResource {
     @UserAuthorization
     public void unregister(@Context SecurityContext securityContext) {
         User user = (User) securityContext.getUserPrincipal();
-        users.remove(user.getKey(), user.getEmail());
+        users.remove(user.getKey(), user.getName());
         BID_SERVER.bidEngine.userIsUnregistered(user);
     }
 }

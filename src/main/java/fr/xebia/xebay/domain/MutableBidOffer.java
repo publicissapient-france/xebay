@@ -71,7 +71,7 @@ class MutableBidOffer {
     }
 
     MutableBidOffer increment(String name, double value, double increment, User user) throws BidException {
-        if (null == user || (null == user.getEmail())) {
+        if (null == user || (null == user.getName())) {
             throw new BidException("bad user");
         }
         if (!item.getName().equals(name)) {

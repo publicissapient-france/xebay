@@ -9,18 +9,18 @@ public class UsersTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void should_not_create_user_with_empty_email() {
+    public void should_not_create_user_with_empty_name() {
         thrown.expect(BidException.class);
-        thrown.expectMessage("can't create user without email");
+        thrown.expectMessage("can't create user without name");
         Users users = new Users();
 
         users.create("");
     }
 
     @Test
-    public void should_not_create_user_with_null_email() {
+    public void should_not_create_user_with_null_name() {
         thrown.expect(BidException.class);
-        thrown.expectMessage("can't create user without email");
+        thrown.expectMessage("can't create user without name");
         Users users = new Users();
 
         users.create(null);

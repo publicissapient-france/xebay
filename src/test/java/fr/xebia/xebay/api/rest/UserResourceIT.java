@@ -43,14 +43,14 @@ public class UserResourceIT {
 
     @Test
     public void register_should_create_new_user() throws Exception {
-        key = target.path("register").queryParam("email", "abc@def.ghi").request().get(String.class);
+        key = target.path("register").queryParam("name", "user1").request().get(String.class);
 
         assertThat(key).hasSize(16);
     }
 
     @Test
     public void register_should_return_API_key_as_text() throws Exception {
-        Response registerResponse = target.path("register").queryParam("email", "abc@def.ghi").request().get();
+        Response registerResponse = target.path("register").queryParam("name", "user1").request().get();
         key = registerResponse.readEntity(String.class);
 
         assertThat(registerResponse.getMediaType()).isEqualTo(MediaType.TEXT_PLAIN_TYPE);
@@ -58,17 +58,17 @@ public class UserResourceIT {
 
     @Test
     public void register_should_throw_exception_if_already_registered_user() throws Exception {
-        key = target.path("register").queryParam("email", "abc@def.ghi").request().get(String.class);
+        key = target.path("register").queryParam("name", "user1").request().get(String.class);
         assertThat(key).hasSize(16);
 
-        Response response = target.path("register").queryParam("email", "abc@def.ghi").request().get(Response.class);
+        Response response = target.path("register").queryParam("name", "user1").request().get(Response.class);
 
         assertThat(response.getStatus()).isEqualTo(400);
-        assertThat(response.readEntity(String.class)).isEqualTo("\"abc@def.ghi\" is already registered");
+        assertThat(response.readEntity(String.class)).isEqualTo("\"user1\" is already registered");
     }
 
     @Test(expected = BadRequestException.class)
-    public void registering_without_email_is_a_bad_request() {
+    public void registering_without_name_is_a_bad_request() {
         target.path("register").request().get(String.class);
     }
 }

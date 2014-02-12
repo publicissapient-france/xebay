@@ -12,8 +12,9 @@ public class SecurityContextImpl implements SecurityContext {
     public SecurityContextImpl(User user) {
         this.user = user;
     }
-    public SecurityContextImpl(String key, String userEmail) {
-        this.user = new User(key, userEmail);
+
+    public SecurityContextImpl(String key, String name) {
+        this.user = new User(key, name);
     }
 
 
@@ -34,14 +35,6 @@ public class SecurityContextImpl implements SecurityContext {
 
     @Override
     public boolean isUserInRole(String role) {
-
-            // Forbidden
-//            Response denied = Response.status(Response.Status.FORBIDDEN).entity("Permission Denied").build();
-//            throw new WebApplicationException(denied);
-
-
-        // this user has this role?
-        //return user.getRoles().contains(User.Role.valueOf(role));
         return false;
     }
 }

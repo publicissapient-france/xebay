@@ -43,7 +43,7 @@ public class BidEngineResourceIT {
     }
 
     private void register() throws Exception {
-        key = client.target("http://localhost:8080/rest/users/register").queryParam("email", "aaa@eee.com").request().get(String.class);
+        key = client.target("http://localhost:8080/rest/users/register").queryParam("name", "user1").request().get(String.class);
     }
 
     private void unregister() throws Exception {
@@ -56,7 +56,7 @@ public class BidEngineResourceIT {
         assertThat(bidOffer.getItemName()).isEqualTo("an item");
         assertThat(bidOffer.getCurrentValue()).isNotNull();
         assertThat(bidOffer.getTimeToLive()).isLessThan(BidEngine.DEFAULT_TIME_TO_LIVE).isNotNegative();
-        assertThat(bidOffer.getFutureBuyerEmail()).isNull();
+        assertThat(bidOffer.getFutureBuyerName()).isNull();
     }
 
     @Test

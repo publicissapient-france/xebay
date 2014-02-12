@@ -7,26 +7,26 @@ var xebay = {
     this.getCurrentBidOffer();
     var cookie = $.cookie("xebay");
     if (cookie) {
-      this.signinWith(cookie.email, cookie.key);
+      this.signinWith(cookie.name, cookie.key);
     }
   },
   "signup": function () {
-    this.signupWith($("#email").val());
+    this.signupWith($("#name").val());
   },
-  "signupWith": function (email) {
-    $.get("/rest/users/register", {"email": email}, function (key) {
-      xebay.signedin(email, key);
+  "signupWith": function (name) {
+    $.get("/rest/users/register", {"name": name}, function (key) {
+      xebay.signedin(name, key);
     });
   },
   "signin": function () {
-    this.signinWith($("#email").val(), $("#key").val());
+    this.signinWith($("#name").val(), $("#key").val());
   },
-  "signinWith": function (email, key) {
+  "signinWith": function (name, key) {
     $.ajax("/rest/users/info", {
       "headers": {"Authorization": key},
-      "data": {"email": email},
+      "data": {"name": name},
       "success": function () {
-        xebay.signedin(email, key);
+        xebay.signedin(name, key);
       }
     });
   },
@@ -43,12 +43,12 @@ var xebay = {
       }
     });
   },
-  "signedin": function (email, key) {
-    $("#email-display").text(email);
+  "signedin": function (name, key) {
+    $("#name-display").text(name);
     $("#key-display").text(key);
     $(".registered").show();
     $(".unregistered").hide();
-    $.cookie("xebay", {"email": email, "key": key});
+    $.cookie("xebay", {"name": name, "key": key});
     this.connect();
   },
   "signedout": function () {
@@ -58,7 +58,7 @@ var xebay = {
     $.removeCookie("xebay");
   },
   "getCurrentBidOffer": function () {
-    $.getJSON("/rest/bidEngine/current").done(function(currentBidOffer) {
+    $.getJSON("/rest/bidEngine/current").done(function (currentBidOffer) {
       xebay.updateCurrentBidOffer(currentBidOffer);
     }).fail(function (jqxhr) {
       xebay.updateCurrentBidOffer({});
@@ -95,12 +95,12 @@ var xebay = {
     $.ajax("/rest/bidEngine/bid", {
       type: "POST",
       headers: { "Authorization": $.cookie("xebay").key },
-      contentType : "application/json",
+      contentType: "application/json",
       data: JSON.stringify(bidDemand)
     }).done(function () {
-        $("#bidAnswerLog").prepend(xebay.bidSuccessTemplate(bidDemand));
-    }).fail(function(jqxhr) {
-        $("#bidAnswerLog").prepend(xebay.bidFailTemplate({ cause: jqxhr.responseText }));
+      $("#bidAnswerLog").prepend(xebay.bidSuccessTemplate(bidDemand));
+    }).fail(function (jqxhr) {
+      $("#bidAnswerLog").prepend(xebay.bidFailTemplate({ cause: jqxhr.responseText }));
     });
   },
   "connect": function () {

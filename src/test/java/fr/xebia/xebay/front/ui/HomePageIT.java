@@ -35,10 +35,10 @@ public class HomePageIT extends PhantomJsTest {
         if (key == null) {
             return;
         }
-        HttpURLConnection urlConnection = (HttpURLConnection) new URL("http://localhost:8080/rest/users/unregister?email=abc@def.ghi&key=" + key).openConnection();
+        HttpURLConnection urlConnection = (HttpURLConnection) new URL("http://localhost:8080/rest/users/unregister?name=user1&key=" + key).openConnection();
         urlConnection.setRequestMethod("DELETE");
         urlConnection.setRequestProperty(HttpHeaders.AUTHORIZATION, key);
-        assertThat(urlConnection.getResponseCode()).as("HTTP response code when unregistering abc@def.ghi").isEqualTo(204);
+        assertThat(urlConnection.getResponseCode()).as("HTTP response code when unregistering user1").isEqualTo(204);
     }
 
     @Test
@@ -52,12 +52,12 @@ public class HomePageIT extends PhantomJsTest {
     public void should_signup() {
         goTo(homePage);
 
-        fill("#email").with("abc@def.ghi");
+        fill("#name").with("user1");
         $("button", withText("Sign up")).click();
 
         await().atMost(2000).until("button").withText("Sign out").isPresent();
         $("a", withText().startsWith("My infos")).click();
-        assertThat($("#email-display").getText()).isEqualTo("abc@def.ghi");
+        assertThat($("#name-display").getText()).isEqualTo("user1");
         assertThat($("#key-display").getText()).hasSize(16);
         key = $("#key-display").getText();
     }

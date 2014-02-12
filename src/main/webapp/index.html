@@ -15,7 +15,7 @@
   <div class="navbar-collapse collapse">
     <form id="register" class="navbar-form navbar-right unregistered">
       <div class="form-group">
-        <input id="email" type="text" placeholder="Email" class="form-control">
+        <input id="name" type="text" placeholder="Name" class="form-control">
       </div>
       <div class="form-group">
         <input id="key" type="password" placeholder="API key" class="form-control">
@@ -31,7 +31,7 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">My infos <b class="caret"></b></a>
           <ul class="dropdown-menu">
-            <li class="my-infos">email: <span id="email-display"></span></li>
+            <li class="my-infos">name: <span id="name-display"></span></li>
             <li class="my-infos">API key: <span id="key-display"></span></li>
           </ul>
         </li>
@@ -56,11 +56,6 @@
       <div id="current-bid-offer"></div>
 
       <h2>API</h2>
-      <p>
-        GET /rest/users/register?email=currentValue<br>
-        200 response contains your key<br>
-        400 if something goes wrong<br>
-      </p>
       <p>
         GET /rest/bidEngine/current<br>
         200 resonse contains json object<br>
@@ -113,7 +108,7 @@
 <script type="text/javascript" src="js/handlebars-v1.3.0.js"></script>
 <script id="currentBidOfferTemplate" type="text/template">
   {{#if itemName}}
-  <p>{{itemName}} {{futureBuyerEmail}}</p>
+  <p>{{itemName}} {{futureBuyerName}}</p>
   <img src="images/{{itemName}}.png"/>
   <div class="flipboard">
     <span id="timeToLiveSeconds" class="flipboardchar"></span>
@@ -131,8 +126,8 @@
   <p class="alert alert-danger col-md-12">Your bid has failed because {{cause}}.</p>
 </script>
 <script id="bidOfferTemplate" type="text/template">
-  {{#if ownerEmail}}
-  <p class="alert alert-info col-md-12">{{futureBuyerEmail}} has bid {{currentValue}} points for {{itemName}}.</p>
+  {{#if ownerName}}
+  <p class="alert alert-info col-md-12">{{futureBuyerName}} has bid {{currentValue}} points for {{itemName}}.</p>
   {{/if}}
 </script>
 <script type="text/javascript" src="js/xebay.js"></script>
