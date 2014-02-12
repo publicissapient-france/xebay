@@ -1,8 +1,5 @@
 package fr.xebia.xebay.domain;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.security.auth.Subject;
 import java.security.Principal;
 import java.util.HashSet;
@@ -11,8 +8,6 @@ import java.util.Set;
 import static java.util.Collections.unmodifiableSet;
 
 public class User implements Principal {
-    private static final Logger log = LoggerFactory.getLogger("UserInfo");
-
     public static final int INITIAL_BALANCE = 1000;
     private final String email;
     private final String key;
@@ -27,8 +22,6 @@ public class User implements Principal {
 
         this.balance = INITIAL_BALANCE;
         this.items = new HashSet<>();
-        log.debug("User items ", items );
-
     }
 
     public double getBalance() {
