@@ -58,4 +58,14 @@ public class BidEngineResource {
         User user = (User) securityContext.getUserPrincipal();
         return bidEngine.bid(user, bidDemand.getItemName(), bidDemand.getCurrentValue(), bidDemand.getIncrement());
     }
+
+    @POST
+    @Path("/offer")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @UserAuthorization
+    public void offer(@FormParam("name") String name, @FormParam("value") Double initialValue, @Context SecurityContext securityContext) {
+        User user = (User) securityContext.getUserPrincipal();
+        bidEngine.offer(user, name, initialValue);
+    }
+
 }
