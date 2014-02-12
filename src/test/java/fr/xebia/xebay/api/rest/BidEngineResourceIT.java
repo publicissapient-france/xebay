@@ -1,6 +1,7 @@
 package fr.xebia.xebay.api.rest;
 
 import fr.xebia.xebay.domain.BidDemand;
+import fr.xebia.xebay.domain.BidEngine;
 import fr.xebia.xebay.domain.BidOffer;
 import fr.xebia.xebay.utils.TomcatRule;
 import org.glassfish.jersey.jackson.JacksonFeature;
@@ -54,7 +55,7 @@ public class BidEngineResourceIT {
         BidOffer bidOffer = target.path("current").request().get(BidOffer.class);
         assertThat(bidOffer.getItemName()).isEqualTo("an item");
         assertThat(bidOffer.getCurrentValue()).isNotNull();
-        assertThat(bidOffer.getTimeToLive()).isLessThan(10000).isNotNegative();
+        assertThat(bidOffer.getTimeToLive()).isLessThan(BidEngine.DEFAULT_TIME_TO_LIVE).isNotNegative();
         assertThat(bidOffer.getFutureBuyerEmail()).isNull();
     }
 
@@ -74,7 +75,7 @@ public class BidEngineResourceIT {
                 .post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), BidOffer.class);
         assertThat(bidOffer.getItemName()).isEqualTo("an item");
         assertThat(bidOffer.getCurrentValue()).isEqualTo(5);
-        assertThat(bidOffer.getTimeToLive()).isLessThan(10000).isNotNegative();
+        assertThat(bidOffer.getTimeToLive()).isLessThan(100000).isNotNegative();
 
         unregister();
     }
@@ -111,7 +112,7 @@ public class BidEngineResourceIT {
                 .post(Entity.entity(bidDemand, MediaType.APPLICATION_JSON_TYPE), BidOffer.class);
         assertThat(bidOffer.getItemName()).isEqualTo("an item");
         assertThat(bidOffer.getCurrentValue()).isEqualTo(firstValue + 0.7);
-        assertThat(bidOffer.getTimeToLive()).isLessThan(10000).isNotNegative();
+        assertThat(bidOffer.getTimeToLive()).isLessThan(BidEngine.DEFAULT_TIME_TO_LIVE).isNotNegative();
 
         unregister();
     }

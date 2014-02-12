@@ -104,7 +104,7 @@ public class XebayTest {
 
         resolvesBidOffer(bidEngine);
 
-        assertThat(user.getBalance()).isEqualTo(995);
+        assertThat(user.getBalance()).isEqualTo(User.INITIAL_BALANCE - 5);
         Item purchasedItem = user.getItems().iterator().next();
         assertThat(purchasedItem.getName()).isEqualTo("an item");
         assertThat(purchasedItem.getValue()).isEqualTo(5.0);
@@ -199,21 +199,24 @@ public class XebayTest {
 
     @Test
     public void user_cant_bid_without_enough_balance() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 900), new Item("another item", 5)));
+        int initialItemValue = User.INITIAL_BALANCE - 100;
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", initialItemValue), new Item("another item", 5)));
         expectedException.expect(BidException.class);
         expectedException.expectMessage("user can't bid 1001.0, not enought money left.");
 
-        bidEngine.bid(user, "an item", 900, 101);
+        bidEngine.bid(user, "an item", initialItemValue, 101);
     }
 
     @Test(expected = BidException.class)
     public void if_user_cant_bid_current_offer_keep_unchanged() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 900), new Item("another item", 5)));
+        int initialItemValue = User.INITIAL_BALANCE - 100;
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", initialItemValue), new Item("another item", 5)));
         try {
-            bidEngine.bid(user, "an item", 900, 101);
+            bidEngine.bid(user, "an item", initialItemValue, 101);
         } finally {
-            assertThat(user.getBalance()).isEqualTo(1000);
-            assertThat(bidEngine.currentBidOffer().currentValue).isEqualTo(900);
+            assertThat(user.getBalance()).isEqualTo(User.INITIAL_BALANCE);
+            BidOffer bidOffer = bidEngine.currentBidOffer();
+            assertThat(bidOffer.currentValue).isEqualTo(initialItemValue);
         }
     }
 
