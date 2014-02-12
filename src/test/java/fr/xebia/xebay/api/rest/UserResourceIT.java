@@ -11,10 +11,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -55,7 +51,7 @@ public class UserResourceIT {
     @Test
     public void register_should_return_API_key_as_text() throws Exception {
         Response registerResponse = target.path("register").queryParam("email", "abc@def.ghi").request().get();
-        key = readFromResponse(registerResponse);
+        key = registerResponse.readEntity(String.class);
 
         assertThat(registerResponse.getMediaType()).isEqualTo(MediaType.TEXT_PLAIN_TYPE);
     }
@@ -68,27 +64,11 @@ public class UserResourceIT {
         Response response = target.path("register").queryParam("email", "abc@def.ghi").request().get(Response.class);
 
         assertThat(response.getStatus()).isEqualTo(400);
-        assertThat(readFromResponse(response)).isEqualTo("\"abc@def.ghi\" is already registered");
+        assertThat(response.readEntity(String.class)).isEqualTo("\"abc@def.ghi\" is already registered");
     }
 
     @Test(expected = BadRequestException.class)
     public void registering_without_email_is_a_bad_request() {
         target.path("register").request().get(String.class);
-    }
-
-    private String readFromResponse(Response registerResponse) {
-        StringBuilder responseToString = new StringBuilder();
-        try (BufferedReader in = new BufferedReader(new InputStreamReader((InputStream) registerResponse.getEntity()))) {
-            String currentLine;
-            while ((currentLine = in.readLine()) != null) {
-                if (responseToString.length() > 0) {
-                    responseToString.append('\n');
-                }
-                responseToString.append(currentLine);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return responseToString.toString();
     }
 }
