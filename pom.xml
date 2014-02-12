@@ -160,7 +160,8 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>15.0</version>
-            <scope>test</scope>
+            <!-- used in tests and transitively by org.glassfish.jersey.core:jersey-server -->
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 
