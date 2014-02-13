@@ -11,13 +11,13 @@ public class BidOffer {
     public BidOffer() {
     }
 
-    public BidOffer(Item item, double initialValue, double currentValue, long timeToLive, User futureBuyer) {
+    public BidOffer(String itemName, double initialValue, double currentValue, long timeToLive, String ownerName, String futureBuyerName) {
+        this.itemName = itemName;
         this.timeToLive = timeToLive;
-        this.itemName = item.getName();
         this.initialValue = initialValue;
         this.currentValue = currentValue;
-        this.ownerName = item.getOwner() == null ? null : item.getOwner().getName();
-        this.futureBuyerName = futureBuyer == null ? null : futureBuyer.getName();
+        this.ownerName = ownerName;
+        this.futureBuyerName = futureBuyerName;
     }
 
     public String getItemName() {

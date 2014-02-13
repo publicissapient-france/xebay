@@ -27,7 +27,12 @@ class MutableBidOffer {
     }
 
     BidOffer toBidOffer() {
-        return new BidOffer(item, initialValue, currentValue, getTimeToLive(), futureBuyer);
+        return new BidOffer(item.getName(),
+                initialValue,
+                currentValue,
+                getTimeToLive(),
+                item.getOwner() == null ? null : item.getOwner().getName(),
+                futureBuyer == null ? null : futureBuyer.getName());
     }
 
     User getFutureBuyer() {
