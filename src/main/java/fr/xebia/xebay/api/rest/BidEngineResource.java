@@ -1,7 +1,8 @@
 package fr.xebia.xebay.api.rest;
 
+import fr.xebia.xebay.api.rest.dto.BidDemand;
+import fr.xebia.xebay.api.rest.dto.ItemOffer;
 import fr.xebia.xebay.api.rest.security.UserAuthorization;
-import fr.xebia.xebay.domain.BidDemand;
 import fr.xebia.xebay.domain.BidEngine;
 import fr.xebia.xebay.domain.BidOffer;
 import fr.xebia.xebay.domain.User;
@@ -61,11 +62,11 @@ public class BidEngineResource {
 
     @POST
     @Path("/offer")
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Consumes(MediaType.APPLICATION_JSON)
     @UserAuthorization
-    public void offer(@FormParam("name") String name, @FormParam("value") Double initialValue, @Context SecurityContext securityContext) {
+    public void offer(ItemOffer itemOffer, @Context SecurityContext securityContext) {
         User user = (User) securityContext.getUserPrincipal();
-        bidEngine.offer(user, name, initialValue);
+        bidEngine.offer(user, itemOffer.getName(), itemOffer.getValue());
     }
 
 }
