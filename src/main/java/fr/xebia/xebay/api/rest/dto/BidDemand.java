@@ -1,4 +1,4 @@
-package fr.xebia.xebay.domain;
+package fr.xebia.xebay.api.rest.dto;
 
 public class BidDemand {
 
@@ -15,24 +15,12 @@ public class BidDemand {
         this.increment = increment;
     }
 
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
-    }
-
     public String getItemName() {
         return itemName;
     }
 
-    public void setCurrentValue(double currentValue) {
-        this.currentValue = currentValue;
-    }
-
     public double getCurrentValue() {
         return currentValue;
-    }
-
-    public void setIncrement(double increment) {
-        this.increment = increment;
     }
 
     public Double getIncrement() {
