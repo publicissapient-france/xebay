@@ -66,7 +66,7 @@ public class BidEngineResource {
     @Path("/offer")
     @Consumes(MediaType.APPLICATION_JSON)
     @UserAuthorization
-    public void offer(ItemOffer itemOffer, @Context SecurityContext securityContext) {
+    public Response offer(ItemOffer itemOffer, @Context SecurityContext securityContext) {
         User user = (User) securityContext.getUserPrincipal();
         Item item = items.find(itemOffer.getName());
         if(null == item){
@@ -75,6 +75,7 @@ public class BidEngineResource {
                     .build());
         }
         bidEngine.offer(item, itemOffer.getValue(), user);
+        return Response.ok().build();
     }
 
 }
