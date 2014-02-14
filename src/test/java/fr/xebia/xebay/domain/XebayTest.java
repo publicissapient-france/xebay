@@ -19,11 +19,12 @@ public class XebayTest {
     @Mock
     private Expirable expiration;
 
-    private Users users = new Users();
+    private Users users;
     private User user;
 
     @Before
-    public void createUser() {
+    public void createUsersAndUser() {
+        users = new Users();
         user = users.create("user1");
     }
 
