@@ -1,4 +1,4 @@
-package fr.xebia.xebay.api.rest;
+package fr.xebia.xebay.api.rest.exceptions;
 
 import fr.xebia.xebay.domain.UserNotAllowedException;
 

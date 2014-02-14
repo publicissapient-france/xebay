@@ -1,7 +1,7 @@
 package fr.xebia.xebay.api.socket;
 
 import com.google.gson.Gson;
-import fr.xebia.xebay.domain.BidDemand;
+import fr.xebia.xebay.api.rest.dto.BidDemand;
 import fr.xebia.xebay.domain.BidOffer;
 import fr.xebia.xebay.utils.TomcatRule;
 import org.assertj.core.api.Assertions;

@@ -76,9 +76,7 @@ class MutableBidOffer {
     }
 
     MutableBidOffer increment(String name, double value, double increment, User user) throws BidException {
-        if (null == user || (null == user.getName())) {
-            throw new BidException("bad user");
-        }
+        checkUser(user);
         if (!item.getName().equals(name)) {
             throw new BidException(format("current item to bid is not \"%s\"", name));
         }
@@ -94,6 +92,12 @@ class MutableBidOffer {
         }
 
         return increment(increment, user);
+    }
+
+    private void checkUser(User user) {
+        if (null == user || (null == user.getName())) {
+            throw new BidException("bad user");
+        }
     }
 
     private MutableBidOffer increment(double increment, User user) {
