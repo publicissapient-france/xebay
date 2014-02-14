@@ -113,11 +113,13 @@ public class XebayTest {
 
     @Test
     public void should_makes_offer() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3), new Item("another item", 2.4)), expiration);
+        Item anItem = new Item("an item", 4.3);
+        Item anotherItem = new Item("another item", 2.4);
+        BidEngine bidEngine = new BidEngine(new Items(anItem, anotherItem), expiration);
         bidEngine.bid(user, "an item", 4.3, 0.7);
         resolvesBidOffer(bidEngine);
 
-        bidEngine.offer(user, "an item", 5.9);
+        bidEngine.offer(anItem, 5.9, user);
 
         resolvesBidOffer(bidEngine);
         BidOffer bidOffer = bidEngine.currentBidOffer();
@@ -128,60 +130,75 @@ public class XebayTest {
 
     @Test
     public void should_not_makes_offer_if_item_doesnt_belong_to_user() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3), new Item("another item", 2.4)), expiration);
+        Item anItem = new Item("an item", 4.3);
+        Item anotherItem = new Item("another item", 2.4);
+        BidEngine bidEngine = new BidEngine(new Items(anItem, anotherItem), expiration);
         expectedException.expect(BidForbiddenException.class);
         expectedException.expectMessage("item \"another item\" doesn't belong to user \"user1\"");
 
-        bidEngine.offer(user, "another item", 5.9);
+        bidEngine.offer(anotherItem, 5.9, user);
     }
 
     @Test
     public void should_not_makes_offer_if_item_is_current_offer() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3), new Item("another item", 2.4)), expiration);
+        Item anItem = new Item("an item", 4.3);
+        Item anotherItem = new Item("another item", 2.4);
+
+        BidEngine bidEngine = new BidEngine(new Items(anItem, anotherItem), expiration);
         bidEngine.bid(user, "an item", 4.3, 2.1);
         resolvesBidOffer(bidEngine);
-        bidEngine.offer(user, "an item", 5.9);
+        bidEngine.offer(anItem, 5.9, user);
         resolvesBidOffer(bidEngine);
         expectedException.expect(BidForbiddenException.class);
         expectedException.expectMessage("item \"an item\" is the current offer thus can't be offered");
 
-        bidEngine.offer(user, "an item", 6.0);
+        bidEngine.offer(anItem, 6.0, user);
     }
 
-    //TODO remove (bidEngine should not have to do the check)
     @Test
-    public void should_not_makes_offer_if_item_doesnt_exists() {
+    public void should_not_makes_offer_if_item_is_null() {
         BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3)), expiration);
-        expectedException.expect(BidException.class);
-        expectedException.expectMessage("item \"inexistant\" doesn't exist");
+        expectedException.expect(NullPointerException.class);
+        bidEngine.offer(null, 5.9, user);
+    }
 
-        bidEngine.offer(user, "inexistant", 5.9);
+    @Test
+    public void should_not_makes_offer_if_user_is_null() {
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3)), expiration);
+        expectedException.expect(NullPointerException.class);
+        bidEngine.offer(new Item("an item", 4.3), 5.9, null);
     }
 
     @Test
     public void should_not_makes_offer_if_item_is_already_offered() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3), new Item("another item", 2.4)), expiration);
+        Item anItem = new Item("an item", 4.3);
+        Item anotherItem = new Item("another item", 2.4);
+
+        BidEngine bidEngine = new BidEngine(new Items(anItem, anotherItem), expiration);
+
         bidEngine.bid(user, "an item", 4.3, 2.1);
         resolvesBidOffer(bidEngine);
 
-        bidEngine.offer(user, "an item", 5.9);
+        bidEngine.offer(anItem, 5.9, user);
         expectedException.expect(BidForbiddenException.class);
         expectedException.expectMessage("item \"an item\" is already offered");
 
-        bidEngine.offer(user, "an item", 6.5);
+        bidEngine.offer(anItem, 6.5, user);
     }
 
     @Test
     public void when_a_bid_is_won_seller_increase_money() {
+        Item anItem = new Item("an item", 4.3);
+
         User seller = users.create("seller");
         User buyer = users.create("buyer");
-        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3)), expiration);
+        BidEngine bidEngine = new BidEngine(new Items(anItem), expiration);
 
         // let seller buy "an item"
         bidEngine.bid(seller, "an item", 4.3, 0.7);
         resolvesBidOffer(bidEngine);
         // let seller offer his item
-        bidEngine.offer(seller, "an item", 5.0);
+        bidEngine.offer(anItem, 5.0, seller);
         resolvesBidOffer(bidEngine);
         // let buyer buy "an item" owned by seller
         bidEngine.bid(buyer, "an item", 5.0, 0.8);

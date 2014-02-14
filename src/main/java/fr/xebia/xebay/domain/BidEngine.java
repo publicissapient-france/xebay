@@ -45,10 +45,8 @@ public class BidEngine {
         return updatedBidOffer;
     }
 
-    public void offer(User user, String itemName, double initialValue) {
+    public void offer(Item item, double initialValue, User user) {
         nextBidOfferIfExpired();
-
-        Item item = getItem(itemName);//TODO put uplevel (in resource rest)
         checkUserOffer(user, item);
         BidOfferToSell bidOfferToSell = checkOffer(item, initialValue);
         bidOffersToSell.offer(bidOfferToSell);
@@ -71,15 +69,6 @@ public class BidEngine {
         }
     }
 
-    private Item getItem(String itemName) {
-        Item item;
-        try {
-            item = items.get(itemName);
-        } catch (NoSuchElementException e) {
-            throw new BidException(format("item \"%s\" doesn't exist", itemName));
-        }
-        return item;
-    }
 
     public void addListener(BidEngineListener bidEngineListener) {
         nextBidOfferIfExpired();

@@ -9,14 +9,19 @@ public enum BidServer {
     BID_SERVER;
 
     public final Users users;
+    public final Items items;
     public final BidEngine bidEngine;
 
     BidServer() {
         users = new Users();
         if (System.getProperty("xebay.test") != null) {
-            bidEngine = new BidEngine(new Items(new Item("an item", 4.3)), () -> false);
+            items = new Items(new Item("an item", 4.3));
+            bidEngine = new BidEngine(items, () -> false);
             return;
         }
-        bidEngine = new BidEngine(Items.load("items").get());
+
+        items = Items.load("items").get();
+        bidEngine = new BidEngine(items);
+
     }
 }

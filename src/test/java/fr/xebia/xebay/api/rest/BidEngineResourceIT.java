@@ -2,8 +2,7 @@ package fr.xebia.xebay.api.rest;
 
 import fr.xebia.xebay.api.rest.dto.BidDemand;
 import fr.xebia.xebay.api.rest.dto.ItemOffer;
-import fr.xebia.xebay.domain.BidEngine;
-import fr.xebia.xebay.domain.BidOffer;
+import fr.xebia.xebay.domain.*;
 import fr.xebia.xebay.utils.TomcatRule;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.junit.*;
@@ -11,6 +10,7 @@ import org.junit.rules.ExpectedException;
 
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -134,6 +134,23 @@ public class BidEngineResourceIT {
             unregister();
         }
 
+    }
+
+    @Test
+    public void should_throw_notfound_excption_when_user_offering_item_that_doesnt_exists() throws Exception {
+        register();
+        ItemOffer itemOffer = new ItemOffer("unknown item", 10.0);
+
+        expectedException.expect(NotFoundException.class);
+        expectedException.expectMessage("HTTP 404 Not Found");
+
+        try {
+            target.path("/offer").request()
+                    .header(HttpHeaders.AUTHORIZATION, key)
+                    .post(Entity.entity(itemOffer, MediaType.APPLICATION_JSON_TYPE), ItemOffer.class);
+        } finally {
+            unregister();
+        }
     }
 
 }

@@ -21,6 +21,15 @@ public class Items {
         this.currentItemIndex = items.length - 1;
     }
 
+    public Item find(String name) {
+        try {
+            return get(name);
+        } catch (NoSuchElementException e) {
+            return null;
+        }
+    }
+
+
     Item next() {
         return next(currentItemIndex + 1);
     }

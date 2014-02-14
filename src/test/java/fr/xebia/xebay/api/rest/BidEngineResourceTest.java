@@ -2,6 +2,8 @@ package fr.xebia.xebay.api.rest;
 
 import fr.xebia.xebay.api.rest.dto.ItemOffer;
 import fr.xebia.xebay.domain.BidEngine;
+import fr.xebia.xebay.domain.Item;
+import fr.xebia.xebay.domain.Items;
 import fr.xebia.xebay.domain.User;
 import org.junit.Before;
 import org.junit.Rule;
@@ -22,12 +24,15 @@ public class BidEngineResourceTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Mock private BidEngine bidEngine;
+    @Mock private Items items;
+    @Mock SecurityContext securityContext ;
+
     private User user;
     private BidEngineResource bidEngineResource;
 
     @Before
     public void init() {
-        bidEngineResource = new BidEngineResource(bidEngine);
+        bidEngineResource = new BidEngineResource(bidEngine, items);
         user = new User("key1", "user1");
     }
 
@@ -37,31 +42,32 @@ public class BidEngineResourceTest {
         thrown.expect(WebApplicationException.class);
         thrown.expectMessage("HTTP 404 Not Found");
 
-        new BidEngineResource(bidEngine).currentBidOffer();
+        bidEngineResource.currentBidOffer();
     }
 
     @Test
     public void should_call_bidEngine_offer_when_user_offering_item() {
-        SecurityContext securityContext = mock(SecurityContext.class);
+        Item item = new Item("an item", 1.2);
 
         when(securityContext.getUserPrincipal()).thenReturn(user);
+        when(items.find("an item")).thenReturn(item);
 
-        ItemOffer itemOffer = new ItemOffer("an item", 10.0);
+        bidEngineResource.offer(new ItemOffer("an item", 10.0), securityContext);
 
-        bidEngineResource.offer(itemOffer, securityContext);
-
-        verify(bidEngine, times(1)).offer(user, "an item", 10.0);
+        verify(bidEngine, times(1)).offer(item, 10.0, user);
     }
-    //TODO test should check NotFoundException @Test(expected = BidException.class)
-    public void should_throw_notFoundException_when_offering_unknown_item() throws Exception {
-        SecurityContext securityContext = mock(SecurityContext.class);
+    @Test
+    public void should_throw_404_notFoundException_when_offering_unknown_item() throws Exception {
         when(securityContext.getUserPrincipal()).thenReturn(user);
 
-        String itemName = "unknown item";
+        String unknownItem = "unknown item";
+        when(items.find(unknownItem)).thenReturn(null);
 
-//        doThrow(new BidException("unknown item not found")).when(bidEngine).offer(user, itemName, 10.0);
 
-//        bidEngineResource.offer(new ItemOffer(itemName, 10.0), securityContext);
+        thrown.expect(WebApplicationException.class);
+        thrown.expectMessage("HTTP 404 Not Found");
+
+        bidEngineResource.offer(new ItemOffer(unknownItem, 10.0), securityContext);
     }
 
 }
