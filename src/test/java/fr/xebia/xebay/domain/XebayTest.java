@@ -129,7 +129,7 @@ public class XebayTest {
     @Test
     public void should_not_makes_offer_if_item_doesnt_belong_to_user() {
         BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3), new Item("another item", 2.4)), expiration);
-        expectedException.expect(BidException.class);
+        expectedException.expect(BidForbiddenException.class);
         expectedException.expectMessage("item \"another item\" doesn't belong to user \"user1\"");
 
         bidEngine.offer(user, "another item", 5.9);
@@ -142,12 +142,13 @@ public class XebayTest {
         resolvesBidOffer(bidEngine);
         bidEngine.offer(user, "an item", 5.9);
         resolvesBidOffer(bidEngine);
-        expectedException.expect(BidException.class);
+        expectedException.expect(BidForbiddenException.class);
         expectedException.expectMessage("item \"an item\" is the current offer thus can't be offered");
 
-        bidEngine.offer(user, "an item", 5.9);
+        bidEngine.offer(user, "an item", 6.0);
     }
 
+    //TODO remove (bidEngine should not have to do the check)
     @Test
     public void should_not_makes_offer_if_item_doesnt_exists() {
         BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3)), expiration);
@@ -162,11 +163,12 @@ public class XebayTest {
         BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3), new Item("another item", 2.4)), expiration);
         bidEngine.bid(user, "an item", 4.3, 2.1);
         resolvesBidOffer(bidEngine);
-        bidEngine.offer(user, "an item", 5.9);
-        expectedException.expect(BidException.class);
-        expectedException.expectMessage("item \"an item\" is already offered");
 
         bidEngine.offer(user, "an item", 5.9);
+        expectedException.expect(BidForbiddenException.class);
+        expectedException.expectMessage("item \"an item\" is already offered");
+
+        bidEngine.offer(user, "an item", 6.5);
     }
 
     @Test
