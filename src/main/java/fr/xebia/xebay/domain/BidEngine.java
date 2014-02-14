@@ -48,23 +48,37 @@ public class BidEngine {
     public void offer(User user, String itemName, double initialValue) {
         nextBidOfferIfExpired();
 
+        Item item = getItem(itemName);//TODO put uplevel (in resource rest)
+        checkUserOffer(user, item);
+        BidOfferToSell bidOfferToSell = checkOffer(item, initialValue);
+        bidOffersToSell.offer(bidOfferToSell);
+    }
+
+    private BidOfferToSell checkOffer(Item item, double initialValue) {
+        if (bidOffer.isPresent() && bidOffer.get().getItem().equals(item)) {
+            throw new BidForbiddenException(format("item \"%s\" is the current offer thus can't be offered", item.getName()));
+        }
+        BidOfferToSell bidOfferToSell = new BidOfferToSell(item, initialValue);
+        if (bidOffersToSell.contains(bidOfferToSell)) {
+            throw new BidForbiddenException(format("item \"%s\" is already offered", item));
+        }
+        return bidOfferToSell;
+    }
+
+    private void checkUserOffer(User user, Item item) {
+        if (!user.equals(item.getOwner())) {
+            throw new BidForbiddenException(format("item \"%s\" doesn't belong to user \"%s\"", item, user));
+        }
+    }
+
+    private Item getItem(String itemName) {
         Item item;
         try {
             item = items.get(itemName);
         } catch (NoSuchElementException e) {
             throw new BidException(format("item \"%s\" doesn't exist", itemName));
         }
-        if (bidOffer.isPresent() && bidOffer.get().getItem().equals(item)) {
-            throw new BidException(format("item \"%s\" is the current offer thus can't be offered", itemName));
-        }
-        if (!user.equals(item.getOwner())) {
-            throw new BidException(format("item \"%s\" doesn't belong to user \"%s\"", item, user));
-        }
-        BidOfferToSell bidOfferToSell = new BidOfferToSell(item, initialValue);
-        if (bidOffersToSell.contains(bidOfferToSell)) {
-            throw new BidException(format("item \"%s\" is already offered", item));
-        }
-        bidOffersToSell.offer(bidOfferToSell);
+        return item;
     }
 
     public void addListener(BidEngineListener bidEngineListener) {
