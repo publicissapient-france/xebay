@@ -9,9 +9,9 @@ import static java.util.Collections.unmodifiableSet;
 
 public class User implements Principal {
     public static final int INITIAL_BALANCE = 1000;
-    private final String name;
     private final String key;
 
+    private final String name;
     private double balance;
     private Set<Item> items;
 
@@ -22,6 +22,7 @@ public class User implements Principal {
         this.balance = INITIAL_BALANCE;
         this.items = new HashSet<>();
     }
+
 
     public double getBalance() {
         return balance;
