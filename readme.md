@@ -4,6 +4,10 @@
 
     $ mvn tomcat7:run
 
+### How to add users (because there is no specific page)
+
+    $ curl --header Authorization:4dm1n http://localhost:8080/rest/users/register?name=<name>
+
 ### Coding Style
 
 You can use [editorconfig](http://editorconfig.org) to synchronize this project coding style.

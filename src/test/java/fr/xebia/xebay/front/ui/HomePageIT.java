@@ -1,5 +1,6 @@
 package fr.xebia.xebay.front.ui;
 
+import fr.xebia.xebay.domain.AdminUser;
 import fr.xebia.xebay.front.test.PhantomJsTest;
 import fr.xebia.xebay.utils.TomcatRule;
 import org.fluentlenium.core.annotation.Page;
@@ -9,7 +10,10 @@ import org.junit.ClassRule;
 import org.junit.Test;
 
 import javax.ws.rs.core.HttpHeaders;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -26,8 +30,14 @@ public class HomePageIT extends PhantomJsTest {
     private String key;
 
     @Before
-    public void initializeKey() {
-        key = null;
+    public void register() throws IOException {
+        HttpURLConnection urlConnection = (HttpURLConnection) new URL("http://localhost:8080/rest/users/register?name=user1").openConnection();
+        urlConnection.setRequestProperty(HttpHeaders.AUTHORIZATION, AdminUser.KEY);
+        assertThat(urlConnection.getResponseCode()).as("HTTP response code when registering user1").isEqualTo(200);
+        try (BufferedReader in = new BufferedReader(new InputStreamReader((InputStream) urlConnection.getContent()))) {
+            key = in.readLine();
+        }
+        assertThat(key).hasSize(16);
     }
 
     @After
@@ -35,9 +45,9 @@ public class HomePageIT extends PhantomJsTest {
         if (key == null) {
             return;
         }
-        HttpURLConnection urlConnection = (HttpURLConnection) new URL("http://localhost:8080/rest/users/unregister?name=user1&key=" + key).openConnection();
+        HttpURLConnection urlConnection = (HttpURLConnection) new URL("http://localhost:8080/rest/users/unregister?key=" + key).openConnection();
         urlConnection.setRequestMethod("DELETE");
-        urlConnection.setRequestProperty(HttpHeaders.AUTHORIZATION, key);
+        urlConnection.setRequestProperty(HttpHeaders.AUTHORIZATION, AdminUser.KEY);
         assertThat(urlConnection.getResponseCode()).as("HTTP response code when unregistering user1").isEqualTo(204);
     }
 
@@ -49,16 +59,16 @@ public class HomePageIT extends PhantomJsTest {
     }
 
     @Test
-    public void should_signup() {
+    public void should_signin() {
         goTo(homePage);
 
         fill("#name").with("user1");
-        $("button", withText("Sign up")).click();
+        fill("#key").with(key);
+        $("button", withText("Sign in")).click();
 
         await().atMost(2000).until("button").withText("Sign out").isPresent();
         $("a", withText().startsWith("My infos")).click();
         assertThat($("#name-display").getText()).isEqualTo("user1");
-        assertThat($("#key-display").getText()).hasSize(16);
-        key = $("#key-display").getText();
+        assertThat($("#key-display").getText()).isEqualTo(key);
     }
 }

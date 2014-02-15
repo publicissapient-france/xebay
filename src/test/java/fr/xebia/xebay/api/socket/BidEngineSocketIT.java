@@ -1,6 +1,7 @@
 package fr.xebia.xebay.api.socket;
 
 import com.google.gson.Gson;
+import fr.xebia.xebay.domain.AdminUser;
 import fr.xebia.xebay.api.rest.dto.BidDemand;
 import fr.xebia.xebay.domain.BidOffer;
 import fr.xebia.xebay.utils.TomcatRule;
@@ -29,19 +30,19 @@ import java.util.List;
 
 @ClientEndpoint
 public class BidEngineSocketIT {
-
     @ClassRule
     public static TomcatRule tomcatRule = new TomcatRule();
-    static Gson gson = new Gson();
 
-    List<BidOffer> bidOfferList = new ArrayList<>();
-    WebTarget target = null;
-    String key = null;
+    private static Gson gson = new Gson();
+
+    private List<BidOffer> bidOfferList = new ArrayList<>();
+    private WebTarget target = null;
+    private String key = null;
 
     @Before
     public void before() throws URISyntaxException, IOException, DeploymentException {
         target = ClientBuilder.newClient().register(JacksonFeature.class).target("http://localhost:8080/rest");
-        key = target.path("users/register").queryParam("name", "user1").request().get(String.class);
+        key = target.path("users/register").queryParam("name", "user1").request().header(HttpHeaders.AUTHORIZATION, AdminUser.KEY).get(String.class);
         ContainerProvider.getWebSocketContainer().connectToServer(this, new URI("ws://localhost:8080/socket/bidEngine"));
     }
 
@@ -57,7 +58,7 @@ public class BidEngineSocketIT {
     @After
     public void after() throws IOException {
         bidOfferList.clear();
-        target.path("users/unregister").request().header(HttpHeaders.AUTHORIZATION, key).delete();
+        target.path("users/unregister").queryParam("key", key).request().header(HttpHeaders.AUTHORIZATION, AdminUser.KEY).delete();
     }
 
     @Test(timeout = 5000)

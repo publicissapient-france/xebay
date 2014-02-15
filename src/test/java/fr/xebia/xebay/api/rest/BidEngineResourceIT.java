@@ -2,7 +2,9 @@ package fr.xebia.xebay.api.rest;
 
 import fr.xebia.xebay.api.rest.dto.BidDemand;
 import fr.xebia.xebay.api.rest.dto.ItemOffer;
-import fr.xebia.xebay.domain.*;
+import fr.xebia.xebay.domain.AdminUser;
+import fr.xebia.xebay.domain.BidEngine;
+import fr.xebia.xebay.domain.BidOffer;
 import fr.xebia.xebay.utils.TomcatRule;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.junit.*;
@@ -45,11 +47,20 @@ public class BidEngineResourceIT {
     }
 
     private void register() throws Exception {
-        key = client.target("http://localhost:8080/rest/users/register").queryParam("name", "user1").request().get(String.class);
+        key = client.target("http://localhost:8080/rest/users/register")
+                .queryParam("name", "user1")
+                .request()
+                .header(HttpHeaders.AUTHORIZATION, AdminUser.KEY)
+                .get(String.class);
     }
 
     private void unregister() throws Exception {
-        client.target("http://localhost:8080/rest/users/unregister").request().header(HttpHeaders.AUTHORIZATION, key).delete();
+        client.target("http://localhost:8080/rest/users/unregister")
+                .queryParam("key", key)
+                .request()
+                .header(HttpHeaders.AUTHORIZATION, AdminUser.KEY)
+                .delete();
+        key = null;
     }
 
     @Test

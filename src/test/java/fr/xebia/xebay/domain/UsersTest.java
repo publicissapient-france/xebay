@@ -4,6 +4,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class UsersTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -24,5 +26,14 @@ public class UsersTest {
         Users users = new Users();
 
         users.create(null);
+    }
+
+    @Test
+    public void should_have_admin_user_by_default() {
+        Users users = new Users();
+
+        User admin = users.getUser(AdminUser.KEY);
+
+        assertThat(admin).isNotNull().isInstanceOf(AdminUser.class);
     }
 }

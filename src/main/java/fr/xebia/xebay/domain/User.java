@@ -79,4 +79,8 @@ public class User implements Principal {
     public boolean canBid(double cost) {
         return this.balance > cost;
     }
+
+    public boolean isInRole(String role) {
+        return false;
+    }
 }

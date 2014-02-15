@@ -15,12 +15,14 @@ public class Users {
             "0123456789" +
             "-_";
 
-    private final Set<User> users = new HashSet<>();
+    private final Set<User> users;
 
     private final Random random;
 
     public Users() {
         this.random = new Random();
+        this.users = new HashSet<>();
+        this.users.add(new AdminUser());
     }
 
     public User create(String name) throws BidException {

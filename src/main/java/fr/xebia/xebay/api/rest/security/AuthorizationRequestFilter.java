@@ -15,15 +15,13 @@ import java.io.IOException;
 
 import static fr.xebia.xebay.BidServer.BID_SERVER;
 
-@Priority(Priorities.AUTHORIZATION)
+@Priority(Priorities.AUTHENTICATION)
 @UserAuthorization
 public class AuthorizationRequestFilter implements ContainerRequestFilter {
     private static final Logger log = LoggerFactory.getLogger("AuthorizationRequestFilter");
 
     @Override
-    public void filter(ContainerRequestContext request)
-            throws IOException {
-
+    public void filter(ContainerRequestContext request) throws IOException {
         String authToken = request.getHeaderString(HttpHeaders.AUTHORIZATION);
         log.info("user token " + authToken);
         User user = authorize(authToken);
