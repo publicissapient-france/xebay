@@ -17,12 +17,12 @@ public class UserTest {
     }
 
     @Test
-    public void two_users_are_equals_if_they_have_same_name() {
+    public void two_users_are_equals_if_they_have_same_key() {
         User user1 = new User("key1", "user1");
-        User user1WithAnotherKey = new User("key2", "user1");
+        User user2 = new User("key1", "user2");
 
-        assertThat(user1).isEqualTo(user1WithAnotherKey);
-        assertThat(user1.hashCode()).isEqualTo(user1WithAnotherKey.hashCode());
+        assertThat(user1).isEqualTo(user2);
+        assertThat(user1.hashCode()).isEqualTo(user2.hashCode());
     }
 
     @Test
