@@ -42,6 +42,9 @@ public class Users {
     }
 
     public User remove(String key) throws UserNotAllowedException, BidException {
+        if (AdminUser.KEY.equals(key)) {
+            throw new BidException("admin can't be removed");
+        }
         User user = getUser(key);
         users.remove(user);
         return user;

@@ -68,4 +68,13 @@ public class UsersTest {
 
         assertThat(admin).isNotNull().isInstanceOf(AdminUser.class);
     }
+
+    @Test
+    public void should_never_remove_admin_user() {
+        Users users = new Users();
+        thrown.expect(BidException.class);
+        thrown.expectMessage("admin can't be removed");
+
+        users.remove(AdminUser.KEY);
+    }
 }
