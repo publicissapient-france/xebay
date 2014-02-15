@@ -9,23 +9,22 @@ import static java.util.Collections.unmodifiableSet;
 
 public class User implements Principal {
     public static final int INITIAL_BALANCE = 1000;
-    private final String key;
 
+    private final String key;
     private final String name;
+    private final Set<Item> items;
+
     private double balance;
-    private Set<Item> items;
 
     public User(String key, String name) {
-        this.name = name;
         this.key = key;
-
-        this.balance = INITIAL_BALANCE;
+        this.name = name;
         this.items = new HashSet<>();
+        this.balance = INITIAL_BALANCE;
     }
 
-
-    public double getBalance() {
-        return balance;
+    public String getKey() {
+        return key;
     }
 
     @Override
@@ -33,12 +32,12 @@ public class User implements Principal {
         return name;
     }
 
-    public String getKey() {
-        return key;
-    }
-
     public Set<Item> getItems() {
         return unmodifiableSet(items);
+    }
+
+    public double getBalance() {
+        return balance;
     }
 
     void buy(Item item) {
