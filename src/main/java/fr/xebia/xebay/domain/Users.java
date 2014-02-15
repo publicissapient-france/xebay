@@ -45,11 +45,11 @@ public class Users {
 
     public void remove(String key, String name) throws UserNotAllowedException, BidException {
         if (!containsName(name)) {
-            throw new BidException(format("\"%s\" not registered", name));
+            throw new BidException(format("\"%s\" is not registered", name));
         }
         User user = getUser(key);
         if (!user.getName().equals(name)) {
-            throw new BidException(format("\"%s\" registered but bad name", name));
+            throw new BidException(format("\"%s\" is registered but bad name", name));
         }
         users.remove(user);
     }
@@ -59,7 +59,7 @@ public class Users {
         return findByKey(key);
     }
 
-    public void checkUserKey(String key) throws UserNotAllowedException {
+    private void checkUserKey(String key) throws UserNotAllowedException {
         if (!containsKey(key)) {
             throw new UserNotAllowedException(format("key \"%s\" is unknown", key));
         }
