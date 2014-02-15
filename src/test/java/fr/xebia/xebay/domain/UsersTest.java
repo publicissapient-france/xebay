@@ -41,21 +41,10 @@ public class UsersTest {
     @Test
     public void should_not_remove_non_existing_user() {
         Users users = new Users();
-        thrown.expect(BidException.class);
-        thrown.expectMessage("\"user1\" is not registered");
+        thrown.expect(UserNotAllowedException.class);
+        thrown.expectMessage("key \"key\" is unknown");
 
-        users.remove(null, "user1");
-    }
-
-    @Test
-    public void should_not_remove_non_existing_name() {
-        Users users = new Users();
-        users.create("user1");
-        String key = users.create("user2").getKey();
-        thrown.expect(BidException.class);
-        thrown.expectMessage("\"user1\" is registered but bad name");
-
-        users.remove(key, "user1");
+        users.remove("key");
     }
 
     @Test
@@ -63,8 +52,10 @@ public class UsersTest {
         Users users = new Users();
         String key = users.create("user1").getKey();
 
-        users.remove(key, "user1");
+        User removed = users.remove(key);
 
+        assertThat(removed.getKey()).isEqualTo(key);
+        assertThat(removed.getName()).isEqualTo("user1");
         thrown.expect(UserNotAllowedException.class);
         assertThat(users.getUser(key));
     }

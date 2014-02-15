@@ -54,8 +54,7 @@ public class UserResource {
     @UserAuthorization
     @RolesAllowed(ADMIN_ROLE)
     public void unregister(@QueryParam("key") String key) {
-        User user = users.getUser(key);
-        users.remove(user.getKey(), user.getName());
+        User user = users.remove(key);
         BID_SERVER.bidEngine.userIsUnregistered(user);
     }
 }
