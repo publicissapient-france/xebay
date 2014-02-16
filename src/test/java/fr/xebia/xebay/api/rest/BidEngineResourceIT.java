@@ -1,8 +1,8 @@
 package fr.xebia.xebay.api.rest;
 
+import fr.xebia.xebay.api.RegisterRule;
 import fr.xebia.xebay.api.rest.dto.BidDemand;
 import fr.xebia.xebay.api.rest.dto.ItemOffer;
-import fr.xebia.xebay.domain.AdminUser;
 import fr.xebia.xebay.domain.BidEngine;
 import fr.xebia.xebay.domain.BidOffer;
 import fr.xebia.xebay.utils.TomcatRule;
@@ -26,10 +26,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class BidEngineResourceIT {
     private Client client;
     private WebTarget target;
-    private String key;
 
     @ClassRule
     public static TomcatRule tomcatRule = new TomcatRule();
+
+    @Rule
+    public RegisterRule registerRule = new RegisterRule();
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -46,23 +48,6 @@ public class BidEngineResourceIT {
         client.close();
     }
 
-    private void register() throws Exception {
-        key = client.target("http://localhost:8080/rest/users/register")
-                .queryParam("name", "user1")
-                .request()
-                .header(HttpHeaders.AUTHORIZATION, AdminUser.KEY)
-                .get(String.class);
-    }
-
-    private void unregister() throws Exception {
-        client.target("http://localhost:8080/rest/users/unregister")
-                .queryParam("key", key)
-                .request()
-                .header(HttpHeaders.AUTHORIZATION, AdminUser.KEY)
-                .delete();
-        key = null;
-    }
-
     @Test
     public void current_bidOffer_can_be_retrieved() throws Exception {
         BidOffer bidOffer = target.path("current").request().get(BidOffer.class);
@@ -74,8 +59,6 @@ public class BidEngineResourceIT {
 
     @Test
     public void a_registered_user_can_post_form_bid() throws Exception {
-        register();
-
         BidOffer currentBidOffer = target.path("current").request().get(BidOffer.class);
 
         Form form = new Form();
@@ -84,13 +67,11 @@ public class BidEngineResourceIT {
         form.param("increment", "0.7");
 
         BidOffer bidOffer = target.path("/bid").request()
-                .header(HttpHeaders.AUTHORIZATION, key)
+                .header(HttpHeaders.AUTHORIZATION, registerRule.getKey())
                 .post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), BidOffer.class);
         assertThat(bidOffer.getItemName()).isEqualTo("an item");
         assertThat(bidOffer.getCurrentValue()).isEqualTo(5);
         assertThat(bidOffer.getTimeToLive()).isLessThan(BidEngine.DEFAULT_TIME_TO_LIVE).isNotNegative();
-
-        unregister();
     }
 
     @Test
@@ -113,55 +94,39 @@ public class BidEngineResourceIT {
 
     @Test
     public void a_registered_user_can_bid() throws Exception {
-        register();
-
         BidOffer currentBidOffer = target.path("current").request().get(BidOffer.class);
         double firstValue = currentBidOffer.getCurrentValue();
 
         BidDemand bidDemand = new BidDemand(currentBidOffer.getItemName(), currentBidOffer.getCurrentValue(), 0.7);
 
         BidOffer bidOffer = target.path("/bid").request()
-                .header(HttpHeaders.AUTHORIZATION, key)
+                .header(HttpHeaders.AUTHORIZATION, registerRule.getKey())
                 .post(Entity.entity(bidDemand, MediaType.APPLICATION_JSON_TYPE), BidOffer.class);
         assertThat(bidOffer.getItemName()).isEqualTo("an item");
         assertThat(bidOffer.getCurrentValue()).isEqualTo(firstValue + 0.7);
         assertThat(bidOffer.getTimeToLive()).isLessThan(BidEngine.DEFAULT_TIME_TO_LIVE).isNotNegative();
-
-        unregister();
     }
 
     @Test
     public void should_throw_forbidden_exception_when_user_try_offering_item_not_belonging_to_him() throws Exception {
-        register();
         ItemOffer itemOffer = new ItemOffer("an item", 10.0);
 
         expectedException.expect(ForbiddenException.class);
         expectedException.expectMessage("HTTP 403 Forbidden");
-        try {
-            target.path("/offer").request()
-                    .header(HttpHeaders.AUTHORIZATION, key)
-                    .post(Entity.entity(itemOffer, MediaType.APPLICATION_JSON_TYPE), ItemOffer.class);
-        } finally {
-            unregister();
-        }
-
+        target.path("/offer").request()
+                .header(HttpHeaders.AUTHORIZATION, registerRule.getKey())
+                .post(Entity.entity(itemOffer, MediaType.APPLICATION_JSON_TYPE), ItemOffer.class);
     }
 
     @Test
     public void should_throw_notfound_excption_when_user_offering_item_that_doesnt_exists() throws Exception {
-        register();
         ItemOffer itemOffer = new ItemOffer("unknown item", 10.0);
 
         expectedException.expect(NotFoundException.class);
         expectedException.expectMessage("HTTP 404 Not Found");
 
-        try {
-            target.path("/offer").request()
-                    .header(HttpHeaders.AUTHORIZATION, key)
-                    .post(Entity.entity(itemOffer, MediaType.APPLICATION_JSON_TYPE), ItemOffer.class);
-        } finally {
-            unregister();
-        }
+        target.path("/offer").request()
+                .header(HttpHeaders.AUTHORIZATION, registerRule.getKey())
+                .post(Entity.entity(itemOffer, MediaType.APPLICATION_JSON_TYPE), ItemOffer.class);
     }
-
 }

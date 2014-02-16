@@ -1,17 +1,13 @@
 package fr.xebia.xebay.api.socket;
 
 import com.google.gson.Gson;
-import fr.xebia.xebay.domain.AdminUser;
+import fr.xebia.xebay.api.RegisterRule;
 import fr.xebia.xebay.api.rest.dto.BidDemand;
 import fr.xebia.xebay.domain.BidOffer;
 import fr.xebia.xebay.utils.TomcatRule;
-import org.assertj.core.api.Assertions;
 import org.assertj.core.data.Offset;
 import org.glassfish.jersey.jackson.JacksonFeature;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.*;
 
 import javax.websocket.ClientEndpoint;
 import javax.websocket.ContainerProvider;
@@ -28,6 +24,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @ClientEndpoint
 public class BidEngineSocketIT {
     @ClassRule
@@ -35,14 +33,15 @@ public class BidEngineSocketIT {
 
     private static Gson gson = new Gson();
 
+    @Rule
+    public RegisterRule registerRule = new RegisterRule();
+
     private List<BidOffer> bidOfferList = new ArrayList<>();
     private WebTarget target = null;
-    private String key = null;
 
     @Before
     public void before() throws URISyntaxException, IOException, DeploymentException {
         target = ClientBuilder.newClient().register(JacksonFeature.class).target("http://localhost:8080/rest");
-        key = target.path("users/register").queryParam("name", "user1").request().header(HttpHeaders.AUTHORIZATION, AdminUser.KEY).get(String.class);
         ContainerProvider.getWebSocketContainer().connectToServer(this, new URI("ws://localhost:8080/socket/bidEngine"));
     }
 
@@ -58,25 +57,22 @@ public class BidEngineSocketIT {
     @After
     public void after() throws IOException {
         bidOfferList.clear();
-        target.path("users/unregister").queryParam("key", key).request().header(HttpHeaders.AUTHORIZATION, AdminUser.KEY).delete();
     }
 
     @Test(timeout = 5000)
     public void test_good_demand_is_notified() throws Exception {
-
         BidOffer currentBidOffer = target.path("bidEngine/current").request().get(BidOffer.class);
         BidDemand bidDemand = new BidDemand(currentBidOffer.getItemName(), currentBidOffer.getCurrentValue(), 10);
 
-        target.path("bidEngine/bid").request().header(HttpHeaders.AUTHORIZATION, key)
+        target.path("bidEngine/bid").request().header(HttpHeaders.AUTHORIZATION, registerRule.getKey())
                 .post(Entity.entity(bidDemand, MediaType.APPLICATION_JSON));
         synchronized (this) {
             this.wait();
         }
 
         BidOffer bidOffer = bidOfferList.get(0);
-        Assertions.assertThat(bidOffer.getItemName()).isEqualTo("an item");
-        Assertions.assertThat(bidOffer.getCurrentValue()).isEqualTo(currentBidOffer.getCurrentValue() + 10, Offset.offset(0d));
-
+        assertThat(bidOffer.getItemName()).isEqualTo("an item");
+        assertThat(bidOffer.getCurrentValue()).isEqualTo(currentBidOffer.getCurrentValue() + 10, Offset.offset(0d));
     }
 }
 

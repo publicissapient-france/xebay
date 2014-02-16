@@ -69,6 +69,6 @@ public class UserResourceIT {
 
     @Test(expected = BadRequestException.class)
     public void registering_without_name_is_a_bad_request() {
-        target.path("register").request().get(String.class);
+        target.path("register").request().header(HttpHeaders.AUTHORIZATION, AdminUser.KEY).get(String.class);
     }
 }
