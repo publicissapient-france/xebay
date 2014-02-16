@@ -14,9 +14,14 @@ You can use [editorconfig](http://editorconfig.org) to synchronize this project 
 
 ### TODO
 
- - dev : unify input and output types for apis (immutable views of state of BidEngine when requested)
  - web : provide an admin page to add or remove users
  - web : provide a user page to update informations (name, avatar, etc.)
- - api : developer wants to sell items that he owns
  - web : as a visitor, I should see graph of values of each items
- - clients : implements selling items that are owned by a developper
+ - web/API : add categories
+ - all : change BidEngineResource.bid(name, curValue, increment) to BidEngineResource.bid(name, newValue)
+ - domain : create packages for isolation
+ - all : toggle custom rules to change the game
+    - if a user sell an item at his sell price, bank buy it right now without any conditions
+    - if a user owns every item of a category he gain a 500$ bonus
+    - for next 5 bids bank gives 100$ to buyer
+    - etc.
