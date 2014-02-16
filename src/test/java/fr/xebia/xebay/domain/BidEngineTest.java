@@ -14,4 +14,13 @@ public class BidEngineTest {
 
         new BidEngine(new Items());
     }
+
+    @Test
+    public void admin_should_not_bid() {
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3)));
+        expectedException.expect(BidException.class);
+        expectedException.expectMessage("admin is not authorized to bid");
+
+        bidEngine.bid(new AdminUser(), "an item", 4.3, 1.2);
+    }
 }
