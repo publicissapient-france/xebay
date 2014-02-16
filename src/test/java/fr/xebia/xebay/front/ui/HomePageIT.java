@@ -32,7 +32,6 @@ public class HomePageIT extends PhantomJsTest {
     public void should_signin() {
         goTo(homePage);
 
-        fill("#name").with("user1");
         fill("#key").with(registerRule.getKey());
         $("button", withText("Sign in")).click();
 

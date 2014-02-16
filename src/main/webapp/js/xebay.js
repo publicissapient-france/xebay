@@ -7,39 +7,17 @@ var xebay = {
     this.getCurrentBidOffer();
     var cookie = $.cookie("xebay");
     if (cookie) {
-      this.signinWith(cookie.name, cookie.key);
+      this.signinWith(cookie.key);
     }
   },
-  "signup": function () {
-    this.signupWith($("#name").val());
-  },
-  "signupWith": function (name) {
-    $.get("/rest/users/register", {"name": name}, function (key) {
-      xebay.signedin(name, key);
-    });
-  },
   "signin": function () {
-    this.signinWith($("#name").val(), $("#key").val());
+    this.signinWith($("#key").val());
   },
-  "signinWith": function (name, key) {
+  "signinWith": function (key) {
     $.ajax("/rest/users/info", {
       "headers": {"Authorization": key},
-      "data": {"name": name},
-      "success": function () {
-        xebay.signedin(name, key);
-      }
-    });
-  },
-  "signout": function () {
-    var cookie = $.cookie("xebay");
-    this.signoutWith(cookie.key);
-  },
-  "signoutWith": function (key) {
-    $.ajax("/rest/users/unregister", {
-      "headers": {"Authorization": key},
-      "type": "DELETE",
-      "success": function () {
-        xebay.signedout();
+      "success": function (data) {
+        xebay.signedin(data.name, key);
       }
     });
   },
@@ -51,7 +29,7 @@ var xebay = {
     $.cookie("xebay", {"name": name, "key": key});
     this.connect();
   },
-  "signedout": function () {
+  "signout": function () {
     $("#key-display").text("");
     $(".unregistered").show();
     $(".registered").hide();
@@ -60,7 +38,7 @@ var xebay = {
   "getCurrentBidOffer": function () {
     $.getJSON("/rest/bidEngine/current").done(function (currentBidOffer) {
       xebay.updateCurrentBidOffer(currentBidOffer);
-    }).fail(function (jqxhr) {
+    }).fail(function () {
       xebay.updateCurrentBidOffer({});
       setTimeout(xebay.getCurrentBidOffer, 5000);
     });
@@ -132,7 +110,7 @@ var xebay = {
     if (!count) {
       count = 0;
     }
-    $("#bidAnswerLog p").slice(count).remove();
+    $("#bidAnswerLog").find("p").slice(count).remove();
   }
 };
 
