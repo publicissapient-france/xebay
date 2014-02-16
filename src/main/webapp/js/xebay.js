@@ -3,6 +3,7 @@ var xebay = {
   "timeout": null,
   "init": function () {
     $(".registered").hide();
+    $("#register-message-display").hide();
     $.cookie.json = true;
     this.getCurrentBidOffer();
     var cookie = $.cookie("xebay");
@@ -18,10 +19,14 @@ var xebay = {
       "headers": {"Authorization": key},
       "success": function (data) {
         xebay.signedin(data.name, key);
+      },
+      "error": function () {
+        $("#register-message-display").text("Please provide a valid API key").show();
       }
     });
   },
   "signedin": function (name, key) {
+    $("#register-message-display").text("").hide();
     $("#name-display").text(name);
     $("#key-display").text(key);
     $(".registered").show();

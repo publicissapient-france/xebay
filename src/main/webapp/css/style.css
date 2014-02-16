@@ -58,3 +58,7 @@ body {
   height: 120px;
   border-radius: 6px;
 }
+
+#register-message-display {
+  padding: 6px;
+}
