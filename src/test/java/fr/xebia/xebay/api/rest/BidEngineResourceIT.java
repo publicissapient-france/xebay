@@ -63,8 +63,7 @@ public class BidEngineResourceIT {
 
         Form form = new Form();
         form.param("name", currentBidOffer.getItemName());
-        form.param("value", String.valueOf(currentBidOffer.getCurrentValue()));
-        form.param("increment", "0.7");
+        form.param("value", String.valueOf(currentBidOffer.getCurrentValue() + 0.7));
 
         BidOffer bidOffer = target.path("/bid").request()
                 .header(HttpHeaders.AUTHORIZATION, registerRule.getKey())
@@ -97,7 +96,7 @@ public class BidEngineResourceIT {
         BidOffer currentBidOffer = target.path("current").request().get(BidOffer.class);
         double firstValue = currentBidOffer.getCurrentValue();
 
-        BidDemand bidDemand = new BidDemand(currentBidOffer.getItemName(), currentBidOffer.getCurrentValue(), 0.7);
+        BidDemand bidDemand = new BidDemand(currentBidOffer.getItemName(), currentBidOffer.getCurrentValue() + 0.7);
 
         BidOffer bidOffer = target.path("/bid").request()
                 .header(HttpHeaders.AUTHORIZATION, registerRule.getKey())

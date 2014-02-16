@@ -34,7 +34,7 @@ public class BidEngineListenerTest {
         BidEngineListener bidEngineListener = mock(BidEngineListener.class);
         bidEngine.addListener(bidEngineListener);
 
-        bidEngine.bid(user, "an item", 4.3, 5);
+        bidEngine.bid(user, "an item", 4.3 + 5);
 
         ArgumentCaptor<BidOffer> argumentCaptor = ArgumentCaptor.forClass(BidOffer.class);
         verify(bidEngineListener).onBidOfferBidded(argumentCaptor.capture());

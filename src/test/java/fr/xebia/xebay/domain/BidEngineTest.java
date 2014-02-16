@@ -21,6 +21,6 @@ public class BidEngineTest {
         expectedException.expect(BidException.class);
         expectedException.expectMessage("admin is not authorized to bid");
 
-        bidEngine.bid(new AdminUser(), "an item", 4.3, 1.2);
+        bidEngine.bid(new AdminUser(), "an item", 4.3 + 1.2);
     }
 }

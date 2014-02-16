@@ -56,7 +56,7 @@ public class XebayTest {
     @Test
     public void a_bid_can_be_done() {
         BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3)));
-        BidOffer bidOffer = bidEngine.bid(user, "an item", 4.3, 2.1);
+        BidOffer bidOffer = bidEngine.bid(user, "an item", 4.3 + 2.1);
 
         assertThat(bidOffer.currentValue).isEqualTo(6.4);
         assertThat(bidOffer.futureBuyerName).isNotNull().isEqualTo("user1");
@@ -68,17 +68,9 @@ public class XebayTest {
         expectedException.expect(BidException.class);
         expectedException.expectMessage("current item to bid is not \"another item\"");
 
-        bidEngine.bid(user, "another item", 4.3, 2.1);
+        bidEngine.bid(user, "another item", 4.3 + 2.1);
     }
 
-    @Test
-    public void user_have_to_bid_on_current_item_value() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3)));
-        expectedException.expect(BidException.class);
-        expectedException.expectMessage("value for \"an item\" is not 4.1 but 4.3");
-
-        bidEngine.bid(user, "an item", 4.1, 2.1);
-    }
 
     @Test
     public void should_not_bid_with_less_than_ten_percent_of_initial_value() {
@@ -86,8 +78,16 @@ public class XebayTest {
         expectedException.expect(BidException.class);
         expectedException.expectMessage("increment 0.42 is less than ten percent of initial value 4.3 of item \"an item\"");
 
-        bidEngine.bid(user, "an item", 4.3, 0.42);
+        bidEngine.bid(user, "an item", 4.3 + 0.42);
     }
+    @Test
+    public void should_bid_if_exactly_ten_percent_increment_of_initial_value() {
+        BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 38.07)));
+        BidOffer bidOffer = bidEngine.bid(user, "an item", 38.07 + 3.807);
+
+        assertThat(bidOffer.currentValue).isEqualTo(38.07 + 3.807);
+    }
+
 
     @Test
     public void a_bid_is_valid_until_bid_offer_expires() {
@@ -101,7 +101,7 @@ public class XebayTest {
     @Test
     public void when_only_one_user_bids_then_he_wins() {
         BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3), new Item("another item", 2.4)), expiration);
-        bidEngine.bid(user, "an item", 4.3, 0.7);
+        bidEngine.bid(user, "an item", 4.3 + 0.7);
 
         resolvesBidOffer(bidEngine);
 
@@ -117,7 +117,7 @@ public class XebayTest {
         Item anItem = new Item("an item", 4.3);
         Item anotherItem = new Item("another item", 2.4);
         BidEngine bidEngine = new BidEngine(new Items(anItem, anotherItem), expiration);
-        bidEngine.bid(user, "an item", 4.3, 0.7);
+        bidEngine.bid(user, "an item", 4.3 + 0.7);
         resolvesBidOffer(bidEngine);
 
         bidEngine.offer(anItem, 5.9, user);
@@ -146,7 +146,7 @@ public class XebayTest {
         Item anotherItem = new Item("another item", 2.4);
 
         BidEngine bidEngine = new BidEngine(new Items(anItem, anotherItem), expiration);
-        bidEngine.bid(user, "an item", 4.3, 2.1);
+        bidEngine.bid(user, "an item", 4.3 + 2.1);
         resolvesBidOffer(bidEngine);
         bidEngine.offer(anItem, 5.9, user);
         resolvesBidOffer(bidEngine);
@@ -177,7 +177,7 @@ public class XebayTest {
 
         BidEngine bidEngine = new BidEngine(new Items(anItem, anotherItem), expiration);
 
-        bidEngine.bid(user, "an item", 4.3, 2.1);
+        bidEngine.bid(user, "an item", 4.3 + 2.1);
         resolvesBidOffer(bidEngine);
 
         bidEngine.offer(anItem, 5.9, user);
@@ -196,13 +196,13 @@ public class XebayTest {
         BidEngine bidEngine = new BidEngine(new Items(anItem), expiration);
 
         // let seller buy "an item"
-        bidEngine.bid(seller, "an item", 4.3, 0.7);
+        bidEngine.bid(seller, "an item", 4.3 + 0.7);
         resolvesBidOffer(bidEngine);
         // let seller offer his item
         bidEngine.offer(anItem, 5.0, seller);
         resolvesBidOffer(bidEngine);
         // let buyer buy "an item" owned by seller
-        bidEngine.bid(buyer, "an item", 5.0, 0.8);
+        bidEngine.bid(buyer, "an item", 5.0 + 0.8);
         resolvesBidOffer(bidEngine);
 
         assertThat(seller.getItems()).isEmpty();
@@ -225,7 +225,7 @@ public class XebayTest {
         expectedException.expect(BidException.class);
         expectedException.expectMessage("user can't bid 1001.0, not enought money left.");
 
-        bidEngine.bid(user, "an item", initialItemValue, 101);
+        bidEngine.bid(user, "an item", initialItemValue + 101);
     }
 
     @Test(expected = BidException.class)
@@ -233,7 +233,7 @@ public class XebayTest {
         int initialItemValue = User.INITIAL_BALANCE - 100;
         BidEngine bidEngine = new BidEngine(new Items(new Item("an item", initialItemValue), new Item("another item", 5)));
         try {
-            bidEngine.bid(user, "an item", initialItemValue, 101);
+            bidEngine.bid(user, "an item", initialItemValue + 101);
         } finally {
             assertThat(user.getBalance()).isEqualTo(User.INITIAL_BALANCE);
             BidOffer bidOffer = bidEngine.currentBidOffer();
@@ -244,7 +244,7 @@ public class XebayTest {
     @Test
     public void should_not_offer_item_that_is_owned_by_a_user() {
         BidEngine bidEngine = new BidEngine(new Items(new Item("an item", 4.3)), expiration);
-        bidEngine.bid(user, "an item", 4.3, 2.1);
+        bidEngine.bid(user, "an item", 4.3 + 2.1);
         resolvesBidOffer(bidEngine);
 
         BidOffer noNewBidOffer = bidEngine.currentBidOffer();

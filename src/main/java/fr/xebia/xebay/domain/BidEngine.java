@@ -36,13 +36,13 @@ public class BidEngine {
         return bidOffer.isPresent() ? bidOffer.get().toBidOffer() : null;
     }
 
-    public BidOffer bid(User user, String name, double value, double increment) throws BidException {
+    public BidOffer bid(User user, String itemName, double newValue) throws BidException {
         if (user.isInRole(AdminUser.ADMIN_ROLE)) {
             throw new BidException("admin is not authorized to bid");
         }
         nextBidOfferIfExpired();
-        BidOffer updatedBidOffer = bidOffer.orElseThrow(() -> new BidException(format("current item to bid is not \"%s\"", name)))
-                .increment(name, value, increment, user)
+        BidOffer updatedBidOffer = bidOffer.orElseThrow(() -> new BidException(format("current item to bid is not \"%s\"", itemName)))
+                .bid(itemName, newValue, user)
                 .toBidOffer();
         listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferBidded(updatedBidOffer));
         return updatedBidOffer;

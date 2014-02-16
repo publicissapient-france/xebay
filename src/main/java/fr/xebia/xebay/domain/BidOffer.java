@@ -1,11 +1,14 @@
 package fr.xebia.xebay.domain;
 
 public class BidOffer {
+    //item
     String itemName;
+    String ownerName;
     double initialValue;
+
     double currentValue;
     long timeToLive;
-    String ownerName;
+    //bidder
     String futureBuyerName;
 
     public BidOffer() {

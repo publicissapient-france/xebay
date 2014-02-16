@@ -9,6 +9,8 @@ import org.junit.rules.ExpectedException;
 import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class AuthenticationTest {
     @Rule
@@ -49,7 +51,10 @@ public class AuthenticationTest {
 
         BidEngineResource bidEngineResource = new BidEngineResource();
 
-        bidEngineResource.bid("an item", 4.3, 20.0, new SecurityContextImpl(null)); //todo fake user without right
+        User badUser = mock(User.class);
+        when(badUser.getName()).thenReturn(null);
+
+        bidEngineResource.bid("an item", 4.3 + 20.0, new SecurityContextImpl(badUser)); //todo fake user without right
     }
 
     @Test
@@ -57,6 +62,6 @@ public class AuthenticationTest {
         BidEngineResource bidEngineResource = new BidEngineResource();
         BidOffer bidOffer = bidEngineResource.currentBidOffer();
 
-        bidEngineResource.bid(bidOffer.getItemName(), bidOffer.getCurrentValue(), 20.0, new SecurityContextImpl(new User("abc", "user1")));
+        bidEngineResource.bid(bidOffer.getItemName(), bidOffer.getCurrentValue()+ 20.0, new SecurityContextImpl(new User("abc", "user1")));
     }
 }

@@ -48,9 +48,9 @@ public class BidEngineResource {
     @Path("/bid")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @UserAuthorization
-    public BidOffer bid(@FormParam("name") String name, @FormParam("value") Double curValue, @FormParam("increment") Double increment, @Context SecurityContext securityContext) {
+    public BidOffer bid(@FormParam("name") String itemName, @FormParam("value") Double newValue, @Context SecurityContext securityContext) {
         User user = (User) securityContext.getUserPrincipal();
-        return bidEngine.bid(user, name, curValue, increment);
+        return bidEngine.bid(user, itemName, newValue);
     }
 
     @POST
@@ -59,7 +59,7 @@ public class BidEngineResource {
     @UserAuthorization
     public BidOffer bid(BidDemand bidDemand, @Context SecurityContext securityContext) {
         User user = (User) securityContext.getUserPrincipal();
-        return bidEngine.bid(user, bidDemand.getItemName(), bidDemand.getCurrentValue(), bidDemand.getIncrement());
+        return bidEngine.bid(user, bidDemand.getItemName(), bidDemand.getValue());
     }
 
     @POST

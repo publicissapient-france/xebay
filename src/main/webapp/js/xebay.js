@@ -72,8 +72,7 @@ var xebay = {
   "sendBidDemand": function (increment) {
     var bidDemand = {
       itemName: xebay.bidOfferInfo["itemName"],
-      currentValue: xebay.bidOfferInfo["currentValue"],
-      increment: increment
+      value: xebay.bidOfferInfo["currentValue"]+ increment
     };
     $.ajax("/rest/bidEngine/bid", {
       type: "POST",

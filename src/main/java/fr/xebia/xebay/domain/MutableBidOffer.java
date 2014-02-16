@@ -6,6 +6,7 @@ import static java.lang.Math.max;
 import static java.lang.String.format;
 
 class MutableBidOffer {
+    private static final double MIN_BID_RATIO = 0.1;
     private final Item item;
     private final double initialValue;
     private long initialTimeToLive;
@@ -75,15 +76,13 @@ class MutableBidOffer {
         }
     }
 
-    MutableBidOffer increment(String name, double value, double increment, User user) throws BidException {
+    MutableBidOffer bid(String name, double newValue, User user) throws BidException {
         checkUser(user);
         if (!item.getName().equals(name)) {
             throw new BidException(format("current item to bid is not \"%s\"", name));
         }
-        if (currentValue != value) {
-            throw new BidException(format("value for \"%s\" is not %s but %s", item.getName(), Double.toString(value), Double.toString(currentValue)));
-        }
-        if (currentValue / 10 > increment) {
+        double increment = exactCalcul(newValue - currentValue);
+        if (exactCalcul(currentValue * MIN_BID_RATIO) > increment) {
             throw new BidException(format("increment %s is less than ten percent of initial value %s of item \"%s\"", Double.toString(increment), Double.toString(item.getValue()), item.getName()));
         }
 
@@ -92,6 +91,10 @@ class MutableBidOffer {
         }
 
         return increment(increment, user);
+    }
+
+    private double exactCalcul(double value){
+        return Math.round(value * 100000 ) / 100000.0;
     }
 
     private void checkUser(User user) {

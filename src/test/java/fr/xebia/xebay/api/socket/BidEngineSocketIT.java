@@ -68,7 +68,7 @@ public class BidEngineSocketIT {
     @Test(timeout = 5000)
     public void test_good_demand_is_notified() throws Exception {
         BidOffer currentBidOffer = target.path("bidEngine/current").request().get(BidOffer.class);
-        BidDemand bidDemand = new BidDemand(currentBidOffer.getItemName(), currentBidOffer.getCurrentValue(), 10);
+        BidDemand bidDemand = new BidDemand(currentBidOffer.getItemName(), currentBidOffer.getCurrentValue() + 10);
 
         target.path("bidEngine/bid").request().header(HttpHeaders.AUTHORIZATION, registerRule.getKey())
                 .post(Entity.entity(bidDemand, MediaType.APPLICATION_JSON));
