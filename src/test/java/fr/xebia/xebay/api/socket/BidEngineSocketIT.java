@@ -1,11 +1,11 @@
 package fr.xebia.xebay.api.socket;
 
-import com.google.gson.Gson;
 import fr.xebia.xebay.api.RegisterRule;
 import fr.xebia.xebay.api.rest.dto.BidDemand;
 import fr.xebia.xebay.domain.BidOffer;
 import fr.xebia.xebay.utils.TomcatRule;
 import org.assertj.core.data.Offset;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.junit.*;
 
@@ -24,14 +24,16 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 @ClientEndpoint
 public class BidEngineSocketIT {
     @ClassRule
     public static TomcatRule tomcatRule = new TomcatRule();
 
-    private static Gson gson = new Gson();
+    private static ObjectMapper gson = new ObjectMapper();
 
     @Rule
     public RegisterRule registerRule = new RegisterRule();
@@ -47,8 +49,12 @@ public class BidEngineSocketIT {
 
     @OnMessage
     public void onMessage(String message) {
-        BidOffer bidOffer = gson.fromJson(message, BidOffer.class);
-        bidOfferList.add(bidOffer);
+        try {
+            BidOffer bidOffer = gson.readValue(message, BidOffer.class);
+            bidOfferList.add(bidOffer);
+        } catch (IOException e) {
+            fail(format("error during reading %s", message), e);
+        }
         synchronized (this) {
             this.notify();
         }
