@@ -128,4 +128,22 @@ public class BidEngineResourceIT {
                 .header(HttpHeaders.AUTHORIZATION, registerRule.getKey())
                 .post(Entity.entity(itemOffer, MediaType.APPLICATION_JSON_TYPE), ItemOffer.class);
     }
+
+    //TODO FIXME api should throw 400 and not 500-server-error if empty body sent
+    //-upgrade jackson
+    //-JsonMappingExceptionMapper to throw 400
+    @Test
+    public void should_throw_bad_request_exception_when_posting_null() throws Exception {
+        ItemOffer itemOffer = null;
+
+/*
+        expectedException.expect(BadRequestException.class);
+        expectedException.expectMessage("HTTP 400 Bad Request");
+
+        target.path("/offer").request()
+                .header(HttpHeaders.AUTHORIZATION, registerRule.getKey())
+                .post(Entity.entity(itemOffer, MediaType.APPLICATION_JSON_TYPE), ItemOffer.class);
+*/
+    }
+
 }
