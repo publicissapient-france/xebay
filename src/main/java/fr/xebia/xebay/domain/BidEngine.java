@@ -51,19 +51,20 @@ public class BidEngine {
     public void offer(Item item, double initialValue, User user) {
         nextBidOfferIfExpired();
         checkUserOffer(user, item);
-        BidOfferToSell bidOfferToSell = checkOffer(item, initialValue);
+        item.setValue(initialValue);
+        BidOfferToSell bidOfferToSell = new BidOfferToSell(item);
+        checkOffer(bidOfferToSell);
         bidOffersToSell.offer(bidOfferToSell);
     }
 
-    private BidOfferToSell checkOffer(Item item, double initialValue) {
+    private void checkOffer(BidOfferToSell bidOfferToSell) {
+        Item item = bidOfferToSell.getItem();
         if (bidOffer.isPresent() && bidOffer.get().getItem().equals(item)) {
             throw new BidForbiddenException(format("item \"%s\" is the current offer thus can't be offered", item.getName()));
         }
-        BidOfferToSell bidOfferToSell = new BidOfferToSell(item, initialValue);
         if (bidOffersToSell.contains(bidOfferToSell)) {
-            throw new BidForbiddenException(format("item \"%s\" is already offered", item));
+            throw new BidForbiddenException(format("item \"%s\" is already offered", item.getName()));
         }
-        return bidOfferToSell;
     }
 
     private void checkUserOffer(User user, Item item) {

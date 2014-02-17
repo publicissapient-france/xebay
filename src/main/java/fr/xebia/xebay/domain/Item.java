@@ -20,6 +20,10 @@ public class Item {
         return value;
     }
 
+    public void setValue(double value) {
+        this.value = value;
+    }
+
     public User getOwner() {
         return owner;
     }

@@ -127,6 +127,7 @@ public class XebayTest {
         assertThat(bidOffer.itemName).isEqualTo("an item");
         assertThat(bidOffer.ownerName).isNotNull().isEqualTo("user1");
         assertThat(bidOffer.initialValue).isEqualTo(5.9);
+        assertThat(bidOffer.currentValue).isEqualTo(5.9);
     }
 
     @Test
