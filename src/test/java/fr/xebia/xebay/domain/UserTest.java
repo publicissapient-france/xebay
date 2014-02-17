@@ -36,7 +36,7 @@ public class UserTest {
 
     @Test
     public void a_user_can_buy_an_item() {
-        Item item = new Item("item", 20);
+        Item item = new Item("category", "item", 20);
         User user = new User("key", "user");
 
         user.buy(item);
@@ -47,7 +47,7 @@ public class UserTest {
 
     @Test
     public void a_user_can_sell_an_item() {
-        Item item = new Item("item", 20);
+        Item item = new Item("category", "item", 20);
         User user = new User("key", "user");
         user.buy(item);
 

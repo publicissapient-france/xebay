@@ -25,7 +25,7 @@ public class HomePageIT extends PhantomJsTest {
     public void should_display_current_bid_offer() {
         goTo(homePage);
 
-        assertThat($("#current-bid-offer").getText()).contains("an item");
+        assertThat($("#current-bid-offer").getText()).contains("an item", "category");
     }
 
     @Test

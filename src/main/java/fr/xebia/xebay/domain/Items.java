@@ -63,11 +63,14 @@ public class Items {
             while ((currentLine = csv.readLine()) != null) {
                 Matcher matcher = columnPattern.matcher(currentLine);
 
-                if (matcher.find() && matcher.find()) {
-                    String name = matcher.group("withoutQuote") != null ? matcher.group("withoutQuote") : matcher.group("withQuotes");
-
+                if (matcher.find()) {
+                    String category = matcher.group("withoutQuote") != null ? matcher.group("withoutQuote") : matcher.group("withQuotes");
                     if (matcher.find()) {
-                        items.add(new Item(name.trim(), Double.valueOf(matcher.group("withoutQuote"))));
+                        String name = matcher.group("withoutQuote") != null ? matcher.group("withoutQuote") : matcher.group("withQuotes");
+
+                        if (matcher.find()) {
+                            items.add(new Item(category.trim(), name.trim(), Double.valueOf(matcher.group("withoutQuote"))));
+                        }
                     }
                 }
             }

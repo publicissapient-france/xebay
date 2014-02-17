@@ -39,9 +39,7 @@
 
 <div class="jumbotron">
   <div class="container">
-    <p>
-      A bid server to enjoy coding HTTP bid clients
-    </p>
+    <p>A bid server to enjoy coding HTTP bid clients</p>
   </div>
 </div>
 
@@ -105,7 +103,7 @@
 <script type="text/javascript" src="js/handlebars-v1.3.0.js"></script>
 <script id="currentBidOfferTemplate" type="text/template">
   {{#if itemName}}
-  <p>{{itemName}} {{futureBuyerName}}</p>
+  <p>[{{itemCategory}}] {{itemName}} {{futureBuyerName}}</p>
   <img src="images/{{itemName}}.png"/>
   <div class="flipboard">
     <span id="timeToLiveSeconds" class="flipboardchar"></span>

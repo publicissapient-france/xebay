@@ -3,11 +3,14 @@ package fr.xebia.xebay.domain;
 import static java.lang.Math.rint;
 
 public class Item {
+    private final String category;
     private final String name;
+
     private double value;
     private User owner;
 
-    public Item(String name, double value) {
+    public Item(String category, String name, double value) {
+        this.category = category;
         this.name = name;
         this.value = rint(value * 100) / 100;
     }
@@ -26,6 +29,10 @@ public class Item {
 
     public User getOwner() {
         return owner;
+    }
+
+    public String getCategory() {
+        return category;
     }
 
     void concludeTransaction(double value, User buyer) {

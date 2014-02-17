@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ItemTest {
     @Test
     public void round_amount() throws Exception {
-        Item item = new Item("an item", 4.337);
+        Item item = new Item("category", "an item", 4.337);
 
         double value = item.getValue();
 

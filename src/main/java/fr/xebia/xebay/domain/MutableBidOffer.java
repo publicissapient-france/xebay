@@ -29,6 +29,7 @@ class MutableBidOffer {
 
     BidOffer toBidOffer() {
         return new BidOffer(item.getName(),
+                item.getCategory(),
                 initialValue,
                 currentValue,
                 getTimeToLive(),
@@ -93,8 +94,8 @@ class MutableBidOffer {
         return increment(increment, user);
     }
 
-    private double exactCalcul(double value){
-        return Math.round(value * 100000 ) / 100000.0;
+    private double exactCalcul(double value) {
+        return Math.round(value * 100000) / 100000.0;
     }
 
     private void checkUser(User user) {

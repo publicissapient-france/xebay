@@ -15,7 +15,7 @@ public enum BidServer {
     BidServer() {
         users = new Users();
         if (System.getProperty("xebay.test") != null) {
-            items = new Items(new Item("an item", 4.3));
+            items = new Items(new Item("category", "an item", 4.3));
             bidEngine = new BidEngine(items, () -> false);
             return;
         }

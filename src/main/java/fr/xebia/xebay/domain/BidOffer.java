@@ -3,6 +3,7 @@ package fr.xebia.xebay.domain;
 public class BidOffer {
     //item
     String itemName;
+    String itemCategory;
     String ownerName;
     double initialValue;
 
@@ -14,8 +15,9 @@ public class BidOffer {
     public BidOffer() {
     }
 
-    public BidOffer(String itemName, double initialValue, double currentValue, long timeToLive, String ownerName, String futureBuyerName) {
+    public BidOffer(String itemName, String itemCategory, double initialValue, double currentValue, long timeToLive, String ownerName, String futureBuyerName) {
         this.itemName = itemName;
+        this.itemCategory = itemCategory;
         this.timeToLive = timeToLive;
         this.initialValue = initialValue;
         this.currentValue = currentValue;
@@ -25,6 +27,10 @@ public class BidOffer {
 
     public String getItemName() {
         return itemName;
+    }
+
+    public String getItemCategory() {
+        return itemCategory;
     }
 
     public double getInitialValue() {
@@ -46,5 +52,4 @@ public class BidOffer {
     public String getFutureBuyerName() {
         return futureBuyerName;
     }
-
 }

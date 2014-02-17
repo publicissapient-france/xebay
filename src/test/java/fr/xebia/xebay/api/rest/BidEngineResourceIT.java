@@ -52,6 +52,7 @@ public class BidEngineResourceIT {
     public void current_bidOffer_can_be_retrieved() throws Exception {
         BidOffer bidOffer = target.path("current").request().get(BidOffer.class);
         assertThat(bidOffer.getItemName()).isEqualTo("an item");
+        assertThat(bidOffer.getItemCategory()).isEqualTo("category");
         assertThat(bidOffer.getCurrentValue()).isNotNull();
         assertThat(bidOffer.getTimeToLive()).isLessThan(BidEngine.DEFAULT_TIME_TO_LIVE).isNotNegative();
         assertThat(bidOffer.getFutureBuyerName()).isNull();

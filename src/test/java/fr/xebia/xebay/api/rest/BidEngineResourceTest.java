@@ -47,7 +47,7 @@ public class BidEngineResourceTest {
 
     @Test
     public void should_call_bidEngine_offer_when_user_offering_item() {
-        Item item = new Item("an item", 1.2);
+        Item item = new Item("category", "an item", 1.2);
 
         when(securityContext.getUserPrincipal()).thenReturn(user);
         when(items.find("an item")).thenReturn(item);
