@@ -189,6 +189,48 @@ public class XebayTest {
     }
 
     @Test
+    public void a_user_can_buy_an_item_resoled_by_another() {
+        Item anItem = new Item("an item", 4.3);
+        BidEngine bidEngine = new BidEngine(new Items(anItem), expiration);
+        User seller = users.create("seller");
+        User buyer = users.create("buyer");
+
+        //seller buys the item
+        BidOffer bidOffer = bidEngine.bid(seller, "an item", 4.3 + 0.7);
+        assertThat(bidOffer.itemName).isEqualTo("an item");
+        assertThat(bidOffer.currentValue).isEqualTo(5.0);
+        assertThat(bidOffer.initialValue).isEqualTo(4.3);
+        assertThat(bidOffer.futureBuyerName).isNotNull().isEqualTo("seller");
+        assertThat(bidOffer.ownerName).isNull();
+
+        resolvesBidOffer(bidEngine);
+        assertThat(anItem.getOwner().getName()).isNotNull().isEqualTo("seller");
+
+        //seller offers th item
+        bidEngine.offer(anItem, 5.9, seller);
+        resolvesBidOffer(bidEngine);
+
+        bidOffer = bidEngine.currentBidOffer();
+        assertThat(bidOffer.itemName).isEqualTo("an item");
+        assertThat(bidOffer.ownerName).isNotNull().isEqualTo("seller");
+        assertThat(bidOffer.initialValue).isEqualTo(5.9);
+        assertThat(bidOffer.currentValue).isEqualTo(5.9);
+        assertThat(bidOffer.futureBuyerName).isNull();
+
+        //buyer buys the item
+        bidOffer =bidEngine.bid(buyer, "an item", 5.9 + 0.6);
+
+        assertThat(bidOffer.itemName).isEqualTo("an item");
+        assertThat(bidOffer.initialValue).isEqualTo(5.9);
+        assertThat(bidOffer.currentValue).isEqualTo(6.5);
+        assertThat(bidOffer.futureBuyerName).isNotNull().isEqualTo("buyer");
+
+        resolvesBidOffer(bidEngine);
+
+        assertThat(anItem.getOwner().getName()).isNotNull().isEqualTo("buyer");
+    }
+
+    @Test
     public void when_a_bid_is_won_seller_increase_money() {
         Item anItem = new Item("an item", 4.3);
 
