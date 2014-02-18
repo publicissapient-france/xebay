@@ -52,10 +52,11 @@ public class BidEngineResourceTest {
         when(securityContext.getUserPrincipal()).thenReturn(user);
         when(items.find("an item")).thenReturn(item);
 
-        bidEngineResource.offer(new ItemOffer("an item", 10.0), securityContext);
+        bidEngineResource.offer(new ItemOffer("category", "an item", 10.0), securityContext);
 
         verify(bidEngine, times(1)).offer(item, 10.0, user);
     }
+
     @Test
     public void should_throw_404_notFoundException_when_offering_unknown_item() throws Exception {
         when(securityContext.getUserPrincipal()).thenReturn(user);
@@ -67,7 +68,7 @@ public class BidEngineResourceTest {
         thrown.expect(WebApplicationException.class);
         thrown.expectMessage("HTTP 404 Not Found");
 
-        bidEngineResource.offer(new ItemOffer(unknownItem, 10.0), securityContext);
+        bidEngineResource.offer(new ItemOffer("category", unknownItem, 10.0), securityContext);
     }
 
 }

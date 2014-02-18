@@ -109,7 +109,7 @@ public class BidEngineResourceIT {
 
     @Test
     public void should_throw_forbidden_exception_when_user_try_offering_item_not_belonging_to_him() throws Exception {
-        ItemOffer itemOffer = new ItemOffer("an item", 10.0);
+        ItemOffer itemOffer = new ItemOffer("category", "an item", 10.0);
 
         expectedException.expect(ForbiddenException.class);
         expectedException.expectMessage("HTTP 403 Forbidden");
@@ -119,8 +119,8 @@ public class BidEngineResourceIT {
     }
 
     @Test
-    public void should_throw_notfound_excption_when_user_offering_item_that_doesnt_exists() throws Exception {
-        ItemOffer itemOffer = new ItemOffer("unknown item", 10.0);
+    public void should_throw_notfound_exception_when_user_offering_item_that_doesnt_exists() throws Exception {
+        ItemOffer itemOffer = new ItemOffer("category", "unknown item", 10.0);
 
         expectedException.expect(NotFoundException.class);
         expectedException.expectMessage("HTTP 404 Not Found");
