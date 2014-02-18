@@ -24,7 +24,7 @@ class MutableBidOffer {
         this.initialValue = initialValue;
         this.initialTimeToLive = initialTimeToLive;
         this.created = new Date().getTime();
-        this.currentValue = item.getValue();
+        this.currentValue = initialValue;
     }
 
     BidOffer toBidOffer() {
