@@ -4,7 +4,7 @@ public class BidOffer {
     private Item item;
     private long timeToLive;
     private String userName;
-    private Boolean expired;
+    private boolean expired;
 
     public BidOffer() {
     }
@@ -28,7 +28,7 @@ public class BidOffer {
         return userName;
     }
 
-    public Boolean getExpired() {
+    public boolean isExpired() {
         return expired;
     }
 }

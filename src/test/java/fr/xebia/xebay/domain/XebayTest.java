@@ -45,7 +45,7 @@ public class XebayTest {
         assertThat(bidOffer.getItem().getCategory()).isEqualTo("category");
         assertThat(bidOffer.getItem().getValue()).isEqualTo(4.3);
         assertThat(bidOffer.getUserName()).isNull();
-        assertThat(bidOffer.getExpired()).isFalse();
+        assertThat(bidOffer.isExpired()).isFalse();
         assertThat(bidOffer.getTimeToLive()).isLessThanOrEqualTo(DEFAULT_TIME_TO_LIVE);
     }
 
