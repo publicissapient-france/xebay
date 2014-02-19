@@ -71,4 +71,8 @@ public class Item {
     public void userIsUnregistered() {
         this.owner = null;
     }
+
+    public fr.xebia.xebay.domain.model.Item toItem() {
+        return new fr.xebia.xebay.domain.model.Item(category, name, value);
+    }
 }

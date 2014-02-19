@@ -54,13 +54,13 @@
       <p>
         GET /rest/bidEngine/current<br>
         200 resonse contains json object<br>
-        <code>{"itemName":"itemName","currentValue":34.4,"timeToLive":3945}</code><br>
+        <code>{"itemName":"itemName","value":34.4,"timeToLive":3945}</code><br>
         404 if no more bid offer is available
       </p>
       <p>
         POST /rest/bidEngine/bid<br>
         200 resonse contains json object<br>
-        <code>{"itemName":"itemName","currentValue":34.4,"timeToLive":3945}</code><br>
+        <code>{"itemName":"itemName","value":34.4,"timeToLive":3945}</code><br>
         404 if no more bid offer is available
       </p>
     </div>
@@ -102,27 +102,27 @@
 <script type="text/javascript" src="js/bootstrap-3.0.3.min.js"></script>
 <script type="text/javascript" src="js/handlebars-v1.3.0.js"></script>
 <script id="currentBidOfferTemplate" type="text/template">
-  {{#if itemName}}
-  <p>[{{itemCategory}}] {{itemName}} {{futureBuyerName}}</p>
-  <img src="images/{{itemName}}.png"/>
+  {{#if item}}
+  <p>[{{item.category}}] {{item.name}} {{userName}}</p>
+  <img src="images/{{item.name}}.png"/>
   <div class="flipboard">
     <span id="timeToLiveSeconds" class="flipboardchar"></span>
     <span id="timeToLiveMilliseconds" class="flipboardchar"></span><span>s</span>
   </div>
-  <div class="flipboard"><span class="flipboardchar">{{currentValue}}</span><span>$</span></p>
+  <div class="flipboard"><span class="flipboardchar">{{item.value}}</span><span>$</span></p>
   {{else}}
   <p>There is no bid offer.</p>
   {{/if}}
 </script>
 <script id="bidSuccessTemplate" type="text/template">
-  <p class="alert alert-success col-md-12">Your {{increment}} points bid on {{itemName}} at {{currentValue}} points has succeeded.</p>
+  <p class="alert alert-success col-md-12">Your {{increment}} points bid on {{itemName}} at {{value}} points has succeeded.</p>
 </script>
 <script id="bidFailTemplate" type="text/template">
   <p class="alert alert-danger col-md-12">Your bid has failed because {{cause}}.</p>
 </script>
 <script id="bidOfferTemplate" type="text/template">
   {{#if ownerName}}
-  <p class="alert alert-info col-md-12">{{futureBuyerName}} has bid {{currentValue}} points for {{itemName}}.</p>
+  <p class="alert alert-info col-md-12">{{userName}} has bid {{value}} points for {{itemName}}.</p>
   {{/if}}
 </script>
 <script type="text/javascript" src="js/xebay.js"></script>

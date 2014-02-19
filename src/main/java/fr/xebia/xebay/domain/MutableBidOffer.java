@@ -1,5 +1,7 @@
 package fr.xebia.xebay.domain;
 
+import fr.xebia.xebay.domain.model.BidOffer;
+
 import java.util.Date;
 
 import static java.lang.Math.max;
@@ -7,12 +9,11 @@ import static java.lang.String.format;
 
 class MutableBidOffer {
     private static final double MIN_BID_RATIO = 0.1;
-    private final Item item;
-    private final double initialValue;
-    private long initialTimeToLive;
+    final Item item;
+    final double initialValue;
     private final long created;
-
-    private double currentValue;
+    private final long initialTimeToLive;
+    double currentValue;
     private User futureBuyer;
 
     MutableBidOffer(Item item, long initialTimeToLive) {
@@ -27,30 +28,13 @@ class MutableBidOffer {
         this.currentValue = initialValue;
     }
 
-    BidOffer toBidOffer() {
-        return new BidOffer(item.getName(),
-                item.getCategory(),
-                initialValue,
+    BidOffer toBidOffer(boolean isExpired) {
+        return new BidOffer(item.getCategory(),
+                item.getName(),
                 currentValue,
                 getTimeToLive(),
-                item.getOwner() == null ? null : item.getOwner().getName(),
-                futureBuyer == null ? null : futureBuyer.getName());
-    }
-
-    User getFutureBuyer() {
-        return futureBuyer;
-    }
-
-    Item getItem() {
-        return item;
-    }
-
-    double getInitialValue() {
-        return initialValue;
-    }
-
-    double getCurrentValue() {
-        return currentValue;
+                futureBuyer == null ? (item.getOwner() == null ? null : item.getOwner().getName()) : futureBuyer.getName(),
+                isExpired);
     }
 
     void resolve() {

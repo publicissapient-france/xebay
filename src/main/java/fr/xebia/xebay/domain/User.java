@@ -6,13 +6,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static java.util.Collections.unmodifiableSet;
+import static java.util.stream.Collectors.toSet;
 
 public class User implements Principal {
     public static final int INITIAL_BALANCE = 1000;
 
     private final String key;
     private final String name;
-    private final Set<Item> items;
+    private final Set<fr.xebia.xebay.domain.Item> items;
 
     private double balance;
 
@@ -32,7 +33,7 @@ public class User implements Principal {
         return name;
     }
 
-    public Set<Item> getItems() {
+    public Set<fr.xebia.xebay.domain.Item> getItems() {
         return unmodifiableSet(items);
     }
 
@@ -40,14 +41,20 @@ public class User implements Principal {
         return balance;
     }
 
-    void buy(Item item) {
+    void buy(fr.xebia.xebay.domain.Item item) {
         balance -= item.getValue();
         items.add(item);
     }
 
-    public void sell(Item item) {
+    public void sell(fr.xebia.xebay.domain.Item item) {
         balance += item.getValue();
         items.remove(item);
+    }
+
+    public fr.xebia.xebay.domain.model.User toUser() {
+        return new fr.xebia.xebay.domain.model.User(name, balance, items.stream()
+                .map((item) -> item.toItem())
+                .collect(toSet()));
     }
 
     @Override

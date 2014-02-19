@@ -1,5 +1,6 @@
 package fr.xebia.xebay.domain;
 
+import fr.xebia.xebay.domain.model.BidOffer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,11 +40,9 @@ public class BidEngineListenerTest {
         ArgumentCaptor<BidOffer> argumentCaptor = ArgumentCaptor.forClass(BidOffer.class);
         verify(bidEngineListener).onBidOfferBidded(argumentCaptor.capture());
         BidOffer updatedBidOffer = argumentCaptor.getValue();
-        assertThat(updatedBidOffer.futureBuyerName).isNotNull().isEqualTo("user1");
-        assertThat(updatedBidOffer.currentValue).isEqualTo(9.3);
-        assertThat(updatedBidOffer.itemName).isEqualTo("an item");
-        assertThat(updatedBidOffer.ownerName).isNull();
-        assertThat(updatedBidOffer.initialValue).isEqualTo(4.3);
+        assertThat(updatedBidOffer.getUserName()).isNotNull().isEqualTo("user1");
+        assertThat(updatedBidOffer.getItem().getName()).isEqualTo("an item");
+        assertThat(updatedBidOffer.getItem().getValue()).isEqualTo(9.3);
     }
 
     @Test
@@ -57,11 +56,9 @@ public class BidEngineListenerTest {
         ArgumentCaptor<BidOffer> argumentCaptor = ArgumentCaptor.forClass(BidOffer.class);
         verify(bidEngineListener).onBidOfferResolved(argumentCaptor.capture());
         BidOffer resolvedBidOffer = argumentCaptor.getValue();
-        assertThat(resolvedBidOffer.futureBuyerName).isNull();
-        assertThat(resolvedBidOffer.initialValue).isEqualTo(4.3);
-        assertThat(resolvedBidOffer.itemName).isEqualTo("an item");
-        assertThat(resolvedBidOffer.currentValue).isEqualTo(3.87);
-        assertThat(resolvedBidOffer.ownerName).isNull();
+        assertThat(resolvedBidOffer.getUserName()).isNull();
+        assertThat(resolvedBidOffer.getItem().getName()).isEqualTo("an item");
+        assertThat(resolvedBidOffer.getItem().getValue()).isEqualTo(3.87);
     }
 
     @Test
@@ -75,11 +72,9 @@ public class BidEngineListenerTest {
         ArgumentCaptor<BidOffer> argumentCaptor = ArgumentCaptor.forClass(BidOffer.class);
         verify(bidEngineListener).onNewBidOffer(argumentCaptor.capture());
         BidOffer newBidOffer = argumentCaptor.getValue();
-        assertThat(newBidOffer.futureBuyerName).isNull();
-        assertThat(newBidOffer.initialValue).isEqualTo(2.4);
-        assertThat(newBidOffer.itemName).isEqualTo("another item");
-        assertThat(newBidOffer.currentValue).isEqualTo(2.4);
-        assertThat(newBidOffer.ownerName).isNull();
+        assertThat(newBidOffer.getUserName()).isNull();
+        assertThat(newBidOffer.getItem().getName()).isEqualTo("another item");
+        assertThat(newBidOffer.getItem().getValue()).isEqualTo(2.4);
     }
 
     private void resolvesBidOffer(BidEngine bidEngine) {

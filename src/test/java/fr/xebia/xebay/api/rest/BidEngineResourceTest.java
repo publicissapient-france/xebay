@@ -1,6 +1,6 @@
 package fr.xebia.xebay.api.rest;
 
-import fr.xebia.xebay.api.rest.dto.ItemOffer;
+import fr.xebia.xebay.api.rest.dto.BidDemand;
 import fr.xebia.xebay.domain.BidEngine;
 import fr.xebia.xebay.domain.Item;
 import fr.xebia.xebay.domain.Items;
@@ -22,11 +22,12 @@ import static org.mockito.Mockito.*;
 public class BidEngineResourceTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-
-    @Mock private BidEngine bidEngine;
-    @Mock private Items items;
-    @Mock SecurityContext securityContext ;
-
+    @Mock
+    SecurityContext securityContext;
+    @Mock
+    private BidEngine bidEngine;
+    @Mock
+    private Items items;
     private User user;
     private BidEngineResource bidEngineResource;
 
@@ -52,7 +53,7 @@ public class BidEngineResourceTest {
         when(securityContext.getUserPrincipal()).thenReturn(user);
         when(items.find("an item")).thenReturn(item);
 
-        bidEngineResource.offer(new ItemOffer("category", "an item", 10.0), securityContext);
+        bidEngineResource.offer(new BidDemand("an item", 10.0), securityContext);
 
         verify(bidEngine, times(1)).offer(item, 10.0, user);
     }
@@ -64,11 +65,9 @@ public class BidEngineResourceTest {
         String unknownItem = "unknown item";
         when(items.find(unknownItem)).thenReturn(null);
 
-
         thrown.expect(WebApplicationException.class);
         thrown.expectMessage("HTTP 404 Not Found");
 
-        bidEngineResource.offer(new ItemOffer("category", unknownItem, 10.0), securityContext);
+        bidEngineResource.offer(new BidDemand(unknownItem, 10.0), securityContext);
     }
-
 }

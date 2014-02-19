@@ -1,5 +1,7 @@
 package fr.xebia.xebay.domain;
 
+import fr.xebia.xebay.domain.model.BidOffer;
+
 import java.util.*;
 
 import static java.lang.String.format;
@@ -33,7 +35,7 @@ public class BidEngine {
 
     public BidOffer currentBidOffer() {
         nextBidOfferIfExpired();
-        return bidOffer.isPresent() ? bidOffer.get().toBidOffer() : null;
+        return bidOffer.isPresent() ? bidOffer.get().toBidOffer(bidOfferExpiration.isExpired()) : null;
     }
 
     public BidOffer bid(User user, String itemName, double newValue) throws BidException {
@@ -43,7 +45,7 @@ public class BidEngine {
         nextBidOfferIfExpired();
         BidOffer updatedBidOffer = bidOffer.orElseThrow(() -> new BidException(format("current item to bid is not \"%s\"", itemName)))
                 .bid(itemName, newValue, user)
-                .toBidOffer();
+                .toBidOffer(bidOfferExpiration.isExpired());
         listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferBidded(updatedBidOffer));
         return updatedBidOffer;
     }
@@ -56,7 +58,7 @@ public class BidEngine {
     }
 
     private BidOfferToSell checkOffer(Item item, double initialValue) {
-        if (bidOffer.isPresent() && bidOffer.get().getItem().equals(item)) {
+        if (bidOffer.isPresent() && bidOffer.get().item.equals(item)) {
             throw new BidForbiddenException(format("item \"%s\" is the current offer thus can't be offered", item.getName()));
         }
         BidOfferToSell bidOfferToSell = new BidOfferToSell(item, initialValue);
@@ -87,10 +89,10 @@ public class BidEngine {
         if (bidOfferExpiration.isExpired()) {
             bidOffer.ifPresent((bidOffer) -> {
                 bidOffer.resolve();
-                listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferResolved(bidOffer.toBidOffer()));
+                listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferResolved(bidOffer.toBidOffer(true)));
             });
             bidOffer = nextBidOffer();
-            bidOffer.ifPresent((bidOffer) -> listeners.forEach(bidEngineListener -> bidEngineListener.onNewBidOffer(bidOffer.toBidOffer())));
+            bidOffer.ifPresent((bidOffer) -> listeners.forEach(bidEngineListener -> bidEngineListener.onNewBidOffer(bidOffer.toBidOffer(true))));
         }
     }
 

@@ -2,7 +2,7 @@ package fr.xebia.xebay.api.socket;
 
 import fr.xebia.xebay.api.RegisterRule;
 import fr.xebia.xebay.api.rest.dto.BidDemand;
-import fr.xebia.xebay.domain.BidOffer;
+import fr.xebia.xebay.domain.model.BidOffer;
 import fr.xebia.xebay.utils.TomcatRule;
 import org.assertj.core.data.Offset;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -68,7 +68,7 @@ public class BidEngineSocketIT {
     @Test(timeout = 5000)
     public void test_good_demand_is_notified() throws Exception {
         BidOffer currentBidOffer = target.path("bidEngine/current").request().get(BidOffer.class);
-        BidDemand bidDemand = new BidDemand(currentBidOffer.getItemName(), currentBidOffer.getCurrentValue() + 10);
+        BidDemand bidDemand = new BidDemand(currentBidOffer.getItem().getName(), currentBidOffer.getItem().getValue() + 10);
 
         target.path("bidEngine/bid").request().header(HttpHeaders.AUTHORIZATION, registerRule.getKey())
                 .post(Entity.entity(bidDemand, MediaType.APPLICATION_JSON));
@@ -77,8 +77,8 @@ public class BidEngineSocketIT {
         }
 
         BidOffer bidOffer = bidOfferList.get(0);
-        assertThat(bidOffer.getItemName()).isEqualTo("an item");
-        assertThat(bidOffer.getCurrentValue()).isEqualTo(currentBidOffer.getCurrentValue() + 10, Offset.offset(0d));
+        assertThat(bidOffer.getItem().getName()).isEqualTo("an item");
+        assertThat(bidOffer.getItem().getValue()).isEqualTo(currentBidOffer.getItem().getValue() + 10, Offset.offset(0d));
     }
 }
 

@@ -1,9 +1,12 @@
 package fr.xebia.xebay.api.rest;
 
 import fr.xebia.xebay.api.rest.dto.BidDemand;
-import fr.xebia.xebay.api.rest.dto.ItemOffer;
 import fr.xebia.xebay.api.rest.security.UserAuthorization;
-import fr.xebia.xebay.domain.*;
+import fr.xebia.xebay.domain.BidEngine;
+import fr.xebia.xebay.domain.Item;
+import fr.xebia.xebay.domain.Items;
+import fr.xebia.xebay.domain.User;
+import fr.xebia.xebay.domain.model.BidOffer;
 
 import javax.annotation.security.PermitAll;
 import javax.inject.Singleton;
@@ -66,16 +69,15 @@ public class BidEngineResource {
     @Path("/offer")
     @Consumes(MediaType.APPLICATION_JSON)
     @UserAuthorization
-    public Response offer(ItemOffer itemOffer, @Context SecurityContext securityContext) {
+    public Response offer(BidDemand bidDemand, @Context SecurityContext securityContext) {
         User user = (User) securityContext.getUserPrincipal();
-        Item item = items.find(itemOffer.getName());
-        if(null == item){
+        Item item = items.find(bidDemand.getItemName());
+        if (null == item) {
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity(String.format("item \"%s\" doesn't exist", itemOffer.getName()))
+                    .entity(String.format("item \"%s\" doesn't exist", bidDemand.getItemName()))
                     .build());
         }
-        bidEngine.offer(item, itemOffer.getValue(), user);
+        bidEngine.offer(item, bidDemand.getValue(), user);
         return Response.ok().build();
     }
-
 }

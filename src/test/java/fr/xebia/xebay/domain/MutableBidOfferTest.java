@@ -10,7 +10,7 @@ public class MutableBidOfferTest {
     public void should_have_same_value_for_current_and_intial_value_at_startup() {
         MutableBidOffer mutableBidOffer = new MutableBidOffer(null, 4.3, DEFAULT_TIME_TO_LIVE);
 
-        assertThat(mutableBidOffer.getInitialValue()).isEqualTo(4.3);
-        assertThat(mutableBidOffer.getCurrentValue()).isEqualTo(4.3);
+        assertThat(mutableBidOffer.initialValue).isEqualTo(4.3);
+        assertThat(mutableBidOffer.currentValue).isEqualTo(4.3);
     }
 }

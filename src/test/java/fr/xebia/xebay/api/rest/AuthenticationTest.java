@@ -1,7 +1,10 @@
 package fr.xebia.xebay.api.rest;
 
 import fr.xebia.xebay.api.rest.security.SecurityContextImpl;
-import fr.xebia.xebay.domain.*;
+import fr.xebia.xebay.domain.BidException;
+import fr.xebia.xebay.domain.User;
+import fr.xebia.xebay.domain.Users;
+import fr.xebia.xebay.domain.model.BidOffer;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -35,16 +38,6 @@ public class AuthenticationTest {
     }
 
     @Test
-    public void cant_get_user_if_key_is_not_correct() {
-        UserResource userResource = new UserResource(new Users());
-
-        excpectedException.expect(UserNotAllowedException.class);
-        excpectedException.expectMessage("key \"fake key\" is unknown");
-
-        userResource.getUser("fake key");
-    }
-
-    @Test
     public void cant_bid_if_no_user() {
         excpectedException.expect(BidException.class);
         excpectedException.expectMessage("bad user");
@@ -62,6 +55,6 @@ public class AuthenticationTest {
         BidEngineResource bidEngineResource = new BidEngineResource();
         BidOffer bidOffer = bidEngineResource.currentBidOffer();
 
-        bidEngineResource.bid(bidOffer.getItemName(), bidOffer.getCurrentValue()+ 20.0, new SecurityContextImpl(new User("abc", "user1")));
+        bidEngineResource.bid(bidOffer.getItem().getName(), bidOffer.getItem().getValue() + 20.0, new SecurityContextImpl(new User("abc", "user1")));
     }
 }

@@ -1,6 +1,6 @@
 package fr.xebia.xebay.api.socket;
 
-import fr.xebia.xebay.domain.BidOffer;
+import fr.xebia.xebay.domain.model.BidOffer;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.websocket.EncodeException;
@@ -9,7 +9,6 @@ import javax.websocket.EndpointConfig;
 import java.io.IOException;
 
 public class BidOfferEncoder implements Encoder.Text<BidOffer> {
-
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override

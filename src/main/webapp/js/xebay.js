@@ -1,5 +1,5 @@
 var xebay = {
-  "bidOfferInfo": {},
+  "bidOffer": {},
   "timeout": null,
   "init": function () {
     $(".registered").hide();
@@ -49,14 +49,14 @@ var xebay = {
     });
   },
   "updateCurrentBidOffer": function (currentBidOffer) {
-    xebay.bidOfferInfo = currentBidOffer;
-    $("#current-bid-offer").html(xebay.currentBidOfferTemplate(xebay.bidOfferInfo));
-    if (xebay.bidOfferInfo.timeToLive && !xebay.timeout) {
+    xebay.bidOffer = currentBidOffer;
+    $("#current-bid-offer").html(xebay.currentBidOfferTemplate(xebay.bidOffer));
+    if (xebay.bidOffer.timeToLive && !xebay.timeout) {
       xebay.updateTimeToLive();
     }
   },
   "updateTimeToLive": function () {
-    var timeToLive = xebay.bidOfferInfo.timeToLive;
+    var timeToLive = xebay.bidOffer.timeToLive;
     if (timeToLive < 0) {
       xebay.timeout = null;
       xebay.getCurrentBidOffer();
@@ -67,12 +67,12 @@ var xebay = {
     $("#timeToLiveSeconds").html(timeToLiveSeconds);
     $("#timeToLiveMilliseconds").html(timeToLiveMilliseconds);
     xebay.timeout = setTimeout(xebay.updateTimeToLive, 100);
-    xebay.bidOfferInfo.timeToLive -= 100;
+    xebay.bidOffer.timeToLive -= 100;
   },
   "sendBidDemand": function (increment) {
     var bidDemand = {
-      itemName: xebay.bidOfferInfo["itemName"],
-      value: xebay.bidOfferInfo["currentValue"]+ increment
+      "itemName": xebay.bidOffer.item.name,
+      "value": xebay.bidOffer.item.value + increment
     };
     $.ajax("/rest/bidEngine/bid", {
       type: "POST",

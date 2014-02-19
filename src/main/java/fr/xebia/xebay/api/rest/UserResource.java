@@ -1,9 +1,8 @@
 package fr.xebia.xebay.api.rest;
 
-import fr.xebia.xebay.api.rest.dto.UserInfo;
 import fr.xebia.xebay.api.rest.security.UserAuthorization;
-import fr.xebia.xebay.domain.User;
 import fr.xebia.xebay.domain.Users;
+import fr.xebia.xebay.domain.model.User;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
@@ -27,16 +26,11 @@ public class UserResource {
         this.users = BID_SERVER.users;
     }
 
-    User getUser(@PathParam("key") String key) {
-        return users.getUser(key);
-    }
-
     @GET
     @Path("/info")
     @UserAuthorization
-    public UserInfo getUserInfo(@Context SecurityContext securityContext) {
-        User user = (User) securityContext.getUserPrincipal();
-        return UserInfo.newUserInfo(user);
+    public User getUser(@Context SecurityContext securityContext) {
+        return ((fr.xebia.xebay.domain.User) securityContext.getUserPrincipal()).toUser();
     }
 
     @GET
@@ -45,7 +39,7 @@ public class UserResource {
     @UserAuthorization
     @RolesAllowed(ADMIN_ROLE)
     public String register(@QueryParam("name") String name) {
-        User user = users.create(name);
+        fr.xebia.xebay.domain.User user = users.create(name);
         return user.getKey();
     }
 
@@ -54,7 +48,7 @@ public class UserResource {
     @UserAuthorization
     @RolesAllowed(ADMIN_ROLE)
     public void unregister(@QueryParam("key") String key) {
-        User user = users.remove(key);
+        fr.xebia.xebay.domain.User user = users.remove(key);
         BID_SERVER.bidEngine.userIsUnregistered(user);
     }
 }

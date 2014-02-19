@@ -1,14 +1,11 @@
 package fr.xebia.xebay.api.socket;
 
-import fr.xebia.xebay.domain.*;
+import fr.xebia.xebay.domain.BidEngineListener;
+import fr.xebia.xebay.domain.model.BidOffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.websocket.Session;
-import javax.websocket.OnOpen;
-import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.EncodeException;
+import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.Collections;
@@ -36,7 +33,7 @@ public class BidEngineSocket implements BidEngineListener {
     @OnClose
     @OnError
     public void onDisconnect(Session session) {
-      sessions.remove(session);
+        sessions.remove(session);
     }
 
     @Override

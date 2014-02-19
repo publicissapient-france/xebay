@@ -17,9 +17,6 @@ You can use [editorconfig](http://editorconfig.org) to synchronize this project 
  - web : provide an admin page to add or remove users
  - web : provide a user page to update informations (name, avatar, etc.)
  - web : as a visitor, I should see graph of values of each items
- - web/API : add categories
- - all : change BidEngineResource.bid(name, curValue, increment) to BidEngineResource.bid(name, newValue)
- - domain : create packages for isolation
  - all : toggle custom rules to change the game
     - if a user sell an item at his sell price, bank buy it right now without any conditions
     - if a user owns every item of a category he gain a 500$ bonus
