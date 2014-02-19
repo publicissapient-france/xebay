@@ -64,7 +64,13 @@
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-websocket-api</artifactId>
-            <version>7.0.50</version>
+            <version>7.0.52</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat7-websocket</artifactId>
+            <version>7.0.52</version>
             <scope>provided</scope>
         </dependency>
 
@@ -104,25 +110,25 @@
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-core</artifactId>
-            <version>7.0.50</version>
+            <version>7.0.52</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-logging-juli</artifactId>
-            <version>7.0.50</version>
+            <version>7.0.52</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-jsp-api</artifactId>
-            <version>7.0.50</version>
+            <version>7.0.52</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-jasper</artifactId>
-            <version>7.0.50</version>
+            <version>7.0.52</version>
             <scope>test</scope>
             <exclusions>
                 <!-- transitive dependency to org.eclipse.jdt.core.compiler:ecj:4.3.1 is not pushed to maven-central -->
