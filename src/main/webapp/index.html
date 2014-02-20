@@ -71,6 +71,7 @@
         <p>Please sign in to start bidding !</p>
       </div>
       <div class="registered">
+        <span class="row" id="user-display"></span>
         <span class="row disconnected">
           <button class="btn btn-success col-md-4 col-md-offset-8 disconnected" onclick="xebay.connect()">
             Connect <span class="glyphicon glyphicon-transfer"></span>
@@ -125,6 +126,13 @@
   <p class="alert alert-info col-md-12">{{userName}} has bid {{value}} points for {{itemName}}.</p>
   {{/if}}
 </script>
+<script id="userTemplate" type="text/template">
+  <p>Hey {{name}} you have {{balance}}$</p>
+  <ul>{{#each items}}
+    <li><img src="images/{{name}}.png"/> [{{category}}] {{name}} {{value}}</li>
+  {{else}}<li>no items</li>
+  {{/each}}</ul>
+</script>
 <script type="text/javascript" src="js/xebay.js"></script>
 <script type="text/javascript">
   $(document).ready(function () {
@@ -132,6 +140,7 @@
     xebay.bidSuccessTemplate = Handlebars.compile($("#bidSuccessTemplate").html());
     xebay.bidFailTemplate = Handlebars.compile($("#bidFailTemplate").html());
     xebay.bidOfferTemplate = Handlebars.compile($("#bidOfferTemplate").html());
+    xebay.userTemplate = Handlebars.compile($("#userTemplate").html());
     xebay.init();
   });
 </script>

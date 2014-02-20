@@ -18,26 +18,28 @@ var xebay = {
     $.ajax("/rest/users/info", {
       "headers": {"Authorization": key},
       "success": function (data) {
-        xebay.signedin(data.name, key);
+        xebay.signedin(data, key);
       },
       "error": function () {
         $("#register-message-display").text("Please provide a valid API key").show();
       }
     });
   },
-  "signedin": function (name, key) {
+  "signedin": function (user, key) {
     $("#register-message-display").text("").hide();
-    $("#name-display").text(name);
+    $("#name-display").text(user.name);
     $("#key-display").text(key);
     $(".registered").show();
     $(".unregistered").hide();
-    $.cookie("xebay", {"name": name, "key": key});
+    $("#user-display").html(xebay.userTemplate(user));
+    $.cookie("xebay", {"key": key});
     this.connect();
   },
   "signout": function () {
     $("#key-display").text("");
     $(".unregistered").show();
     $(".registered").hide();
+    $("#user-display").text("");
     $.removeCookie("xebay");
   },
   "getCurrentBidOffer": function () {
