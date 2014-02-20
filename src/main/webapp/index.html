@@ -185,13 +185,20 @@
 </script>
 <script id="userTemplate" type="text/template">
   <p>Hey {{name}} you have {{balance}}$</p>
-  <ul>
-    {{#each items}}
-    <li><img src="images/{{name}}.png"/> [{{category}}] {{name}} {{value}}</li>
-    {{else}}
-    <li>no items</li>
+  <table>
+    <tr>
+      <th>category</th>
+      <th>item</th>
+      <th>value</th>
+    </tr>
+    {{#each items}}<tr>
+      <td>{{category}}</td>
+      <td><img src="images/{{name}}.png" width="20em" height="20em"/> {{name}}</td>
+      <td>{{value}}</td>
+    </tr>
+    {{else}}<tr><td colspan="3">no items</td></tr>
     {{/each}}
-  </ul>
+  </table>
 </script>
 <script type="text/javascript" src="js/xebay.js"></script>
 <script type="text/javascript">
