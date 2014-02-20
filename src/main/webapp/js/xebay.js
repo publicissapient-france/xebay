@@ -103,6 +103,17 @@ var xebay = {
       $("#console").prepend(xebay.bidFailTemplate({ cause: jqxhr.responseText }));
     });
   },
+  "offer": function (name, value, buttonId) {
+    $.ajax("/rest/bidEngine/offer", {
+      "type": "POST",
+      "headers": { "Authorization": $.cookie("xebay").key },
+      "contentType": "application/json",
+      "data": JSON.stringify({"itemName": name, "value": value}),
+      "success": function () {
+        $("#" + buttonId).text("");
+      }
+    });
+  },
   "connect": function () {
     this.socket = new WebSocket("ws://" + window.location.host + "/socket/bidEngine");
     this.socket.onmessage = this.onBidOffer;
