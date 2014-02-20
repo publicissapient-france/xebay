@@ -1,5 +1,7 @@
 package fr.xebia.xebay.domain;
 
+import fr.xebia.xebay.domain.model.*;
+import fr.xebia.xebay.domain.model.User;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -54,5 +56,16 @@ public class AdminUserTest {
         boolean isInAnotherRole = adminUser.isInRole("another role");
 
         assertThat(isInAnotherRole).isFalse();
+    }
+
+    @Test
+    public void should_be_exported_to_model_user() {
+        AdminUser adminUser = new AdminUser();
+
+        User user = adminUser.toUser();
+
+        assertThat(user.getName()).isEqualTo("admin");
+        assertThat(user.getBalance()).isZero();
+        assertThat(user.getItems()).isEmpty();
     }
 }

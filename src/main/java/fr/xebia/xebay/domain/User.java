@@ -52,7 +52,7 @@ public class User implements Principal {
     }
 
     public fr.xebia.xebay.domain.model.User toUser() {
-        return new fr.xebia.xebay.domain.model.User(name, balance, items.stream()
+        return new fr.xebia.xebay.domain.model.User(name, getBalance(), items.stream()
                 .map((item) -> item.toItem())
                 .collect(toSet()));
     }
