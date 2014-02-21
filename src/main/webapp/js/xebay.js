@@ -1,6 +1,5 @@
 var xebay = {
   "bidOffer": {},
-  "timeout": null,
   "init": function () {
     $(".registered").hide();
     $("#register-message-display").hide();
@@ -42,6 +41,20 @@ var xebay = {
     $("#user-display").text("");
     $.removeCookie("xebay");
   },
+  "register": function() {
+    var name = $("#name").val()
+    $.ajax("/rest/users/register", {
+      "headers": {"Authorization": $.cookie("xebay").key},
+      "data": {"name": $("#name").val() },
+      "success": function (key) {
+        $("#console").prepend(xebay.registerSuccessTemplate({name: name}));
+        $("#users").append(xebay.adminUserTemplate({name: name, key: key}));
+      },
+      "error": function (jqxhr) {
+        $("#console").prepend(xebay.registerFailTemplate({name: name, cause: jqxhr.responseText }));
+      }
+    });
+  },
   "getCurrentBidOffer": function () {
     $.getJSON("/rest/bidEngine/current").done(function (currentBidOffer) {
       xebay.updateCurrentBidOffer(currentBidOffer);
@@ -72,6 +85,9 @@ var xebay = {
     xebay.bidOffer.timeToLive -= 100;
   },
   "sendBidDemand": function (increment) {
+    if (!increment) {
+      increment = $("#increment").val();
+    }
     var bidDemand = {
       "itemName": xebay.bidOffer.item.name,
       "value": xebay.bidOffer.item.value + increment
@@ -82,9 +98,9 @@ var xebay = {
       contentType: "application/json",
       data: JSON.stringify(bidDemand)
     }).done(function () {
-      $("#bidAnswerLog").prepend(xebay.bidSuccessTemplate(bidDemand));
+      $("#console").prepend(xebay.bidSuccessTemplate(bidDemand));
     }).fail(function (jqxhr) {
-      $("#bidAnswerLog").prepend(xebay.bidFailTemplate({ cause: jqxhr.responseText }));
+      $("#console").prepend(xebay.bidFailTemplate({ cause: jqxhr.responseText }));
     });
   },
   "connect": function () {
@@ -109,14 +125,10 @@ var xebay = {
   "onBidOffer": function (message) {
     var currentBidOffer = JSON.parse(message.data);
     xebay.updateCurrentBidOffer(currentBidOffer);
-    $("#bidAnswerLog").prepend(xebay.bidOfferTemplate(currentBidOffer));
-    xebay.clearLogs(5);
+    $("#console").prepend(xebay.bidOfferTemplate(currentBidOffer));
   },
-  "clearLogs": function (count) {
-    if (!count) {
-      count = 0;
-    }
-    $("#bidAnswerLog").find("p").slice(count).remove();
+  "clearLogs": function () {
+    $("#console").find("p").remove();
   }
 };
 

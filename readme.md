@@ -14,7 +14,7 @@ You can use [editorconfig](http://editorconfig.org) to synchronize this project 
 
 ### TODO
 
- - web : provide an admin page to add or remove users
+ - web : provide an admin page to add or remove users => Almost there : missing show/hide for admin/non admin users and other stuff
  - web : provide a user page to update informations (name, avatar, etc.)
  - web : as a visitor, I should see graph of values of each items
  - all : toggle custom rules to change the game

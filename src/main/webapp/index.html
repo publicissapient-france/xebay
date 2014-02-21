@@ -24,6 +24,14 @@
       <form class="navbar-form navbar-right">
         <button id="signout" type="button" class="btn btn-warning" onclick="xebay.signout()">Sign out</button>
       </form>
+      <div class="nav navbar-form navbar-right">
+        <button class="btn btn-success disconnected" onclick="xebay.connect()">
+          Connect <span class="glyphicon glyphicon-transfer"></span>
+        </button>
+        <button class="btn btn-danger connected" onclick="xebay.disconnect()">
+          Disconnect <span class="glyphicon glyphicon-flash"></span>
+        </button>
+      </div>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">My infos <b class="caret"></b></a>
@@ -47,55 +55,89 @@
   <div class="row">
 
     <div class="col-md-8">
-      <h2>Current bid offer</h2>
-      <div id="current-bid-offer"></div>
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#play" data-toggle="tab">Play</a></li>
+        <li class="registered"><a href="#precious" data-toggle="tab">Collection</a></li>
+        <li><a href="#api" data-toggle="tab">API</a></li>
+        <li class="registered"><a href="#admin" data-toggle="tab">Admin</a></li>
+      </ul>
+      <div class="tab-content">
+        <div id="play" class="tab-pane active">
+          <h2>Current bid offer</h2>
+          <div id="current-bid-offer"></div>
+          <h2>Bid Board</h2>
+          <div class="unregistered">
+            <p>Please sign in to start bidding !</p>
+          </div>
+          <div class="registered">
+            <div class="row">
+              <div class="col-lg-5">
+                <button class="btn btn-lg btn-success" onclick="xebay.sendBidDemand(1)">+1</button>
+                <button class="btn btn-lg btn-info col-lg-offset-1" onclick="xebay.sendBidDemand(5)">+5</button>
+                <button class="btn btn-sm btn-warning col-lg-offset-1" onclick="xebay.sendBidDemand(10)">+10</button>
+                <button class="btn btn-xs btn-danger col-sm-offset-1" onclick="xebay.sendBidDemand(50)">+50</button>
+              </div>
+              <div class="col-lg-3 input-group input-group-lg">
+                <input id="increment" type="number" class="form-control" placeholder="Increment">
+                <div class="input-group-btn">
+                  <button class="btn btn-primary" onclick="xebay.sendBidDemand()">Bid</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-      <h2>API</h2>
-      <p>
-        GET /rest/bidEngine/current<br>
-        200 resonse contains json object<br>
-        <code>{"itemName":"itemName","value":34.4,"timeToLive":3945}</code><br>
-        404 if no more bid offer is available
-      </p>
-      <p>
-        POST /rest/bidEngine/bid<br>
-        200 resonse contains json object<br>
-        <code>{"itemName":"itemName","value":34.4,"timeToLive":3945}</code><br>
-        404 if no more bid offer is available
-      </p>
+        <div id="precious" class="tab-pane">
+          <h2>My precious</h2>
+          <span id="user-display" class="row"></span>
+        </div>
+
+        <div id="api" class="tab-pane">
+          <h2>Bid Engine API</h2>
+          <p>
+            GET /rest/bidEngine/current<br>
+            200 resonse contains json object<br>
+            <code>{"itemName":"itemName","value":34.4,"timeToLive":3945}</code><br>
+            404 if no more bid offer is available
+          </p>
+          <p>
+            POST /rest/bidEngine/bid<br>
+            200 resonse contains json object<br>
+            <code>{"itemName":"itemName","value":34.4,"timeToLive":3945}</code><br>
+            404 if no more bid offer is available
+          </p>
+        </div>
+
+        <div id="admin" class="tab-pane">
+          <h2>Register users</h2>
+          <div class="input-group col-lg-8">
+            <input id="name" type="text" class="form-control" placeholder="Name">
+            <div class="input-group-btn">
+              <button class="btn btn-success" onclick="xebay.register()">Add</button>
+            </div>
+          </div>
+          <h2>User list</h2>
+          <table id="users" class="table">
+            <tr>
+              <th>Name</th>
+              <th>Key</th>
+            </tr>
+          </table>
+        </div>
+
+      </div>
     </div>
 
     <div class="col-md-4">
-      <h2>Interact</h2>
-      <div class="unregistered">
-        <p>Please sign in to start bidding !</p>
-      </div>
-      <div class="registered">
-        <span class="row" id="user-display"></span>
-        <span class="row disconnected">
-          <button class="btn btn-success col-md-4 col-md-offset-8 disconnected" onclick="xebay.connect()">
-            Connect <span class="glyphicon glyphicon-transfer"></span>
-          </button>
-        </span>
-        <span class="row connected">
-          <button class="btn btn-success btn-lg col-md-3" onclick="xebay.sendBidDemand(1)">+1</button>
-          <button class="btn btn-info btn-lg col-md-3 col-md-offset-1" onclick="xebay.sendBidDemand(5)">+5</button>
-          <button class="btn btn-warning btn-sm col-md-2 col-md-offset-1" onclick="xebay.sendBidDemand(10)">+10</button>
-          <button class="btn btn-danger btn-xs col-md-1 col-md-offset-1" onclick="xebay.sendBidDemand(50)">+50</button>
-        </span>
-        <span class="row connected">
-          <button class="btn col-md-7" onclick="xebay.clearLogs()">
-            Clear <span class="glyphicon glyphicon-trash"></span>
-          </button>
-          <button class="btn btn-danger col-md-4 col-md-offset-1" onclick="xebay.disconnect()">
-            Disconnect <span class="glyphicon glyphicon-flash"></span>
-          </button>
-        </span>
-        <span id="bidAnswerLog" class="row connected"></span>
-      </div>
+      <h2>Console &nbsp;<button class="btn" onclick="xebay.clearLogs()">
+        Clear <span class="glyphicon glyphicon-trash"></span>
+      </button></h2>
+
+      <div id="console"></div>
     </div>
 
   </div>
+
 </div>
 
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
@@ -110,7 +152,7 @@
     <span id="timeToLiveSeconds" class="flipboardchar"></span>
     <span id="timeToLiveMilliseconds" class="flipboardchar"></span><span>s</span>
   </div>
-  <div class="flipboard"><span class="flipboardchar">{{item.value}}</span><span>$</span></p>
+  <div class="flipboard"><span class="flipboardchar">{{item.value}}</span><span>$</span></p></div>
   {{else}}
   <p>There is no bid offer.</p>
   {{/if}}
@@ -121,17 +163,35 @@
 <script id="bidFailTemplate" type="text/template">
   <p class="alert alert-danger col-md-12">Your bid has failed because {{cause}}.</p>
 </script>
+<script id="registerSuccessTemplate" type="text/template">
+  <p class="alert alert-success col-md-12">User {{name}} was successfully registered.</p>
+</script>
+<script id="registerFailTemplate" type="text/template">
+  <p class="alert alert-danger col-md-12">User {{name}} was not registered because {{cause}}.</p>
+</script>
 <script id="bidOfferTemplate" type="text/template">
   {{#if ownerName}}
   <p class="alert alert-info col-md-12">{{userName}} has bid {{value}} points for {{itemName}}.</p>
   {{/if}}
 </script>
+<script id="adminUserTemplate" type="text/template">
+  <tr>
+    <td>{{name}}</td>
+    <td>{{key}}</td>
+    <td>
+      <button class="btn btn-danger" onclick=""><span class="glyphicon glyphicon-trash"></span></button>
+    </td>
+  </tr>
+</script>
 <script id="userTemplate" type="text/template">
   <p>Hey {{name}} you have {{balance}}$</p>
-  <ul>{{#each items}}
+  <ul>
+    {{#each items}}
     <li><img src="images/{{name}}.png"/> [{{category}}] {{name}} {{value}}</li>
-  {{else}}<li>no items</li>
-  {{/each}}</ul>
+    {{else}}
+    <li>no items</li>
+    {{/each}}
+  </ul>
 </script>
 <script type="text/javascript" src="js/xebay.js"></script>
 <script type="text/javascript">
@@ -139,7 +199,10 @@
     xebay.currentBidOfferTemplate = Handlebars.compile($("#currentBidOfferTemplate").html());
     xebay.bidSuccessTemplate = Handlebars.compile($("#bidSuccessTemplate").html());
     xebay.bidFailTemplate = Handlebars.compile($("#bidFailTemplate").html());
+    xebay.registerSuccessTemplate = Handlebars.compile($("#registerSuccessTemplate").html());
+    xebay.registerFailTemplate = Handlebars.compile($("#registerFailTemplate").html());
     xebay.bidOfferTemplate = Handlebars.compile($("#bidOfferTemplate").html());
+    xebay.adminUserTemplate = Handlebars.compile($("#adminUserTemplate").html());
     xebay.userTemplate = Handlebars.compile($("#userTemplate").html());
     xebay.init();
   });
