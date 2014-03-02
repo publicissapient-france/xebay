@@ -10,6 +10,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static fr.xebia.xebay.BidServer.BID_SERVER;
 import static fr.xebia.xebay.domain.AdminUser.ADMIN_ROLE;
 
@@ -31,6 +34,20 @@ public class UserResource {
     @UserAuthorization
     public User getUser(@Context SecurityContext securityContext) {
         return ((fr.xebia.xebay.domain.User) securityContext.getUserPrincipal()).toUser();
+    }
+
+    @GET
+    @UserAuthorization
+    @RolesAllowed(ADMIN_ROLE)
+    public Set<User> getUserSet() {
+        // Lambdas won't work here dude... let me know if there is a workaround with lambdas, it should be as simple as
+        // return users.getUserSet().stream().map(fr.xebia.xebay.domain.User::toUser).collect(Collectors.toSet())
+        Set<User> mappedUserSet = new HashSet<>();
+        Set<fr.xebia.xebay.domain.User> userSet = users.getUserSet();
+        for (fr.xebia.xebay.domain.User user : userSet) {
+            mappedUserSet.add(user.toUser());
+        }
+        return mappedUserSet;
     }
 
     @GET

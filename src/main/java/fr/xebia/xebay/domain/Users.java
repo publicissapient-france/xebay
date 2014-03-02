@@ -57,6 +57,10 @@ public class Users {
                 .orElseThrow(() -> new UserNotAllowedException(format("key \"%s\" is unknown", key)));
     }
 
+    public Set<User> getUserSet() {
+        return this.users;
+    }
+
     private boolean containsKey(String key) {
         return users.stream().anyMatch((user) -> user.getKey().equals(key));
     }

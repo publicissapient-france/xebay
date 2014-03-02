@@ -4,6 +4,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.Set;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UsersTest {
@@ -76,5 +78,25 @@ public class UsersTest {
         thrown.expectMessage("admin can't be removed");
 
         users.remove(AdminUser.KEY);
+    }
+
+    @Test
+    public void should_return_empty_std_user_set() {
+        Users users = new Users();
+
+        Set<User> userSet = users.getUserSet();
+
+        assertThat(userSet).isNotNull().extracting("name", String.class).containsOnly("admin");
+    }
+
+    @Test
+    public void should_return_populated_user_set() {
+        Users users = new Users();
+        users.create("user1");
+        users.create("user2");
+
+        Set<User> userSet = users.getUserSet();
+
+        assertThat(userSet).isNotNull().extracting("name", String.class).containsOnly("admin", "user1", "user2");
     }
 }

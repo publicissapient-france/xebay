@@ -1,17 +1,26 @@
 package fr.xebia.xebay.api.rest;
 
 import fr.xebia.xebay.domain.AdminUser;
+import fr.xebia.xebay.domain.model.User;
 import fr.xebia.xebay.utils.TomcatRule;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 
 import javax.ws.rs.BadRequestException;
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import java.io.IOException;
+import java.util.Set;
 
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -70,5 +79,24 @@ public class UserResourceIT {
     @Test(expected = BadRequestException.class)
     public void registering_without_name_is_a_bad_request() {
         target.path("register").request().header(HttpHeaders.AUTHORIZATION, AdminUser.KEY).get(String.class);
+    }
+
+    @Test(expected = ForbiddenException.class)
+    public void user_should_not_see_registered_users() {
+        key = target.path("register").queryParam("name", "user1").request().header(HttpHeaders.AUTHORIZATION, AdminUser.KEY).get(String.class);
+
+        target.request().header(HttpHeaders.AUTHORIZATION, key).get(new GenericType<Set<User>>() {});
+    }
+
+    @Test
+    public void admin_should_see_registered_users() throws IOException {
+        key = target.path("register").queryParam("name", "user1").request().header(HttpHeaders.AUTHORIZATION, AdminUser.KEY).get(String.class);
+
+        // Given should be as simple as the following but there is a pb with client data conversion :
+        // Set<User> userSet = target.request().header(HttpHeaders.AUTHORIZATION, AdminUser.KEY).get(new GenericType<Set<User>>() {});
+        String text = target.request().header(HttpHeaders.AUTHORIZATION, AdminUser.KEY).get(String.class);
+        Set<User> userSet = new ObjectMapper().readValue(text, new TypeReference<Set<User>>(){});
+
+        assertThat(userSet).isNotNull().hasSize(2).extracting("name", String.class).contains("admin", "user1");
     }
 }
