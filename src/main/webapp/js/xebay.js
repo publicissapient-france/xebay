@@ -47,6 +47,7 @@ var xebay = {
     $(".registered").hide();
     $("#user-display").text("");
     $.removeCookie("xebay");
+    $('#tab-list a:first').tab("show");
   },
   "register": function() {
     var name = $("#name").val()
