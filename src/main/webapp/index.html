@@ -104,15 +104,8 @@
         </div>
 
         <div id="admin" class="tab-pane">
-          <h2>Register users</h2>
-          <div class="input-group col-lg-8">
-            <input id="name" type="text" class="form-control" placeholder="Name">
-            <div class="input-group-btn">
-              <button class="btn btn-success" onclick="xebay.register()">Add</button>
-            </div>
-          </div>
           <h2>User list</h2>
-          <table id="userSet" class="table"></table>
+          <span id="userSet-display" class="row"></span>
         </div>
 
       </div>
@@ -159,21 +152,34 @@
   {{/if}}
 </script>
 <script id="userSetTemplate" type="text/template">
-  <tr>
-    <th>Name</th>
-    <th>Key</th>
-  </tr>
-  {{#each this}}
-  <tr id="{{key}}">
-    <td>{{name}}</td>
-    <td>{{key}}</td>
-    <td>
-      <button class="btn btn-danger" onclick="xebay.unregister('{{key}}');">
-        <span class="glyphicon glyphicon-trash"/>
-      </button>
-    </td>
-  </tr>
-  {{/each}}
+  <table id="userSet" class="table">
+    <tr>
+      <th>Name</th>
+      <th>Key</th>
+      <th></th>
+    </tr>
+    {{#each this}}
+    <tr id="{{key}}">
+      <td>{{name}}</td>
+      <td>{{key}}</td>
+      <td>
+        <button class="btn btn-danger" onclick="xebay.unregister('{{key}}');">
+          <span class="glyphicon glyphicon-trash"/>
+        </button>
+      </td>
+    </tr>
+    {{/each}}
+    <tr>
+      <td colspan="2">
+        <input id="name" type="text" class="form-control" placeholder="Name">
+      </td>
+      <td>
+        <button class="btn btn-success" onclick="xebay.register();">
+          <span class="glyphicon glyphicon-plus"/>
+        </button>
+      </td>
+    </tr>
+  </table>
 </script>
 <script id="userTemplate" type="text/template">
   <p>Hey {{name}} you have {{balance}}$</p>

@@ -69,7 +69,7 @@ var xebay = {
       "dataType": "json",
       "headers": {"Authorization": $.cookie("xebay").key},
       "success": function (userSet) {
-        $("#userSet").html(xebay.userSetTemplate(userSet));
+        $("#userSet-display").html(xebay.userSetTemplate(userSet));
       }
     });
   },
