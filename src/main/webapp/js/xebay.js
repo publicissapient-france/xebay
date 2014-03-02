@@ -36,6 +36,9 @@ var xebay = {
     this.connect();
     if (user.name === "admin") {
       this.updateUserSet();
+      $(".admin").show();
+    } else {
+      $(".admin").hide();
     }
   },
   "signout": function () {
