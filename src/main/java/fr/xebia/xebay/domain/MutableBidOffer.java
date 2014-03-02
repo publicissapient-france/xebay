@@ -34,6 +34,7 @@ class MutableBidOffer {
                 currentValue,
                 getTimeToLive(),
                 futureBuyer == null ? (item.getOwner() == null ? null : item.getOwner().getName()) : futureBuyer.getName(),
+                futureBuyer == null ? null : futureBuyer.getAvatar(),
                 isExpired);
     }
 

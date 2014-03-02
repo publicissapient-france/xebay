@@ -1,5 +1,7 @@
 package fr.xebia.xebay.domain;
 
+import fr.xebia.xebay.domain.utils.Gravatar;
+
 import javax.security.auth.Subject;
 import java.security.Principal;
 import java.util.HashSet;
@@ -14,6 +16,7 @@ public class User implements Principal {
     private final String key;
     private final String name;
     private final Set<fr.xebia.xebay.domain.Item> items;
+    private final String avatar;
 
     private double balance;
 
@@ -22,6 +25,7 @@ public class User implements Principal {
         this.name = name;
         this.items = new HashSet<>();
         this.balance = INITIAL_BALANCE;
+        this.avatar = "http://www.gravatar.com/avatar/" + Gravatar.md5Hex(name);
     }
 
     public String getKey() {
@@ -52,7 +56,7 @@ public class User implements Principal {
     }
 
     public fr.xebia.xebay.domain.model.User toUser() {
-        return new fr.xebia.xebay.domain.model.User(name, getBalance(), items.stream()
+        return new fr.xebia.xebay.domain.model.User(name, avatar, getBalance(), items.stream()
                 .map((item) -> item.toItem())
                 .collect(toSet()));
     }
@@ -88,5 +92,9 @@ public class User implements Principal {
 
     public boolean isInRole(String role) {
         return false;
+    }
+
+    public String getAvatar() {
+        return avatar;
     }
 }

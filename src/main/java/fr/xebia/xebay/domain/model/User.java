@@ -4,11 +4,13 @@ import java.util.Set;
 
 public class User {
     private String name;
+    private String avatarUrl;
     private double balance;
     private Set<Item> items;
 
-    public User(String name, double balance, Set<Item> items) {
+    public User(String name, String avatar, double balance, Set<Item> items) {
         this.name = name;
+        avatarUrl = avatar;
         this.balance = balance;
         this.items = items;
     }
@@ -31,5 +33,9 @@ public class User {
     @Override
     public String toString() {
         return "Name " + name + " Balance " + balance;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
     }
 }
