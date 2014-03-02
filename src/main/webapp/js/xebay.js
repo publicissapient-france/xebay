@@ -1,3 +1,4 @@
+
 var xebay = {
   "bidOffer": {},
   "init": function () {
@@ -47,20 +48,36 @@ var xebay = {
       "headers": {"Authorization": $.cookie("xebay").key},
       "data": {"name": $("#name").val() },
       "success": function (key) {
-        $("#console").prepend(xebay.registerSuccessTemplate({name: name}));
         $("#users").append(xebay.adminUserTemplate({name: name, key: key}));
       },
       "error": function (jqxhr) {
-        $("#console").prepend(xebay.registerFailTemplate({name: name, cause: jqxhr.responseText }));
+        console.warn("User " + name + " was not registered because " + jqxhr.responseText + ".");
+      }
+    });
+  },
+  "unregister": function(key) {
+    var name = $("#name").val()
+    $.ajax("/rest/users/unregister?key=" + key, {
+      "type":"DELETE",
+      "headers": {"Authorization": $.cookie("xebay").key},
+      "success": function () {
+        $("#users").find("tr[id=" + key + "]").remove();
+      },
+      "error": function (jqxhr) {
+        console.warn("User " + key + " was not unregistered because " + jqxhr.responseText + ".");
       }
     });
   },
   "getCurrentBidOffer": function () {
-    $.getJSON("/rest/bidEngine/current").done(function (currentBidOffer) {
-      xebay.updateCurrentBidOffer(currentBidOffer);
-    }).fail(function () {
-      xebay.updateCurrentBidOffer({});
-      setTimeout(xebay.getCurrentBidOffer, 5000);
+    $.ajax("/rest/bidEngine/current", {
+      "dataType": "json",
+      "success": function (currentBidOffer) {
+        xebay.updateCurrentBidOffer(currentBidOffer);
+      },
+      "error": function (jqxhr) {
+        xebay.updateCurrentBidOffer({});
+        setTimeout(xebay.getCurrentBidOffer, 5000);
+      }
     });
   },
   "updateCurrentBidOffer": function (currentBidOffer) {
@@ -93,10 +110,10 @@ var xebay = {
       "value": xebay.bidOffer.item.value + increment
     };
     $.ajax("/rest/bidEngine/bid", {
-      type: "POST",
-      headers: { "Authorization": $.cookie("xebay").key },
-      contentType: "application/json",
-      data: JSON.stringify(bidDemand)
+      "type": "POST",
+      "headers": { "Authorization": $.cookie("xebay").key },
+      "contentType": "application/json",
+      "data": JSON.stringify(bidDemand)
     }).done(function () {
       $("#console").prepend(xebay.bidSuccessTemplate(bidDemand));
     }).fail(function (jqxhr) {

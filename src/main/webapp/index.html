@@ -152,16 +152,10 @@
   {{/if}}
 </script>
 <script id="bidSuccessTemplate" type="text/template">
-  <p class="alert alert-success col-md-12">Your {{increment}} points bid on {{itemName}} at {{value}} points has succeeded.</p>
+  <p class="alert alert-success col-md-12">Your bid on {{itemName}} at {{value}} points has succeeded.</p>
 </script>
 <script id="bidFailTemplate" type="text/template">
   <p class="alert alert-danger col-md-12">Your bid has failed because {{cause}}.</p>
-</script>
-<script id="registerSuccessTemplate" type="text/template">
-  <p class="alert alert-success col-md-12">User {{name}} was successfully registered.</p>
-</script>
-<script id="registerFailTemplate" type="text/template">
-  <p class="alert alert-danger col-md-12">User {{name}} was not registered because {{cause}}.</p>
 </script>
 <script id="bidOfferTemplate" type="text/template">
   {{#if ownerName}}
@@ -169,11 +163,13 @@
   {{/if}}
 </script>
 <script id="adminUserTemplate" type="text/template">
-  <tr>
+  <tr id="{{key}}">
     <td>{{name}}</td>
     <td>{{key}}</td>
     <td>
-      <button class="btn btn-danger" onclick=""><span class="glyphicon glyphicon-trash"></span></button>
+      <button class="btn btn-danger" onclick="xebay.unregister('{{key}}');">
+        <span class="glyphicon glyphicon-trash"/>
+      </button>
     </td>
   </tr>
 </script>
@@ -202,8 +198,6 @@
     xebay.currentBidOfferTemplate = Handlebars.compile($("#currentBidOfferTemplate").html());
     xebay.bidSuccessTemplate = Handlebars.compile($("#bidSuccessTemplate").html());
     xebay.bidFailTemplate = Handlebars.compile($("#bidFailTemplate").html());
-    xebay.registerSuccessTemplate = Handlebars.compile($("#registerSuccessTemplate").html());
-    xebay.registerFailTemplate = Handlebars.compile($("#registerFailTemplate").html());
     xebay.bidOfferTemplate = Handlebars.compile($("#bidOfferTemplate").html());
     xebay.adminUserTemplate = Handlebars.compile($("#adminUserTemplate").html());
     xebay.userTemplate = Handlebars.compile($("#userTemplate").html());
