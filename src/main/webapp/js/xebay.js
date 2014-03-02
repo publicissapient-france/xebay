@@ -34,6 +34,9 @@ var xebay = {
     $("#user-display").html(xebay.userTemplate(user));
     $.cookie("xebay", {"key": key});
     this.connect();
+    if (user.name === "admin") {
+      this.updateUserSet();
+    }
   },
   "signout": function () {
     $("#key-display").text("");
@@ -47,12 +50,7 @@ var xebay = {
     $.ajax("/rest/users/register", {
       "headers": {"Authorization": $.cookie("xebay").key},
       "data": {"name": $("#name").val() },
-      "success": function (key) {
-        $("#users").append(xebay.adminUserTemplate({name: name, key: key}));
-      },
-      "error": function (jqxhr) {
-        console.warn("User " + name + " was not registered because " + jqxhr.responseText + ".");
-      }
+      "success": xebay.updateUserSet
     });
   },
   "unregister": function(key) {
@@ -60,11 +58,15 @@ var xebay = {
     $.ajax("/rest/users/unregister?key=" + key, {
       "type":"DELETE",
       "headers": {"Authorization": $.cookie("xebay").key},
-      "success": function () {
-        $("#users").find("tr[id=" + key + "]").remove();
-      },
-      "error": function (jqxhr) {
-        console.warn("User " + key + " was not unregistered because " + jqxhr.responseText + ".");
+      "success": xebay.updateUserSet
+    });
+  },
+  "updateUserSet": function() {
+    $.ajax("/rest/users", {
+      "dataType": "json",
+      "headers": {"Authorization": $.cookie("xebay").key},
+      "success": function (userSet) {
+        $("#userSet").html(xebay.userSetTemplate(userSet));
       }
     });
   },

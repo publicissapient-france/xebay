@@ -111,11 +111,7 @@
             </div>
           </div>
           <h2>User list</h2>
-          <table id="users" class="table">
-            <tr>
-              <th>Name</th>
-              <th>Key</th>
-            </tr>
+          <table id="userSet" class="table">
           </table>
         </div>
 
@@ -162,7 +158,12 @@
   <p class="alert alert-info col-md-12">{{userName}} has bid {{value}} points for {{itemName}}.</p>
   {{/if}}
 </script>
-<script id="adminUserTemplate" type="text/template">
+<script id="userSetTemplate" type="text/template">
+  <tr>
+    <th>Name</th>
+    <th>Key</th>
+  </tr>
+  {{#each this}}
   <tr id="{{key}}">
     <td>{{name}}</td>
     <td>{{key}}</td>
@@ -172,6 +173,7 @@
       </button>
     </td>
   </tr>
+  {{/each}}
 </script>
 <script id="userTemplate" type="text/template">
   <p>Hey {{name}} you have {{balance}}$</p>
@@ -199,7 +201,7 @@
     xebay.bidSuccessTemplate = Handlebars.compile($("#bidSuccessTemplate").html());
     xebay.bidFailTemplate = Handlebars.compile($("#bidFailTemplate").html());
     xebay.bidOfferTemplate = Handlebars.compile($("#bidOfferTemplate").html());
-    xebay.adminUserTemplate = Handlebars.compile($("#adminUserTemplate").html());
+    xebay.userSetTemplate = Handlebars.compile($("#userSetTemplate").html());
     xebay.userTemplate = Handlebars.compile($("#userTemplate").html());
     xebay.init();
   });
