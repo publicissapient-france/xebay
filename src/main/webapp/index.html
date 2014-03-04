@@ -13,6 +13,12 @@
     <span class="navbar-brand">Xebay</span>
   </div>
   <div class="navbar-collapse collapse">
+    <ul id="tab-list" class="nav navbar-nav">
+      <li class="active"><a href="#play" data-toggle="tab">Play</a></li>
+      <li class="registered"><a href="#precious" data-toggle="tab">Collection</a></li>
+      <li><a href="#api" data-toggle="tab">API</a></li>
+      <li class="registered admin"><a href="#admin" data-toggle="tab">Admin</a></li>
+    </ul>
     <form id="register" class="navbar-form navbar-right unregistered">
       <div id="register-message-display" class="form-group alert alert-danger"></div>
       <div class="form-group">
@@ -49,12 +55,6 @@
   <div class="row">
 
     <div class="col-md-8">
-      <ul id="tab-list" class="nav nav-tabs">
-        <li class="active"><a href="#play" data-toggle="tab">Play</a></li>
-        <li class="registered"><a href="#precious" data-toggle="tab">Collection</a></li>
-        <li><a href="#api" data-toggle="tab">API</a></li>
-        <li class="registered admin"><a href="#admin" data-toggle="tab">Admin</a></li>
-      </ul>
       <div class="tab-content">
 
         <div id="play" class="tab-pane active">
@@ -91,13 +91,13 @@
           <h2>Bid Engine API</h2>
           <p>
             GET /rest/bidEngine/current<br>
-            200 resonse contains json object<br>
+            200 response contains json object<br>
             <code>{"itemName":"itemName","value":34.4,"timeToLive":3945}</code><br>
             404 if no more bid offer is available
           </p>
           <p>
             POST /rest/bidEngine/bid<br>
-            200 resonse contains json object<br>
+            200 response contains json object<br>
             <code>{"itemName":"itemName","value":34.4,"timeToLive":3945}</code><br>
             404 if no more bid offer is available
           </p>
@@ -183,18 +183,22 @@
 </script>
 <script id="userTemplate" type="text/template">
   <p>Hey {{name}} you have {{balance}}$</p>
-  <table>
+  <table class="table">
     <tr>
-      <th>category</th>
-      <th>item</th>
-      <th>value</th>
+      <th>Category</th>
+      <th>Item</th>
+      <th>Value</th>
       <th></th>
     </tr>
     {{#each items}}<tr>
       <td>{{category}}</td>
       <td><img src="images/{{name}}.png" width="20em" height="20em"/> {{name}}</td>
       <td>{{value}}</td>
-      <td id="item{{@index}}"><input type="button" value="offer" onclick="xebay.offer('{{name}}', {{value}}, 'item{{@index}}');"/></td>
+      <td id="item{{@index}}">
+        <button class="btn btn-success" onclick="xebay.offer('{{name}}', {{value}}, 'item{{@index}}');">
+          Offer <span class="glyphicon glyphicon-usd"></span>
+        </button>
+      </td>
     </tr>
     {{else}}<tr><td colspan="3">no items</td></tr>
     {{/each}}
