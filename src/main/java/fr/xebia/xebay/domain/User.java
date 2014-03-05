@@ -1,5 +1,6 @@
 package fr.xebia.xebay.domain;
 
+import fr.xebia.xebay.domain.model.PublicUser;
 import fr.xebia.xebay.domain.utils.Gravatar;
 
 import javax.security.auth.Subject;
@@ -96,5 +97,9 @@ public class User implements Principal {
 
     public String getAvatar() {
         return avatar;
+    }
+
+    public PublicUser toPublicUser() {
+        return new PublicUser(name, balance, items.stream().mapToDouble(item -> item.getValue()).sum());
     }
 }

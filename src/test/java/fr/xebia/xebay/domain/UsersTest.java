@@ -1,5 +1,6 @@
 package fr.xebia.xebay.domain;
 
+import fr.xebia.xebay.domain.model.PublicUser;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -78,6 +79,23 @@ public class UsersTest {
         thrown.expectMessage("admin can't be removed");
 
         users.remove(AdminUser.KEY);
+    }
+
+    @Test
+    public void should_sort_by_balance_plus_asset() {
+        Users users = new Users();
+        User user = users.create("user1");
+        Item item = new Item("category", "item", 50);
+        user.buy(item);
+        item.depreciate();
+        users.create("user2");
+
+        Set<PublicUser> publicUsers = users.getUsers();
+
+        assertThat(publicUsers).containsExactly(
+                new PublicUser("user2", 1000, 0),
+                new PublicUser("user1", 950, 45)
+        );
     }
 
     @Test

@@ -6,6 +6,7 @@ var xebay = {
     $("#register-message-display").hide();
     $.cookie.json = true;
     this.getCurrentBidOffer();
+    this.getLeaderboard();
     var cookie = $.cookie("xebay");
     if (cookie) {
       this.signinWith(cookie.key);
@@ -72,6 +73,11 @@ var xebay = {
       "success": function (userSet) {
         $("#userSet-display").html(xebay.userSetTemplate(userSet));
       }
+    });
+  },
+  "getLeaderboard": function () {
+    $.getJSON("/rest/users/publicUsers").done(function (users) {
+      $("#leaderboard").html(xebay.leaderboardTemplate({"users": users}));
     });
   },
   "getCurrentBidOffer": function () {

@@ -1,10 +1,14 @@
 package fr.xebia.xebay.domain;
 
+import fr.xebia.xebay.domain.model.PublicUser;
+
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+import static fr.xebia.xebay.domain.AdminUser.ADMIN_ROLE;
 import static java.lang.String.format;
+import static java.util.stream.Collectors.toSet;
 import static java.util.stream.IntStream.range;
 
 public class Users {
@@ -21,6 +25,14 @@ public class Users {
         this.random = new Random();
         this.users = new HashSet<>();
         this.users.add(new AdminUser());
+    }
+
+    public Set<PublicUser> getUsers() {
+        return users.stream()
+                .filter(user -> !user.isInRole(ADMIN_ROLE))
+                .map(user -> user.toPublicUser())
+                .sorted((user1, user2) -> Double.compare(user1.getBalance() + user1.getAssets(), user2.getBalance() + user2.getAssets()))
+                .collect(toSet());
     }
 
     public User create(String name) throws BidException {

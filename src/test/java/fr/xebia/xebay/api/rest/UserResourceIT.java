@@ -1,9 +1,10 @@
 package fr.xebia.xebay.api.rest;
 
 import fr.xebia.xebay.domain.AdminUser;
+import fr.xebia.xebay.domain.model.PublicUser;
 import fr.xebia.xebay.domain.model.User;
 import fr.xebia.xebay.utils.TomcatRule;
-import org.codehaus.jackson.JsonParseException;
+import org.glassfish.jersey.jackson.JacksonFeature;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.junit.*;
@@ -18,9 +19,9 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Set;
 
 import java.io.IOException;
-import java.util.Set;
 
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,7 +39,7 @@ public class UserResourceIT {
 
     @Before
     public void setUp() throws Exception {
-        client = ClientBuilder.newClient();
+        client = ClientBuilder.newClient().register(JacksonFeature.class);
         target = client.target("http://localhost:8080/rest/users/");
     }
 
@@ -79,6 +80,15 @@ public class UserResourceIT {
     @Test(expected = BadRequestException.class)
     public void registering_without_name_is_a_bad_request() {
         target.path("register").request().header(HttpHeaders.AUTHORIZATION, AdminUser.KEY).get(String.class);
+    }
+
+    @Test
+    public void should_get_public_users() {
+        key = target.path("register").queryParam("name", "user1").request().header(HttpHeaders.AUTHORIZATION, AdminUser.KEY).get(String.class);
+
+        Set<PublicUser> users = target.path("publicUsers").request().get(new GenericType<Set<PublicUser>>(){});
+
+        assertThat(users).containsExactly(new PublicUser("user1", 1000d, 0d));
     }
 
     @Test(expected = ForbiddenException.class)

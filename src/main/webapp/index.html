@@ -17,6 +17,7 @@
       <li class="active"><a href="#play" data-toggle="tab">Play</a></li>
       <li class="registered"><a href="#precious" data-toggle="tab">Collection</a></li>
       <li><a href="#api" data-toggle="tab">API</a></li>
+      <li><a href="#leaderboard" data-toggle="tab">Leaderboard</a></li>
       <li class="registered admin"><a href="#settings" data-toggle="tab">Settings</a></li>
     </ul>
     <form id="register" class="navbar-form navbar-right unregistered">
@@ -112,6 +113,8 @@
         </p>
       </div>
 
+      <div id="leaderboard" class="tab-pane"></div>
+
       <div id="settings" class="tab-pane">
         <h2>User list</h2>
         <span id="userSet-display" class="row"></span>
@@ -202,6 +205,13 @@
     {{/each}}
   </table>
 </script>
+<script id="leaderboardTemplate" type="text/template">
+  <ol>
+    {{#each users}}<li>{{name}} {{balance}}$ + {{assets}}$</li>
+    {{else}}<li>no users</li>
+    {{/each}}
+  </ol>
+</script>
 <script type="text/javascript" src="js/xebay.js"></script>
 <script type="text/javascript">
   $(document).ready(function () {
@@ -211,6 +221,7 @@
     xebay.bidOfferTemplate = Handlebars.compile($("#bidOfferTemplate").html());
     xebay.userSetTemplate = Handlebars.compile($("#userSetTemplate").html());
     xebay.userTemplate = Handlebars.compile($("#userTemplate").html());
+    xebay.leaderboardTemplate = Handlebars.compile($("#leaderboardTemplate").html());
     xebay.init();
   });
 </script>

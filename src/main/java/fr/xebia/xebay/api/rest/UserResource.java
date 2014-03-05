@@ -2,6 +2,7 @@ package fr.xebia.xebay.api.rest;
 
 import fr.xebia.xebay.api.rest.security.UserAuthorization;
 import fr.xebia.xebay.domain.Users;
+import fr.xebia.xebay.domain.model.PublicUser;
 import fr.xebia.xebay.domain.model.User;
 
 import javax.annotation.security.RolesAllowed;
@@ -9,7 +10,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,10 +30,9 @@ public class UserResource {
     }
 
     @GET
-    @Path("/info")
-    @UserAuthorization
-    public User getUser(@Context SecurityContext securityContext) {
-        return ((fr.xebia.xebay.domain.User) securityContext.getUserPrincipal()).toUser();
+    @Path("/publicUsers")
+    public Set<PublicUser> getUsers() {
+        return users.getUsers();
     }
 
     @GET
@@ -48,6 +47,13 @@ public class UserResource {
             mappedUserSet.add(user.toUser());
         }
         return mappedUserSet;
+    }
+
+    @GET
+    @Path("/info")
+    @UserAuthorization
+    public User getUser(@Context SecurityContext securityContext) {
+        return ((fr.xebia.xebay.domain.User) securityContext.getUserPrincipal()).toUser();
     }
 
     @GET
