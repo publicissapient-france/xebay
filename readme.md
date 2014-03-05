@@ -23,3 +23,4 @@ You can use [editorconfig](http://editorconfig.org) to synchronize this project 
     - if a user owns every item of a category he gain a 500$ bonus
     - for next 5 bids bank gives 100$ to buyer
     - etc.
+ - publish news with "active rules"
