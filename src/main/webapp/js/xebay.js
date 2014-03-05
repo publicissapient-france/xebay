@@ -50,11 +50,11 @@ var xebay = {
     $.removeCookie("xebay");
     $('#tab-list a:first').tab("show");
   },
-  "register": function() {
-    var name = $("#name").val()
+  "register": function () {
+    var name = $("#name").val();
     $.ajax("/rest/users/register", {
       "headers": {"Authorization": $.cookie("xebay").key},
-      "data": {"name": $("#name").val() },
+      "data": {"name": name },
       "success": xebay.updateUserSet
     });
   },

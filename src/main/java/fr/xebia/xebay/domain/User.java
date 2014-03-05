@@ -16,7 +16,7 @@ public class User implements Principal {
 
     private final String key;
     private final String name;
-    private final Set<fr.xebia.xebay.domain.Item> items;
+    private final Set<Item> items;
     private final String avatar;
 
     private double balance;
