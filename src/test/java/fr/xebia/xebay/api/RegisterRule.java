@@ -1,6 +1,6 @@
 package fr.xebia.xebay.api;
 
-import fr.xebia.xebay.domain.AdminUser;
+import fr.xebia.xebay.domain.internal.AdminUser;
 import org.junit.rules.ExternalResource;
 
 import javax.ws.rs.client.Client;

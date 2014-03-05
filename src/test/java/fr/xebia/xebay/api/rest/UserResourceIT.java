@@ -2,9 +2,9 @@ package fr.xebia.xebay.api.rest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.xebia.xebay.domain.AdminUser;
-import fr.xebia.xebay.domain.model.PublicUser;
-import fr.xebia.xebay.domain.model.User;
+import fr.xebia.xebay.domain.internal.AdminUser;
+import fr.xebia.xebay.domain.PublicUser;
+import fr.xebia.xebay.domain.User;
 import fr.xebia.xebay.utils.TomcatRule;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.junit.*;
@@ -85,7 +85,8 @@ public class UserResourceIT {
     public void should_get_public_users() {
         key = target.path("register").queryParam("name", "user1").request().header(HttpHeaders.AUTHORIZATION, AdminUser.KEY).get(String.class);
 
-        Set<PublicUser> users = target.path("publicUsers").request().get(new GenericType<Set<PublicUser>>(){});
+        Set<PublicUser> users = target.path("publicUsers").request().get(new GenericType<Set<PublicUser>>() {
+        });
 
         assertThat(users).containsExactly(new PublicUser("user1", 1000d, 0d));
     }

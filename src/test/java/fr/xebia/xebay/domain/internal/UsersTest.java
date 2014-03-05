@@ -1,6 +1,12 @@
-package fr.xebia.xebay.domain;
+package fr.xebia.xebay.domain.internal;
 
-import fr.xebia.xebay.domain.model.PublicUser;
+import fr.xebia.xebay.domain.BidException;
+import fr.xebia.xebay.domain.PublicUser;
+import fr.xebia.xebay.domain.UserNotAllowedException;
+import fr.xebia.xebay.domain.internal.AdminUser;
+import fr.xebia.xebay.domain.internal.Item;
+import fr.xebia.xebay.domain.internal.User;
+import fr.xebia.xebay.domain.internal.Users;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

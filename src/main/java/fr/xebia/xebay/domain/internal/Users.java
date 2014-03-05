@@ -1,12 +1,14 @@
-package fr.xebia.xebay.domain;
+package fr.xebia.xebay.domain.internal;
 
-import fr.xebia.xebay.domain.model.PublicUser;
+import fr.xebia.xebay.domain.BidException;
+import fr.xebia.xebay.domain.UserNotAllowedException;
+import fr.xebia.xebay.domain.PublicUser;
 
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import static fr.xebia.xebay.domain.AdminUser.ADMIN_ROLE;
+import static fr.xebia.xebay.domain.internal.AdminUser.ADMIN_ROLE;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.IntStream.range;

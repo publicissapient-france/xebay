@@ -1,10 +1,10 @@
 package fr.xebia.xebay.domain;
 
 public class BidException extends RuntimeException {
-    BidException(String message) {
+    public BidException(String message) {
         super(message);
     }
 
-    BidException() {
+    public BidException() {
     }
 }

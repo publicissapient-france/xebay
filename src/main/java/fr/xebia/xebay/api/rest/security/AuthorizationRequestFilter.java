@@ -1,6 +1,6 @@
 package fr.xebia.xebay.api.rest.security;
 
-import fr.xebia.xebay.domain.User;
+import fr.xebia.xebay.domain.internal.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

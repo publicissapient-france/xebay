@@ -2,9 +2,9 @@ package fr.xebia.xebay.api.rest;
 
 import fr.xebia.xebay.api.rest.security.SecurityContextImpl;
 import fr.xebia.xebay.domain.BidException;
-import fr.xebia.xebay.domain.User;
-import fr.xebia.xebay.domain.Users;
-import fr.xebia.xebay.domain.model.BidOffer;
+import fr.xebia.xebay.domain.internal.User;
+import fr.xebia.xebay.domain.internal.Users;
+import fr.xebia.xebay.domain.BidOffer;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

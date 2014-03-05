@@ -1,4 +1,4 @@
-package fr.xebia.xebay.domain;
+package fr.xebia.xebay.domain.internal;
 
 public class BidOfferToSell {
     private final Item item;

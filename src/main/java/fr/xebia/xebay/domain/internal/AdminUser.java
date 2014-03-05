@@ -1,4 +1,4 @@
-package fr.xebia.xebay.domain;
+package fr.xebia.xebay.domain.internal;
 
 public class AdminUser extends User {
     public static final String KEY = "4dm1n";
@@ -14,7 +14,7 @@ public class AdminUser extends User {
     }
 
     @Override
-    void buy(Item item) {
+    public void buy(Item item) {
         throw new RuntimeException("admin can't buy");
     }
 

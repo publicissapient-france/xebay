@@ -1,4 +1,6 @@
-package fr.xebia.xebay.domain;
+package fr.xebia.xebay.domain.internal;
+
+import fr.xebia.xebay.domain.BidException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,7 +32,7 @@ public class Items {
     }
 
 
-    Item next() {
+    public Item next() {
         return next(currentItemIndex + 1);
     }
 
@@ -48,7 +50,7 @@ public class Items {
         return next(currentItemIndex + 1);
     }
 
-    Item get(String name) {
+    public Item get(String name) {
         return stream(items)
                 .filter((item) -> item.getName().equals(name))
                 .findFirst()

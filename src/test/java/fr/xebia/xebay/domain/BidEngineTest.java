@@ -1,5 +1,8 @@
 package fr.xebia.xebay.domain;
 
+import fr.xebia.xebay.domain.internal.AdminUser;
+import fr.xebia.xebay.domain.internal.Item;
+import fr.xebia.xebay.domain.internal.Items;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

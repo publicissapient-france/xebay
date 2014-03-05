@@ -1,6 +1,8 @@
 package fr.xebia.xebay.domain;
 
-import fr.xebia.xebay.domain.model.BidOffer;
+import fr.xebia.xebay.domain.internal.*;
+import fr.xebia.xebay.domain.internal.Item;
+import fr.xebia.xebay.domain.internal.User;
 
 import java.util.*;
 

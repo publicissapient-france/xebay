@@ -2,7 +2,7 @@ package fr.xebia.xebay.api.socket;
 
 import fr.xebia.xebay.api.RegisterRule;
 import fr.xebia.xebay.api.rest.dto.BidDemand;
-import fr.xebia.xebay.domain.model.BidOffer;
+import fr.xebia.xebay.domain.BidOffer;
 import fr.xebia.xebay.utils.TomcatRule;
 import org.assertj.core.data.Offset;
 import com.fasterxml.jackson.databind.ObjectMapper;

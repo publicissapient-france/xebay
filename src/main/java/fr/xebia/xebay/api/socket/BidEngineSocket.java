@@ -1,7 +1,7 @@
 package fr.xebia.xebay.api.socket;
 
 import fr.xebia.xebay.domain.BidEngineListener;
-import fr.xebia.xebay.domain.model.BidOffer;
+import fr.xebia.xebay.domain.BidOffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

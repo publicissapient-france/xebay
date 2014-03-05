@@ -1,6 +1,9 @@
 package fr.xebia.xebay.domain;
 
-import fr.xebia.xebay.domain.model.BidOffer;
+import fr.xebia.xebay.domain.internal.Item;
+import fr.xebia.xebay.domain.internal.Items;
+import fr.xebia.xebay.domain.internal.User;
+import fr.xebia.xebay.domain.internal.Users;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

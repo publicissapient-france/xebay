@@ -1,4 +1,4 @@
-package fr.xebia.xebay.domain.model;
+package fr.xebia.xebay.domain;
 
 import static java.lang.Double.compare;
 import static java.lang.String.format;

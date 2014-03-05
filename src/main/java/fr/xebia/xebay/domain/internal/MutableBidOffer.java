@@ -1,26 +1,27 @@
-package fr.xebia.xebay.domain;
+package fr.xebia.xebay.domain.internal;
 
-import fr.xebia.xebay.domain.model.BidOffer;
+import fr.xebia.xebay.domain.BidException;
+import fr.xebia.xebay.domain.BidOffer;
 
 import java.util.Date;
 
 import static java.lang.Math.max;
 import static java.lang.String.format;
 
-class MutableBidOffer {
+public class MutableBidOffer {
     private static final double MIN_BID_RATIO = 0.1;
-    final Item item;
-    final double initialValue;
+    public final Item item;
+    public final double initialValue;
     private final long created;
     private final long initialTimeToLive;
-    double currentValue;
+    public double currentValue;
     private User futureBuyer;
 
-    MutableBidOffer(Item item, long initialTimeToLive) {
+    public MutableBidOffer(Item item, long initialTimeToLive) {
         this(item, item.getValue(), initialTimeToLive);
     }
 
-    MutableBidOffer(Item item, double initialValue, long initialTimeToLive) {
+    public MutableBidOffer(Item item, double initialValue, long initialTimeToLive) {
         this.item = item;
         this.initialValue = initialValue;
         this.initialTimeToLive = initialTimeToLive;
@@ -28,7 +29,7 @@ class MutableBidOffer {
         this.currentValue = initialValue;
     }
 
-    BidOffer toBidOffer(boolean isExpired) {
+    public BidOffer toBidOffer(boolean isExpired) {
         return new BidOffer(item.getCategory(),
                 item.getName(),
                 currentValue,
@@ -38,7 +39,7 @@ class MutableBidOffer {
                 isExpired);
     }
 
-    void resolve() {
+    public void resolve() {
         if (futureBuyer == null) {
             item.depreciate();
         } else {
@@ -47,22 +48,22 @@ class MutableBidOffer {
         currentValue = item.getValue();
     }
 
-    long getTimeToLive() {
+    public long getTimeToLive() {
         long millisecondsSinceCreated = new Date().getTime() - created;
         return max(0, initialTimeToLive - millisecondsSinceCreated);
     }
 
-    boolean isExpired() {
+    public boolean isExpired() {
         return getTimeToLive() == 0;
     }
 
-    void userIsUnregistered(User user) {
+    public void userIsUnregistered(User user) {
         if (user == futureBuyer) {
             futureBuyer = null;
         }
     }
 
-    MutableBidOffer bid(String name, double newValue, User user) throws BidException {
+    public MutableBidOffer bid(String name, double newValue, User user) throws BidException {
         checkUser(user);
         if (!item.getName().equals(name)) {
             throw new BidException(format("current item to bid is not \"%s\"", name));

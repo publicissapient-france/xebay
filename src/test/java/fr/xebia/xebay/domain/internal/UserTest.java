@@ -1,5 +1,7 @@
-package fr.xebia.xebay.domain;
+package fr.xebia.xebay.domain.internal;
 
+import fr.xebia.xebay.domain.internal.Item;
+import fr.xebia.xebay.domain.internal.User;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

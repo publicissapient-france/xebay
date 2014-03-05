@@ -1,9 +1,9 @@
 package fr.xebia.xebay;
 
 import fr.xebia.xebay.domain.BidEngine;
-import fr.xebia.xebay.domain.Item;
-import fr.xebia.xebay.domain.Items;
-import fr.xebia.xebay.domain.Users;
+import fr.xebia.xebay.domain.internal.Item;
+import fr.xebia.xebay.domain.internal.Items;
+import fr.xebia.xebay.domain.internal.Users;
 
 public enum BidServer {
     BID_SERVER;

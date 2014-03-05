@@ -2,9 +2,9 @@ package fr.xebia.xebay.api.rest;
 
 import fr.xebia.xebay.api.rest.dto.BidDemand;
 import fr.xebia.xebay.domain.BidEngine;
-import fr.xebia.xebay.domain.Item;
-import fr.xebia.xebay.domain.Items;
-import fr.xebia.xebay.domain.User;
+import fr.xebia.xebay.domain.internal.Item;
+import fr.xebia.xebay.domain.internal.Items;
+import fr.xebia.xebay.domain.internal.User;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

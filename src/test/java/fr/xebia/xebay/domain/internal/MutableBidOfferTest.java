@@ -1,5 +1,6 @@
-package fr.xebia.xebay.domain;
+package fr.xebia.xebay.domain.internal;
 
+import fr.xebia.xebay.domain.internal.MutableBidOffer;
 import org.junit.Test;
 
 import static fr.xebia.xebay.domain.BidEngine.DEFAULT_TIME_TO_LIVE;
