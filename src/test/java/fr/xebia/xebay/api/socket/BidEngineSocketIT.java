@@ -5,7 +5,7 @@ import fr.xebia.xebay.api.rest.dto.BidDemand;
 import fr.xebia.xebay.domain.model.BidOffer;
 import fr.xebia.xebay.utils.TomcatRule;
 import org.assertj.core.data.Offset;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.junit.*;
 

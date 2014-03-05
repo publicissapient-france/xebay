@@ -1,12 +1,12 @@
 package fr.xebia.xebay.api.rest;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.xebia.xebay.domain.AdminUser;
 import fr.xebia.xebay.domain.model.PublicUser;
 import fr.xebia.xebay.domain.model.User;
 import fr.xebia.xebay.utils.TomcatRule;
 import org.glassfish.jersey.jackson.JacksonFeature;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 
@@ -19,9 +19,8 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Set;
-
 import java.io.IOException;
+import java.util.Set;
 
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static org.assertj.core.api.Assertions.assertThat;
