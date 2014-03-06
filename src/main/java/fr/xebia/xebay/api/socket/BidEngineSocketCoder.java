@@ -1,7 +1,6 @@
 package fr.xebia.xebay.api.socket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.xebia.xebay.domain.model.BidOffer;
 
 import javax.websocket.*;
 import java.io.IOException;

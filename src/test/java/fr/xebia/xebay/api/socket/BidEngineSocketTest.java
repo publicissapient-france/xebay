@@ -2,11 +2,11 @@ package fr.xebia.xebay.api.socket;
 
 import fr.xebia.xebay.BidServer;
 import fr.xebia.xebay.api.rest.dto.BidDemand;
-import fr.xebia.xebay.domain.AdminUser;
+import fr.xebia.xebay.domain.internal.AdminUser;
 import fr.xebia.xebay.domain.BidEngine;
-import fr.xebia.xebay.domain.Item;
-import fr.xebia.xebay.domain.User;
-import fr.xebia.xebay.domain.model.BidOffer;
+import fr.xebia.xebay.domain.internal.Item;
+import fr.xebia.xebay.domain.internal.User;
+import fr.xebia.xebay.domain.BidOffer;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;

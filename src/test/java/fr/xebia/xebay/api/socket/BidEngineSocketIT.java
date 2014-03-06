@@ -2,6 +2,7 @@ package fr.xebia.xebay.api.socket;
 
 import fr.xebia.xebay.api.RegisterRule;
 import fr.xebia.xebay.api.rest.dto.BidDemand;
+import fr.xebia.xebay.domain.internal.AdminUser;
 import fr.xebia.xebay.domain.BidOffer;
 import fr.xebia.xebay.utils.TomcatRule;
 import org.assertj.core.data.Offset;
@@ -38,20 +39,20 @@ public class BidEngineSocketIT {
     @Rule
     public RegisterRule registerRule = new RegisterRule();
 
-    private List<BidOffer> bidOfferList = new ArrayList<>();
+    private List<BidEngineSocketOutput> bidOfferList = new ArrayList<>();
     private WebTarget target = null;
 
     @Before
     public void before() throws URISyntaxException, IOException, DeploymentException {
         target = ClientBuilder.newClient().register(JacksonFeature.class).target("http://localhost:8080/rest");
-        ContainerProvider.getWebSocketContainer().connectToServer(this, new URI("ws://localhost:8080/socket/bidEngine"));
+        ContainerProvider.getWebSocketContainer().connectToServer(this, new URI("ws://localhost:8080/socket/bidEngine/" + AdminUser.KEY));
     }
 
     @OnMessage
     public void onMessage(String message) {
         try {
-            BidOffer bidOffer = gson.readValue(message, BidOffer.class);
-            bidOfferList.add(bidOffer);
+            BidEngineSocketOutput socketOutput = gson.readValue(message, BidEngineSocketOutput.class);
+            bidOfferList.add(socketOutput);
         } catch (IOException e) {
             fail(format("error during reading %s", message), e);
         }
@@ -76,7 +77,7 @@ public class BidEngineSocketIT {
             this.wait();
         }
 
-        BidOffer bidOffer = bidOfferList.get(0);
+        BidOffer bidOffer = bidOfferList.get(0).getUpdated();
         assertThat(bidOffer.getItem().getName()).isEqualTo("an item");
         assertThat(bidOffer.getItem().getValue()).isEqualTo(currentBidOffer.getItem().getValue() + 10, Offset.offset(0d));
     }

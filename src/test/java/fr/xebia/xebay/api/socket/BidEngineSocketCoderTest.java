@@ -2,7 +2,7 @@ package fr.xebia.xebay.api.socket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.xebia.xebay.api.rest.dto.BidDemand;
-import fr.xebia.xebay.domain.model.BidOffer;
+import fr.xebia.xebay.domain.BidOffer;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;

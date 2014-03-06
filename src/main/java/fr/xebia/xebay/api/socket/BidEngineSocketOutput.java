@@ -1,6 +1,6 @@
 package fr.xebia.xebay.api.socket;
 
-import fr.xebia.xebay.domain.model.BidOffer;
+import fr.xebia.xebay.domain.BidOffer;
 
 import java.util.ArrayList;
 import java.util.List;
