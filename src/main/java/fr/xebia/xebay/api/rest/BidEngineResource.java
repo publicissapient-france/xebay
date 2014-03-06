@@ -77,7 +77,7 @@ public class BidEngineResource {
                     .entity(String.format("item \"%s\" doesn't exist", bidDemand.getItemName()))
                     .build());
         }
-        bidEngine.offer(item, bidDemand.getValue(), user);
+        bidEngine.offer(user, item, bidDemand.getValue());
         return Response.ok().build();
     }
 }

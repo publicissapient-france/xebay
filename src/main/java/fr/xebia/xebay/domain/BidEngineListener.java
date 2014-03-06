@@ -1,9 +1,10 @@
 package fr.xebia.xebay.domain;
 
 public interface BidEngineListener {
-    void onBidOfferBidded(BidOffer updatedBidOffer);
+
+    void onBidOfferStarted(BidOffer newBidOffer);
+    
+    void onBidOfferUpdated(BidOffer updatedBidOffer);
 
     void onBidOfferResolved(BidOffer resolvedBidOffer);
-
-    void onNewBidOffer(BidOffer newBidOffer);
 }

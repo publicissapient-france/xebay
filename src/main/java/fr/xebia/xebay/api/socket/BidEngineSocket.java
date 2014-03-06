@@ -37,7 +37,7 @@ public class BidEngineSocket implements BidEngineListener {
     }
 
     @Override
-    public void onBidOfferBidded(BidOffer updatedBidOffer) {
+    public void onBidOfferUpdated(BidOffer updatedBidOffer) {
         onBidOffer(updatedBidOffer);
     }
 
@@ -47,7 +47,7 @@ public class BidEngineSocket implements BidEngineListener {
     }
 
     @Override
-    public void onNewBidOffer(BidOffer newBidOffer) {
+    public void onBidOfferStarted(BidOffer newBidOffer) {
         onBidOffer(newBidOffer);
     }
 

@@ -41,7 +41,7 @@ public class BidEngineListenerTest {
         bidEngine.bid(user, "an item", 4.3 + 5);
 
         ArgumentCaptor<BidOffer> argumentCaptor = ArgumentCaptor.forClass(BidOffer.class);
-        verify(bidEngineListener).onBidOfferBidded(argumentCaptor.capture());
+        verify(bidEngineListener).onBidOfferUpdated(argumentCaptor.capture());
         BidOffer updatedBidOffer = argumentCaptor.getValue();
         assertThat(updatedBidOffer.getUserName()).isNotNull().isEqualTo("user1");
         assertThat(updatedBidOffer.getItem().getName()).isEqualTo("an item");
@@ -73,7 +73,7 @@ public class BidEngineListenerTest {
         resolvesBidOffer(bidEngine);
 
         ArgumentCaptor<BidOffer> argumentCaptor = ArgumentCaptor.forClass(BidOffer.class);
-        verify(bidEngineListener).onNewBidOffer(argumentCaptor.capture());
+        verify(bidEngineListener).onBidOfferStarted(argumentCaptor.capture());
         BidOffer newBidOffer = argumentCaptor.getValue();
         assertThat(newBidOffer.getUserName()).isNull();
         assertThat(newBidOffer.getItem().getName()).isEqualTo("another item");

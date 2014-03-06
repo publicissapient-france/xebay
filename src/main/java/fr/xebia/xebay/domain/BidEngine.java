@@ -48,11 +48,11 @@ public class BidEngine {
         BidOffer updatedBidOffer = bidOffer.orElseThrow(() -> new BidException(format("current item to bid is not \"%s\"", itemName)))
                 .bid(itemName, newValue, user)
                 .toBidOffer(bidOfferExpiration.isExpired());
-        listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferBidded(updatedBidOffer));
+        listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferUpdated(updatedBidOffer));
         return updatedBidOffer;
     }
 
-    public void offer(Item item, double initialValue, User user) {
+    public void offer(User user, Item item, double initialValue) {
         nextBidOfferIfExpired();
         checkUserOffer(user, item);
         BidOfferToSell bidOfferToSell = checkOffer(item, initialValue);
@@ -94,7 +94,7 @@ public class BidEngine {
                 listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferResolved(bidOffer.toBidOffer(true)));
             });
             bidOffer = nextBidOffer();
-            bidOffer.ifPresent((bidOffer) -> listeners.forEach(bidEngineListener -> bidEngineListener.onNewBidOffer(bidOffer.toBidOffer(true))));
+            bidOffer.ifPresent((bidOffer) -> listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferStarted(bidOffer.toBidOffer(true))));
         }
     }
 

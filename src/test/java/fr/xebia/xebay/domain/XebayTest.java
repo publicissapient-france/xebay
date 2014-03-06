@@ -118,7 +118,7 @@ public class XebayTest {
         bidEngine.bid(user, "an item", 4.3 + 0.7);
         resolvesBidOffer(bidEngine);
 
-        bidEngine.offer(anItem, 5.9, user);
+        bidEngine.offer(user, anItem, 5.9);
 
         resolvesBidOffer(bidEngine);
         BidOffer bidOffer = bidEngine.currentBidOffer();
@@ -135,7 +135,7 @@ public class XebayTest {
         expectedException.expect(BidForbiddenException.class);
         expectedException.expectMessage("item \"another item\" doesn't belong to user \"user1\"");
 
-        bidEngine.offer(anotherItem, 5.9, user);
+        bidEngine.offer(user, anotherItem, 5.9);
     }
 
     @Test
@@ -146,26 +146,26 @@ public class XebayTest {
         BidEngine bidEngine = new BidEngine(new Items(anItem, anotherItem), expiration);
         bidEngine.bid(user, "an item", 4.3 + 2.1);
         resolvesBidOffer(bidEngine);
-        bidEngine.offer(anItem, 5.9, user);
+        bidEngine.offer(user, anItem, 5.9);
         resolvesBidOffer(bidEngine);
         expectedException.expect(BidForbiddenException.class);
         expectedException.expectMessage("item \"an item\" is the current offer thus can't be offered");
 
-        bidEngine.offer(anItem, 6.0, user);
+        bidEngine.offer(user, anItem, 6.0);
     }
 
     @Test
     public void should_not_makes_offer_if_item_is_null() {
         BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", 4.3)), expiration);
         expectedException.expect(NullPointerException.class);
-        bidEngine.offer(null, 5.9, user);
+        bidEngine.offer(user, null, 5.9);
     }
 
     @Test
     public void should_not_makes_offer_if_user_is_null() {
         BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", 4.3)), expiration);
         expectedException.expect(NullPointerException.class);
-        bidEngine.offer(new Item("category", "an item", 4.3), 5.9, null);
+        bidEngine.offer(null, new Item("category", "an item", 4.3), 5.9);
     }
 
     @Test
@@ -178,11 +178,11 @@ public class XebayTest {
         bidEngine.bid(user, "an item", 4.3 + 2.1);
         resolvesBidOffer(bidEngine);
 
-        bidEngine.offer(anItem, 5.9, user);
+        bidEngine.offer(user, anItem, 5.9);
         expectedException.expect(BidForbiddenException.class);
         expectedException.expectMessage("item \"an item\" is already offered");
 
-        bidEngine.offer(anItem, 6.5, user);
+        bidEngine.offer(user, anItem, 6.5);
     }
 
     @Test
@@ -202,7 +202,7 @@ public class XebayTest {
         assertThat(anItem.getOwner().getName()).isNotNull().isEqualTo("seller");
 
         //seller offers th item
-        bidEngine.offer(anItem, 5.9, seller);
+        bidEngine.offer(seller, anItem, 5.9);
         resolvesBidOffer(bidEngine);
 
         bidOffer = bidEngine.currentBidOffer();
@@ -234,7 +234,7 @@ public class XebayTest {
         bidEngine.bid(seller, "an item", 4.3 + 0.7);
         resolvesBidOffer(bidEngine);
         // let seller offer his item
-        bidEngine.offer(anItem, 5.0, seller);
+        bidEngine.offer(seller, anItem, 5.0);
         resolvesBidOffer(bidEngine);
         // let buyer buy "an item" owned by seller
         bidEngine.bid(buyer, "an item", 5.0 + 0.8);

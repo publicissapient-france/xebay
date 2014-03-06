@@ -55,7 +55,7 @@ public class BidEngineResourceTest {
 
         bidEngineResource.offer(new BidDemand("an item", 10.0), securityContext);
 
-        verify(bidEngine, times(1)).offer(item, 10.0, user);
+        verify(bidEngine, times(1)).offer(user, item, 10.0);
     }
 
     @Test

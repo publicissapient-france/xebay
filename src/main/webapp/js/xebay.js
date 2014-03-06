@@ -34,7 +34,7 @@ var xebay = {
     $(".unregistered").hide();
     $("#user-display").html(xebay.userTemplate(user));
     $.cookie("xebay", {"key": key});
-    this.connect();
+    this.connect(key);
     if (user.name === "admin") {
       this.updateUserSet();
       $(".admin").show();
@@ -143,9 +143,9 @@ var xebay = {
       }
     });
   },
-  "connect": function () {
-    this.socket = new WebSocket("ws://" + window.location.host + "/socket/bidEngine");
-    this.socket.onmessage = this.onBidOffer;
+  "connect": function (key) {
+    this.socket = new WebSocket("ws://" + window.location.host + "/socket/bidEngine/" + key);
+    this.socket.onmessage = this.onMessage;
     this.socket.onopen = this.connected;
     this.socket.onclose = this.disconnected;
     this.socket.onerror = this.disconnected;
@@ -162,10 +162,25 @@ var xebay = {
     $(".connected").hide();
     $(".disconnected").show();
   },
-  "onBidOffer": function (message) {
-    var currentBidOffer = JSON.parse(message.data);
-    xebay.updateCurrentBidOffer(currentBidOffer);
-    $("#console").prepend(xebay.bidOfferTemplate(currentBidOffer));
+  "onMessage": function (message) {
+    var socketMessage = JSON.parse(message.data);
+    if (socketMessage.started) {
+      console.log("started" + socketMessage.started);
+      xebay.updateCurrentBidOffer(socketMessage.started);
+      $("#console").prepend(xebay.bidOfferTemplate(socketMessage.started));
+    }
+    if (socketMessage.updated) {
+      console.log("updated" + socketMessage.updated);
+      xebay.updateCurrentBidOffer(socketMessage.updated);
+      $("#console").prepend(xebay.bidOfferTemplate(socketMessage.updated));
+    }
+    if (socketMessage.resolved) {
+      console.log("resolved" + socketMessage.resolved);
+      // TODO
+    }
+    if (socketMessage.messages && socketMessage.messages.length > 0) {
+        console.info("Server says: " + socketMessage.messages);
+    }
   },
   "clearLogs": function () {
     $("#console").find("p").remove();
