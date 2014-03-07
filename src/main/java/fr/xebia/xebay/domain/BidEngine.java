@@ -3,6 +3,7 @@ package fr.xebia.xebay.domain;
 import fr.xebia.xebay.domain.internal.*;
 import fr.xebia.xebay.domain.internal.Item;
 import fr.xebia.xebay.domain.internal.User;
+import fr.xebia.xebay.domain.internal.BidOffer;
 
 import java.util.*;
 
@@ -17,14 +18,14 @@ public class BidEngine {
     private final Queue<BidOfferToSell> bidOffersToSell;
 
     private int timeToLive;
-    private Optional<MutableBidOffer> bidOffer;
+    private Optional<BidOffer> bidOffer;
 
     public BidEngine(Items items) {
         this.items = items;
         this.bidOfferExpiration = () -> !bidOffer.isPresent() || bidOffer.get().isExpired();
         this.bidOffersToSell = new ArrayDeque<>();
         this.timeToLive = DEFAULT_TIME_TO_LIVE;
-        this.bidOffer = Optional.of(new MutableBidOffer(this.items.next(), timeToLive));
+        this.bidOffer = Optional.of(new BidOffer(this.items.next(), timeToLive));
     }
 
     public BidEngine(Items items, Expirable bidOfferExpiration) {
@@ -32,20 +33,21 @@ public class BidEngine {
         this.bidOfferExpiration = bidOfferExpiration;
         this.bidOffersToSell = new ArrayDeque<>();
         this.timeToLive = DEFAULT_TIME_TO_LIVE;
-        this.bidOffer = Optional.of(new MutableBidOffer(this.items.next(), timeToLive));
+        this.bidOffer = Optional.of(new BidOffer(this.items.next(), timeToLive));
     }
 
-    public BidOffer currentBidOffer() {
+    public fr.xebia.xebay.domain.BidOffer currentBidOffer() {
         nextBidOfferIfExpired();
         return bidOffer.isPresent() ? bidOffer.get().toBidOffer(bidOfferExpiration.isExpired()) : null;
     }
 
-    public BidOffer bid(User user, String itemName, double newValue) throws BidException {
+    public fr.xebia.xebay.domain.BidOffer bid(User user, String itemName, double newValue) throws BidException {
         if (user.isInRole(AdminUser.ADMIN_ROLE)) {
             throw new BidException("admin is not authorized to bid");
         }
         nextBidOfferIfExpired();
-        BidOffer updatedBidOffer = bidOffer.orElseThrow(() -> new BidException(format("current item to bid is not \"%s\"", itemName)))
+        fr.xebia.xebay.domain.BidOffer updatedBidOffer = bidOffer
+                .orElseThrow(() -> new BidException(format("current item to bid is not \"%s\"", itemName)))
                 .bid(itemName, newValue, user)
                 .toBidOffer(bidOfferExpiration.isExpired());
         listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferUpdated(updatedBidOffer));
@@ -98,7 +100,7 @@ public class BidEngine {
         }
     }
 
-    private Optional<MutableBidOffer> nextBidOffer() {
+    private Optional<BidOffer> nextBidOffer() {
         if (!bidOffersToSell.isEmpty()) {
             return Optional.of(bidOffersToSell.poll().toBidOffer(timeToLive));
         }
@@ -106,7 +108,7 @@ public class BidEngine {
         if (nextItem == null) {
             return Optional.empty();
         } else {
-            return Optional.of(new MutableBidOffer(nextItem, timeToLive));
+            return Optional.of(new BidOffer(nextItem, timeToLive));
         }
     }
 }

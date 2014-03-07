@@ -1,14 +1,13 @@
 package fr.xebia.xebay.domain.internal;
 
 import fr.xebia.xebay.domain.BidException;
-import fr.xebia.xebay.domain.BidOffer;
 
 import java.util.Date;
 
 import static java.lang.Math.max;
 import static java.lang.String.format;
 
-public class MutableBidOffer {
+public class BidOffer {
     private static final double MIN_BID_RATIO = 0.1;
     public final Item item;
     public final double initialValue;
@@ -17,11 +16,11 @@ public class MutableBidOffer {
     public double currentValue;
     private User futureBuyer;
 
-    public MutableBidOffer(Item item, long initialTimeToLive) {
+    public BidOffer(Item item, long initialTimeToLive) {
         this(item, item.getValue(), initialTimeToLive);
     }
 
-    public MutableBidOffer(Item item, double initialValue, long initialTimeToLive) {
+    public BidOffer(Item item, double initialValue, long initialTimeToLive) {
         this.item = item;
         this.initialValue = initialValue;
         this.initialTimeToLive = initialTimeToLive;
@@ -29,8 +28,8 @@ public class MutableBidOffer {
         this.currentValue = initialValue;
     }
 
-    public BidOffer toBidOffer(boolean isExpired) {
-        return new BidOffer(item.getCategory(),
+    public fr.xebia.xebay.domain.BidOffer toBidOffer(boolean isExpired) {
+        return new fr.xebia.xebay.domain.BidOffer(item.getCategory(),
                 item.getName(),
                 currentValue,
                 getTimeToLive(),
@@ -63,7 +62,7 @@ public class MutableBidOffer {
         }
     }
 
-    public MutableBidOffer bid(String name, double newValue, User user) throws BidException {
+    public BidOffer bid(String name, double newValue, User user) throws BidException {
         checkUser(user);
         if (!item.getName().equals(name)) {
             throw new BidException(format("current item to bid is not \"%s\"", name));
@@ -90,7 +89,7 @@ public class MutableBidOffer {
         }
     }
 
-    private MutableBidOffer increment(double increment, User user) {
+    private BidOffer increment(double increment, User user) {
         this.currentValue += increment;
         this.futureBuyer = user;
         return this;
