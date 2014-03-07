@@ -4,6 +4,7 @@ import fr.xebia.xebay.domain.internal.*;
 import fr.xebia.xebay.domain.internal.Item;
 import fr.xebia.xebay.domain.internal.User;
 import fr.xebia.xebay.domain.internal.BidOffer;
+import fr.xebia.xebay.domain.plugin.Plugins;
 
 import java.util.*;
 
@@ -16,6 +17,7 @@ public class BidEngine {
     private final Items items;
     private final Expirable bidOfferExpiration;
     private final Queue<BidOfferToSell> bidOffersToSell;
+    private final Plugins plugins;
 
     private int timeToLive;
     private Optional<BidOffer> bidOffer;
@@ -26,6 +28,7 @@ public class BidEngine {
         this.bidOffersToSell = new ArrayDeque<>();
         this.timeToLive = DEFAULT_TIME_TO_LIVE;
         this.bidOffer = Optional.of(new BidOffer(this.items.next(), timeToLive));
+        this.plugins = new Plugins();
     }
 
     public BidEngine(Items items, Expirable bidOfferExpiration) {
@@ -34,6 +37,7 @@ public class BidEngine {
         this.bidOffersToSell = new ArrayDeque<>();
         this.timeToLive = DEFAULT_TIME_TO_LIVE;
         this.bidOffer = Optional.of(new BidOffer(this.items.next(), timeToLive));
+        this.plugins = new Plugins();
     }
 
     public fr.xebia.xebay.domain.BidOffer currentBidOffer() {
@@ -54,11 +58,21 @@ public class BidEngine {
         return updatedBidOffer;
     }
 
+    public void activate(String pluginName) {
+        plugins.activate(pluginName);
+    }
+
+    public void deactivate(String pluginName) {
+        plugins.deactivate(pluginName);
+    }
+
     public void offer(User user, Item item, double initialValue) {
         nextBidOfferIfExpired();
         checkUserOffer(user, item);
         BidOfferToSell bidOfferToSell = checkOffer(item, initialValue);
-        bidOffersToSell.offer(bidOfferToSell);
+        if (plugins.authorize(bidOfferToSell)) {
+            bidOffersToSell.offer(bidOfferToSell);
+        }
     }
 
     private BidOfferToSell checkOffer(Item item, double initialValue) {

@@ -15,6 +15,14 @@ public class BidOfferToSell {
         return new BidOffer(item, initialValue, initialTimeToLive);
     }
 
+    public boolean isInitialValueAtItemPrice() {
+        return initialValue == item.getValue();
+    }
+
+    public void backToBankAtItemPrice() {
+        item.concludeTransaction(item.getValue(), BANK);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -28,9 +36,5 @@ public class BidOfferToSell {
     @Override
     public int hashCode() {
         return item.hashCode();
-    }
-
-    public void backToBankAtPrice() {
-        item.concludeTransaction(item.getValue(), BANK);
     }
 }
