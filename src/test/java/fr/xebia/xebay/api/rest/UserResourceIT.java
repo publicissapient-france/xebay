@@ -1,7 +1,5 @@
 package fr.xebia.xebay.api.rest;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.xebia.xebay.domain.internal.AdminUser;
 import fr.xebia.xebay.domain.PublicUser;
 import fr.xebia.xebay.domain.User;
@@ -102,10 +100,10 @@ public class UserResourceIT {
     public void admin_should_see_registered_users() throws IOException {
         key = target.path("register").queryParam("name", "user1").request().header(HttpHeaders.AUTHORIZATION, AdminUser.KEY).get(String.class);
 
-        // Given should be as simple as the following but there is a pb with client data conversion :
+        // "when" should be as simple as the following but there is a pb with client data conversion :
         // Set<User> userSet = target.request().header(HttpHeaders.AUTHORIZATION, AdminUser.KEY).get(new GenericType<Set<User>>() {});
-        String text = target.request().header(HttpHeaders.AUTHORIZATION, AdminUser.KEY).get(String.class);
-        Set<User> userSet = new ObjectMapper().readValue(text, new TypeReference<Set<User>>(){});
+        Set<User> userSet = target.request().header(HttpHeaders.AUTHORIZATION, AdminUser.KEY).get(new GenericType<Set<User>>() {
+        });
 
         assertThat(userSet).isNotNull().hasSize(2).extracting("name", String.class).contains("admin", "user1");
     }
