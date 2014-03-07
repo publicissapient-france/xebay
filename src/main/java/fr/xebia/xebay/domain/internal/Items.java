@@ -9,6 +9,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static fr.xebia.xebay.domain.internal.Item.BANK;
 import static java.util.Arrays.stream;
 
 public class Items {
@@ -40,7 +41,7 @@ public class Items {
         if (currentItemIndex >= items.length) {
             currentItemIndex = 0;
         }
-        if (items[currentItemIndex].getOwner() == null) {
+        if (items[currentItemIndex].getOwner() == BANK) {
             this.currentItemIndex = currentItemIndex;
             return items[currentItemIndex];
         }
@@ -85,6 +86,6 @@ public class Items {
     public void userIsUnregistered(User user) {
         Arrays.stream(items)
                 .filter((item) -> user.equals(item.getOwner()))
-                .forEach((item) -> item.userIsUnregistered());
+                .forEach((item) -> item.backToBank());
     }
 }

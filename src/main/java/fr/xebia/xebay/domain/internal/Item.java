@@ -3,6 +3,8 @@ package fr.xebia.xebay.domain.internal;
 import static java.lang.Math.rint;
 
 public class Item {
+    public static final User BANK = null;
+
     private final String category;
     private final String name;
 
@@ -13,6 +15,7 @@ public class Item {
         this.category = category;
         this.name = name;
         this.value = rint(value * 100) / 100;
+        this.owner = BANK;
     }
 
     public String getName() {
@@ -38,7 +41,9 @@ public class Item {
             owner.sell(this);
         }
 
-        buyer.buy(this);
+        if (buyer != BANK) {
+            buyer.buy(this);
+        }
 
         owner = buyer;
     }
@@ -68,8 +73,8 @@ public class Item {
         return name;
     }
 
-    public void userIsUnregistered() {
-        this.owner = null;
+    public void backToBank() {
+        this.owner = BANK;
     }
 
     public fr.xebia.xebay.domain.Item toItem() {

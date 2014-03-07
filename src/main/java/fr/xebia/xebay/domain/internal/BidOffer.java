@@ -4,6 +4,7 @@ import fr.xebia.xebay.domain.BidException;
 
 import java.util.Date;
 
+import static fr.xebia.xebay.domain.internal.Item.BANK;
 import static java.lang.Math.max;
 import static java.lang.String.format;
 
@@ -33,7 +34,7 @@ public class BidOffer {
                 item.getName(),
                 currentValue,
                 getTimeToLive(),
-                futureBuyer == null ? (item.getOwner() == null ? null : item.getOwner().getName()) : futureBuyer.getName(),
+                futureBuyer == null ? (item.getOwner() == BANK ? null : item.getOwner().getName()) : futureBuyer.getName(),
                 futureBuyer == null ? null : futureBuyer.getAvatar(),
                 isExpired);
     }

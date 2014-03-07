@@ -1,5 +1,7 @@
 package fr.xebia.xebay.domain.internal;
 
+import static fr.xebia.xebay.domain.internal.Item.BANK;
+
 public class BidOfferToSell {
     private final Item item;
     private final double initialValue;
@@ -26,5 +28,9 @@ public class BidOfferToSell {
     @Override
     public int hashCode() {
       return item.hashCode();
+    }
+
+    public void backToBankAtPrice() {
+        item.concludeTransaction(item.getValue(), BANK);
     }
 }
