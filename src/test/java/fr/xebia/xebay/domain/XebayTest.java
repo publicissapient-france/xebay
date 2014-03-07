@@ -186,7 +186,7 @@ public class XebayTest {
     }
 
     @Test
-    public void a_user_can_buy_an_item_resoled_by_another() {
+    public void a_user_can_buy_an_item_offered_by_another() {
         Item anItem = new Item("category", "an item", 4.3);
         BidEngine bidEngine = new BidEngine(new Items(anItem), expiration);
         User seller = users.create("seller");
