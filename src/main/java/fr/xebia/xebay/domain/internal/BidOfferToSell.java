@@ -17,17 +17,17 @@ public class BidOfferToSell {
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) {
-        return false;
-      }
-      BidOfferToSell that = (BidOfferToSell) o;
-      return item.equals(that.item);
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        BidOfferToSell that = (BidOfferToSell) o;
+        return item.equals(that.item);
     }
 
     @Override
     public int hashCode() {
-      return item.hashCode();
+        return item.hashCode();
     }
 
     public void backToBankAtPrice() {
