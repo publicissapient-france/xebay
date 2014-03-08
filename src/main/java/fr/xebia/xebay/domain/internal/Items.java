@@ -8,9 +8,9 @@ import java.io.InputStreamReader;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import static fr.xebia.xebay.domain.internal.Item.BANK;
-import static java.util.Arrays.stream;
 
 public class Items {
     private final Item[] items;
@@ -32,7 +32,6 @@ public class Items {
         }
     }
 
-
     public Item next() {
         return next(currentItemIndex + 1);
     }
@@ -52,7 +51,7 @@ public class Items {
     }
 
     public Item get(String name) {
-        return stream(items)
+        return stream()
                 .filter((item) -> item.getName().equals(name))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException());
@@ -84,8 +83,11 @@ public class Items {
     }
 
     public void userIsUnregistered(User user) {
-        Arrays.stream(items)
-                .filter((item) -> user.equals(item.getOwner()))
+        stream().filter((item) -> user.equals(item.getOwner()))
                 .forEach((item) -> item.backToBank());
+    }
+
+    public Stream<Item> stream() {
+        return Arrays.stream(items);
     }
 }

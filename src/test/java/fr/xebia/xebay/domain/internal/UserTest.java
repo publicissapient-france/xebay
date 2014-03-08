@@ -1,7 +1,5 @@
 package fr.xebia.xebay.domain.internal;
 
-import fr.xebia.xebay.domain.internal.Item;
-import fr.xebia.xebay.domain.internal.User;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -84,5 +82,14 @@ public class UserTest {
         boolean impliesSubject = user.implies(null);
 
         assertThat(impliesSubject).isFalse();
+    }
+
+    @Test
+    public void balance_of_a_user_can_be_increased_with_an_amount() {
+        User user = new User("key", "user");
+
+        user.credit(4.3);
+
+        assertThat(user.getBalance()).isEqualTo(1004.3);
     }
 }

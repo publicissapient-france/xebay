@@ -54,6 +54,30 @@ public class PluginsTest {
         assertThat(bidOffer.getItem().getValue()).isEqualTo(5);
     }
 
+    @Test
+    public void plugin_all_items_in_category_on_activation() {
+        Item anItem = new Item("category", "an item", 4.3);
+        BidEngine bidEngine = new BidEngine(new Items(anItem), expiration);
+        bidEngine.bid(user, "an item", 5.0);
+        resolvesBidOffer(bidEngine);
+
+        bidEngine.activate("AllItemsInCategory");
+
+        assertThat(user.getBalance()).isEqualTo(1495);
+    }
+
+    @Test
+    public void plugin_all_items_in_category_on_bid_offer_resolved() {
+        Item anItem = new Item("category", "an item", 4.3);
+        BidEngine bidEngine = new BidEngine(new Items(anItem), expiration);
+        bidEngine.activate("AllItemsInCategory");
+        bidEngine.bid(user, "an item", 5.0);
+
+        resolvesBidOffer(bidEngine);
+
+        assertThat(user.getBalance()).isEqualTo(1495);
+    }
+
     private void resolvesBidOffer(BidEngine bidEngine) {
         boolean previousExpirationState = expiration.isExpired();
         when(expiration.isExpired()).thenReturn(true);

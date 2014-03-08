@@ -8,6 +8,7 @@ import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
 
+import static java.lang.Math.abs;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.toSet;
 
@@ -101,5 +102,9 @@ public class User implements Principal {
 
     public PublicUser toPublicUser() {
         return new PublicUser(name, balance, items.stream().mapToDouble(item -> item.getValue()).sum());
+    }
+
+    public void credit(double value) {
+        balance += abs(value);
     }
 }

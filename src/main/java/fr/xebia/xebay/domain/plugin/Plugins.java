@@ -1,6 +1,8 @@
 package fr.xebia.xebay.domain.plugin;
 
+import fr.xebia.xebay.domain.internal.BidOffer;
 import fr.xebia.xebay.domain.internal.BidOfferToSell;
+import fr.xebia.xebay.domain.internal.Items;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,6 +14,7 @@ public class Plugins implements Plugin {
     public Plugins() {
         this.plugins = new HashSet<>();
         this.plugins.add(new BankBuyEverything());
+        this.plugins.add(new AllItemsInCategory());
     }
 
     @Override
@@ -23,8 +26,13 @@ public class Plugins implements Plugin {
         return authorize;
     }
 
-    public void activate(String pluginName) {
-        ifPresent(pluginName, plugin -> plugin.activate());
+    @Override
+    public void onBidOfferResolved(BidOffer bidOffer, Items items) {
+        plugins.forEach(plugin -> plugin.onBidOfferResolved(bidOffer, items));
+    }
+
+    public void activate(String pluginName, Items items) {
+        ifPresent(pluginName, plugin -> plugin.activate(items));
     }
 
     public void deactivate(String pluginName) {

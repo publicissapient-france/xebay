@@ -1,9 +1,9 @@
 package fr.xebia.xebay.domain;
 
 import fr.xebia.xebay.domain.internal.*;
+import fr.xebia.xebay.domain.internal.BidOffer;
 import fr.xebia.xebay.domain.internal.Item;
 import fr.xebia.xebay.domain.internal.User;
-import fr.xebia.xebay.domain.internal.BidOffer;
 import fr.xebia.xebay.domain.plugin.Plugins;
 
 import java.util.*;
@@ -59,7 +59,7 @@ public class BidEngine {
     }
 
     public void activate(String pluginName) {
-        plugins.activate(pluginName);
+        plugins.activate(pluginName, items);
     }
 
     public void deactivate(String pluginName) {
@@ -107,6 +107,7 @@ public class BidEngine {
         if (bidOfferExpiration.isExpired()) {
             bidOffer.ifPresent((bidOffer) -> {
                 bidOffer.resolve();
+                plugins.onBidOfferResolved(bidOffer, items);
                 listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferResolved(bidOffer.toBidOffer(true)));
             });
             bidOffer = nextBidOffer();

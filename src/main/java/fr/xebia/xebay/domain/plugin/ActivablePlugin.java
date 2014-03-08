@@ -1,6 +1,8 @@
 package fr.xebia.xebay.domain.plugin;
 
+import fr.xebia.xebay.domain.internal.BidOffer;
 import fr.xebia.xebay.domain.internal.BidOfferToSell;
+import fr.xebia.xebay.domain.internal.Items;
 
 public abstract class ActivablePlugin implements Plugin {
     private final String name;
@@ -16,12 +18,26 @@ public abstract class ActivablePlugin implements Plugin {
         return name;
     }
 
-    public void activate() {
+    public void activate(Items items) {
         activated = true;
+        onActivation(items);
     }
 
     public void deactivate() {
         activated = false;
+    }
+
+    protected void onActivation(Items items) {
+    }
+
+    @Override
+    public final void onBidOfferResolved(BidOffer bidOffer, Items items) {
+        if (activated) {
+            onBidOfferResolvedIfActivated(bidOffer, items);
+        }
+    }
+
+    protected void onBidOfferResolvedIfActivated(BidOffer bidOffer, Items items) {
     }
 
     @Override
