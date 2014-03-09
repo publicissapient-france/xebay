@@ -1,14 +1,16 @@
 package fr.xebia.xebay.api.rest;
 
 import fr.xebia.xebay.api.rest.dto.BidDemand;
+import fr.xebia.xebay.api.rest.jersey.PATCH;
 import fr.xebia.xebay.api.rest.security.UserAuthorization;
 import fr.xebia.xebay.domain.BidEngine;
+import fr.xebia.xebay.domain.BidOffer;
 import fr.xebia.xebay.domain.internal.Item;
 import fr.xebia.xebay.domain.internal.Items;
 import fr.xebia.xebay.domain.internal.User;
-import fr.xebia.xebay.domain.BidOffer;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Singleton;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -17,6 +19,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import static fr.xebia.xebay.BidServer.BID_SERVER;
+import static fr.xebia.xebay.domain.internal.AdminUser.ADMIN_ROLE;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 
 @Singleton
@@ -79,5 +82,17 @@ public class BidEngineResource {
         }
         bidEngine.offer(user, item, bidDemand.getValue());
         return Response.ok().build();
+    }
+
+    @PATCH
+    @Path("/plugin/{name}")
+    @UserAuthorization
+    @RolesAllowed(ADMIN_ROLE)
+    public void status(@PathParam("name") String name, @QueryParam("active") boolean active) {
+        if (active) {
+            bidEngine.activate(name);
+        } else {
+            bidEngine.deactivate(name);
+        }
     }
 }

@@ -70,4 +70,17 @@ public class BidEngineResourceTest {
 
         bidEngineResource.offer(new BidDemand(unknownItem, 10.0), securityContext);
     }
+
+    @Test
+    public void should_call_bidEngine_to_toggle_plugin_status() throws Exception {
+        String name = "pluginName";
+
+        bidEngineResource.status(name, true);
+
+        verify(bidEngine, times(1)).activate(name);
+
+        bidEngineResource.status(name, false);
+
+        verify(bidEngine, times(1)).deactivate(name);
+    }
 }

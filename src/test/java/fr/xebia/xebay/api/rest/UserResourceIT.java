@@ -100,8 +100,6 @@ public class UserResourceIT {
     public void admin_should_see_registered_users() throws IOException {
         key = target.path("register").queryParam("name", "user1").request().header(HttpHeaders.AUTHORIZATION, AdminUser.KEY).get(String.class);
 
-        // "when" should be as simple as the following but there is a pb with client data conversion :
-        // Set<User> userSet = target.request().header(HttpHeaders.AUTHORIZATION, AdminUser.KEY).get(new GenericType<Set<User>>() {});
         Set<User> userSet = target.request().header(HttpHeaders.AUTHORIZATION, AdminUser.KEY).get(new GenericType<Set<User>>() {
         });
 

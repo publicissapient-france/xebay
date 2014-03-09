@@ -5,7 +5,10 @@ import fr.xebia.xebay.api.rest.dto.BidDemand;
 import fr.xebia.xebay.domain.BidEngine;
 import fr.xebia.xebay.domain.BidOffer;
 import fr.xebia.xebay.domain.Item;
+import fr.xebia.xebay.domain.internal.AdminUser;
 import fr.xebia.xebay.utils.TomcatRule;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
@@ -36,7 +39,7 @@ public class BidEngineResourceIT {
 
     @Before
     public void initializeRestClient() throws Exception {
-        client = ClientBuilder.newBuilder().register(JacksonFeature.class).build();
+        client = ClientBuilder.newBuilder().register(JacksonFeature.class).property(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, true).build();
         target = client.target("http://localhost:8080/rest/bidEngine");
     }
 
@@ -137,5 +140,19 @@ public class BidEngineResourceIT {
         target.path("/offer").request()
                 .header(HttpHeaders.AUTHORIZATION, registerRule.getKey())
                 .post(Entity.entity(null, MediaType.APPLICATION_JSON_TYPE), Item.class);
+    }
+
+    @Test
+    public void user_can_not_change_plugin_status() {
+
+        expectedException.expect(ForbiddenException.class);
+
+        target.path("plugin").path("name").queryParam("active", true).request().header(HttpHeaders.AUTHORIZATION, registerRule.getKey()).method("PATCH", Void.TYPE);
+    }
+
+    @Test
+    public void admin_can_change_plugin_status() {
+
+        target.path("plugin").path("name").queryParam("active", true).request().header(HttpHeaders.AUTHORIZATION, AdminUser.KEY).method("PATCH", Void.TYPE);
     }
 }
