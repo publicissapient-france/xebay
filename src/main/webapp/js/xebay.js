@@ -182,6 +182,24 @@ var xebay = {
         console.info("Server says: " + socketMessage.messages);
     }
   },
+  "plugin": function(name, active) {
+    $.ajax("/rest/bidEngine/plugin/" + name + "?active=" + active, {
+      "type":"PATCH",
+      "headers": {"Authorization": $.cookie("xebay").key},
+      "success": function (data) {
+        if (active) {
+          $(".btn-success." + name).show().removeClass("hidden");
+          $(".btn-danger." + name).hide();
+        } else{
+          $(".btn-danger." + name).show();
+          $(".btn-success." + name).hide();
+        }
+      },
+      "error": function () {
+        console.log("Unable to change plugin status");
+      }
+    });
+  },
   "clearLogs": function () {
     $("#console").find("p").remove();
   }
