@@ -38,15 +38,8 @@ public class UserResource {
     @GET
     @UserAuthorization
     @RolesAllowed(ADMIN_ROLE)
-    public Set<User> getUserSet() {
-        // Lambdas won't work here dude... let me know if there is a workaround with lambdas, it should be as simple as
-        // return users.getUserSet().stream().map(fr.xebia.xebay.domain.User::toUser).collect(Collectors.toSet())
-        Set<User> mappedUserSet = new HashSet<>();
-        Set<fr.xebia.xebay.domain.internal.User> userSet = users.getUserSet();
-        for (fr.xebia.xebay.domain.internal.User user : userSet) {
-            mappedUserSet.add(user.toUser());
-        }
-        return mappedUserSet;
+    public Set<User> getAdminUserSet() {
+        return users.getAdminUserSet();
     }
 
     @GET

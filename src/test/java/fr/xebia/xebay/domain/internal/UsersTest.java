@@ -3,10 +3,6 @@ package fr.xebia.xebay.domain.internal;
 import fr.xebia.xebay.domain.BidException;
 import fr.xebia.xebay.domain.PublicUser;
 import fr.xebia.xebay.domain.UserNotAllowedException;
-import fr.xebia.xebay.domain.internal.AdminUser;
-import fr.xebia.xebay.domain.internal.Item;
-import fr.xebia.xebay.domain.internal.User;
-import fr.xebia.xebay.domain.internal.Users;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -108,9 +104,9 @@ public class UsersTest {
     public void should_return_empty_std_user_set() {
         Users users = new Users();
 
-        Set<User> userSet = users.getUserSet();
+        Set<fr.xebia.xebay.domain.User> userSet = users.getAdminUserSet();
 
-        assertThat(userSet).isNotNull().extracting("name", String.class).containsOnly("admin");
+        assertThat(userSet).isNotNull().isEmpty();
     }
 
     @Test
@@ -119,8 +115,8 @@ public class UsersTest {
         users.create("user1");
         users.create("user2");
 
-        Set<User> userSet = users.getUserSet();
+        Set<fr.xebia.xebay.domain.User> userSet = users.getAdminUserSet();
 
-        assertThat(userSet).isNotNull().extracting("name", String.class).containsOnly("admin", "user1", "user2");
+        assertThat(userSet).isNotNull().extracting("name", String.class).containsOnly("user1", "user2");
     }
 }

@@ -7,6 +7,7 @@ import fr.xebia.xebay.domain.PublicUser;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static fr.xebia.xebay.domain.internal.AdminUser.ADMIN_ROLE;
 import static java.lang.String.format;
@@ -71,8 +72,11 @@ public class Users {
                 .orElseThrow(() -> new UserNotAllowedException(format("key \"%s\" is unknown", key)));
     }
 
-    public Set<User> getUserSet() {
-        return this.users;
+    public Set<fr.xebia.xebay.domain.User> getAdminUserSet() {
+
+        return users.stream()
+                .filter(user -> !user.isInRole(ADMIN_ROLE))
+                .map(User::toUser).collect(Collectors.toSet());
     }
 
     private boolean containsKey(String key) {

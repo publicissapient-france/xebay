@@ -103,6 +103,6 @@ public class UserResourceIT {
         Set<User> userSet = target.request().header(HttpHeaders.AUTHORIZATION, AdminUser.KEY).get(new GenericType<Set<User>>() {
         });
 
-        assertThat(userSet).isNotNull().hasSize(2).extracting("name", String.class).contains("admin", "user1");
+        assertThat(userSet).isNotNull().hasSize(1).extracting("name", String.class).contains("user1");
     }
 }
