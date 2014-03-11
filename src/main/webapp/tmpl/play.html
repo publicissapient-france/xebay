@@ -1,0 +1,53 @@
+<div id="play">
+
+    <div class="col-md-8">
+
+        <h2>Current bid offer</h2>
+        <div id="current-bid-offer" ng-show="bidOffer.item">
+            <p>[ {{bidOffer.item.category}} ] {{bidOffer.item.name}} {{bidOffer.userName}}</p>
+            <img ng-src="images/{{bidOffer.item.name}}.png"/>
+            <div class="flipboard">
+                <span class="flipboardchar">{{bidOffer.timeToLiveSeconds}}</span>
+                <span class="flipboardchar">{{bidOffer.timeToLiveMilliseconds}}</span><span>s</span>
+            </div>
+            <div class="flipboard">
+                <span class="flipboardchar">{{bidOffer.item.value}}</span>
+                <span>$</span>
+            </div>
+        </div>
+        <p ng-show="!bidOffer.item">There is no bid offer.</p>
+
+        <h2>Bid</h2>
+        <div class="unregistered">
+            <p>Please sign in to start bidding !</p>
+        </div>
+        <div class="registered">
+            <div class="row">
+                <div class="col-lg-5">
+                    <button class="btn btn-lg btn-success" onclick="xebay.sendBidDemand(1)">+1</button>
+                    <button class="btn btn-lg btn-info col-lg-offset-1" onclick="xebay.sendBidDemand(5)">+5</button>
+                    <button class="btn btn-sm btn-warning col-lg-offset-1" onclick="xebay.sendBidDemand(10)">+10
+                    </button>
+                    <button class="btn btn-xs btn-danger col-sm-offset-1" onclick="xebay.sendBidDemand(50)">+50</button>
+                </div>
+                <div class="col-lg-3 input-group input-group-lg">
+                    <input id="increment" type="number" class="form-control" placeholder="+Value">
+
+                    <div class="input-group-btn">
+                        <button class="btn btn-primary" onclick="xebay.sendBidDemand()">Bid</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <h2>Console &nbsp;
+            <button class="btn" onclick="xebay.clearLogs()">
+                Clear <span class="glyphicon glyphicon-trash"></span>
+            </button>
+        </h2>
+        <div id="console"></div>
+    </div>
+
+</div>
