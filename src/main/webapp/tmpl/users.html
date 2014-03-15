@@ -1,0 +1,31 @@
+<div id="settings">
+
+    <h2>User list</h2>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Key</th>
+            <th></th>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input id="name" type="text" class="form-control" placeholder="Name" ng-model="newUserName">
+            </td>
+            <td>
+                <button class="btn btn-success" ng-click="register()">
+                    <span class="glyphicon glyphicon-plus"/>
+                </button>
+            </td>
+        </tr>
+        <tr ng-repeat="user in users">
+            <td>{{user.name}}</td>
+            <td>{{user.key}}</td>
+            <td>
+                <button class="btn btn-danger" ng-click="unregister(user.key)">
+                    <span class="glyphicon glyphicon-trash"/>
+                </button>
+            </td>
+        </tr>
+    </table>
+
+</div>

@@ -1,4 +1,4 @@
-<div id="play">
+<div id="/play">
 
     <div class="col-md-8">
 
@@ -18,10 +18,10 @@
         <p ng-show="!bidOffer.item">There is no bid offer.</p>
 
         <h2>Bid</h2>
-        <div class="unregistered">
+        <div ng-show="!userData.userInfo.logged">
             <p>Please sign in to start bidding !</p>
         </div>
-        <div class="registered">
+        <div ng-show="userData.userInfo.logged">
             <div class="row">
                 <div class="col-lg-5">
                     <button class="btn btn-lg btn-success" onclick="xebay.sendBidDemand(1)">+1</button>
@@ -42,7 +42,7 @@
     </div>
 
     <div class="col-md-4">
-        <h2>Console &nbsp;
+        <h2>Events &nbsp;
             <button class="btn" onclick="xebay.clearLogs()">
                 Clear <span class="glyphicon glyphicon-trash"></span>
             </button>

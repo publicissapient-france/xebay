@@ -1,0 +1,22 @@
+<div id="settings">
+
+    <h2>Plugins</h2>
+    <table class="table">
+        <tr>
+            <th>Plugin</th>
+            <th></th>
+        </tr>
+        <tr ng-repeat="plugin in plugins">
+            <td>{{plugin.name}}</td>
+            <td>
+                <button class="btn btn-danger {{plugin.name}}" ng-click="toggleStatus(plugin, true)" ng-show="!plugin.status">
+                    <span class="glyphicon glyphicon-ban-circle"/>
+                </button>
+                <button class="btn btn-success {{plugin.name}}" ng-click="toggleStatus(plugin, false)" ng-show="plugin.status">
+                    <span class="glyphicon glyphicon-ok-circle"/>
+                </button>
+            </td>
+        </tr>
+    </table>
+
+</div>
