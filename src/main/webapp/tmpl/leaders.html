@@ -1,17 +1,16 @@
-<div class="tab-pane">
-    <h2>Leader Board</h2>
-    <table class="table">
-        <tr>
-            <th>Position</th>
-            <th>Name</th>
-            <th>Balance</th>
-            <th>Assets</th>
-        </tr>
-        <tr ng-repeat="leader in leaders">
-            <td>{{$index + 1}}</td>
-            <td>{{leader.name}}</td>
-            <td>{{leader.balance}}$</td>
-            <td>{{leader.assets}}$</td>
-        </tr>
-    </table>
-</div>
+<h2>Leader Board</h2>
+
+<table class="table">
+    <tr>
+        <th class="col-md-1">Position</th>
+        <th class="col-md-5">Name</th>
+        <th class="col-md-2">Balance</th>
+        <th class="col-md-2">Assets</th>
+    </tr>
+    <tr ng-repeat="leader in leaders">
+        <td>{{$index + 1}}</td>
+        <td>{{leader.name}}</td>
+        <td>{{leader.balance}}$</td>
+        <td>{{leader.assets}}$</td>
+    </tr>
+</table>

@@ -1,6 +1,32 @@
-<div>
+<h2>Account</h2>
 
-    <h1>Name: {{xebay.userInfo.name}}</h1>
-    <h2>Key: {{xebay.userInfo.key}}</h2>
+<div class="thumbnail">
+    <img ng-src="{{xebay.userInfo.avatarUrl}}">
 
+    <div class="caption">
+        <p>Name: {{xebay.userInfo.name}}</p>
+
+        <p>Key: {{xebay.userInfo.key}}</p>
+
+        <p>Balance: {{xebay.userInfo.balance}}$</p>
+    </div>
 </div>
+
+<table class="table">
+    <tr>
+        <th class="col-md-2">Category</th>
+        <th class="col-md-7">Item</th>
+        <th class="col-md-1">Value</th>
+        <th class="col-md-1"></th>
+    </tr>
+    <tr ng-repeat="item in xebay.userInfo.items">
+        <td>{{item.category}}</td>
+        <td>
+            <img ng-src="images/{{item.name}}.png" width="20em" height="20em"/> {{item.name}}
+        </td>
+        <td>{{item.value}} $</td>
+        <td>
+            <button class="btn btn-success" ng-click="sendOffer(item)">Sell</button>
+        </td>
+    </tr>
+</table>

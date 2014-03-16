@@ -28,6 +28,13 @@ angular.module('xebayApp').controller('playController', ['$scope', '$http', '$ti
         }
     };
 
+    $scope.sendBidOffer = function (increment) {
+        var bidOffer = {itemName: $scope.bidOffer.item.name, value: $scope.bidOffer.item.value + increment};
+        $http.post("/rest/bidEngine/bid", bidOffer, {
+            headers: {"Authorization": $scope.xebay.userInfo.key}
+        });
+    };
+
     $scope.getBidOffer();
 
 }]);

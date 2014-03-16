@@ -10,17 +10,15 @@
     <script type="text/javascript" src="js/angular-1.12.14/angular-resource.js"></script>
     <script type="text/javascript" src="js/xebay-main.js"></script>
     <script type="text/javascript" src="js/xebay-account.js"></script>
-    <script type="text/javascript" src="js/xebay-items.js"></script>
     <script type="text/javascript" src="js/xebay-leaders.js"></script>
     <script type="text/javascript" src="js/xebay-play.js"></script>
     <script type="text/javascript" src="js/xebay-plugins.js"></script>
-    <script type="text/javascript" src="js/xebay-user.js"></script>
     <script type="text/javascript" src="js/xebay-users.js"></script>
     <title>Xebay</title>
 </head>
 <body>
 
-<div class="navbar navbar-inverse navbar-fixed-top" ng-controller="userController">
+<div class="navbar navbar-inverse navbar-fixed-top" ng-controller="accountController">
     <div class="navbar-header">
         <span class="navbar-brand">Xebay</span>
     </div>
@@ -30,7 +28,7 @@
 <div class="container">
     <div class="row">
         <div class="tab-content">
-            <div ng-view></div>
+            <div ng-view class="col-md-10 col-md-offset-1"></div>
         </div>
     </div>
 </div>

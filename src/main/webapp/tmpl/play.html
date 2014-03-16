@@ -1,53 +1,44 @@
-<div id="/play">
+<h2>Play</h2>
 
-    <div class="col-md-8">
+<div ng-show="!bidOffer.item">
+    <p>There is no offer</p>
+</div>
 
-        <h2>Current bid offer</h2>
-        <div id="current-bid-offer" ng-show="bidOffer.item">
-            <p>[ {{bidOffer.item.category}} ] {{bidOffer.item.name}} {{bidOffer.userName}}</p>
-            <img ng-src="images/{{bidOffer.item.name}}.png"/>
-            <div class="flipboard">
-                <span class="flipboardchar">{{bidOffer.timeToLiveSeconds}}</span>
-                <span class="flipboardchar">{{bidOffer.timeToLiveMilliseconds}}</span><span>s</span>
-            </div>
-            <div class="flipboard">
-                <span class="flipboardchar">{{bidOffer.item.value}}</span>
-                <span>$</span>
-            </div>
+<div class="thumbnail" ng-show="bidOffer.item">
+    <img ng-src="images/{{bidOffer.item.name}}.png"/>
+
+    <div class="caption">
+
+        <p>Category: {{bidOffer.item.category}}</p>
+
+        <p>Name: {{bidOffer.item.name}}</p>
+
+        <p>Owner: {{bidOffer.userName}} - <img ng-src="images/{{bidOffer.avatarUrl}}.png"/></p>
+
+        <p>Bidder: {{bidOffer.userName}} - <img ng-src="images/{{bidOffer.avatarUrl}}.png"/></p>
+
+        <div class="flipboard">
+            <span class="flipboardchar">{{bidOffer.timeToLiveSeconds}}</span>
+            <span class="flipboardchar">{{bidOffer.timeToLiveMilliseconds}}</span><span>s</span>
         </div>
-        <p ng-show="!bidOffer.item">There is no bid offer.</p>
-
-        <h2>Bid</h2>
-        <div ng-show="!userData.userInfo.logged">
-            <p>Please sign in to start bidding !</p>
+        <div class="flipboard">
+            <span class="flipboardchar">{{bidOffer.item.value}}</span>
+            <span>$</span>
         </div>
-        <div ng-show="userData.userInfo.logged">
-            <div class="row">
-                <div class="col-lg-5">
-                    <button class="btn btn-lg btn-success" onclick="xebay.sendBidDemand(1)">+1</button>
-                    <button class="btn btn-lg btn-info col-lg-offset-1" onclick="xebay.sendBidDemand(5)">+5</button>
-                    <button class="btn btn-sm btn-warning col-lg-offset-1" onclick="xebay.sendBidDemand(10)">+10
-                    </button>
-                    <button class="btn btn-xs btn-danger col-sm-offset-1" onclick="xebay.sendBidDemand(50)">+50</button>
-                </div>
-                <div class="col-lg-3 input-group input-group-lg">
-                    <input id="increment" type="number" class="form-control" placeholder="+Value">
+        <div class="progress progress-striped active">
+            <div class="progress-bar" role="progressbar"
+                 style="width: {{bidOffer.timeToLiveSeconds / 9 * 100}}%;"></div>
+        </div>
 
-                    <div class="input-group-btn">
-                        <button class="btn btn-primary" onclick="xebay.sendBidDemand()">Bid</button>
-                    </div>
-                </div>
-            </div>
+        <div ng-show="bidOffer.item && !xebay.userInfo.logged">
+            <p>Sign in to Bid</p>
+        </div>
+
+        <div class="btn-group input-group btn-group-lg" ng-show="bidOffer.item && xebay.userInfo.logged">
+            <button class="btn btn-success" ng-click="sendBidOffer(1)">+1</button>
+            <button class="btn btn-info" ng-click="sendBidOffer(5)">+5</button>
+            <button class="btn btn-warning" ng-click="sendBidOffer(10)">+10</button>
+            <button class="btn btn-danger" ng-click="sendBidOffer(50)">+50</button>
         </div>
     </div>
-
-    <div class="col-md-4">
-        <h2>Events &nbsp;
-            <button class="btn" onclick="xebay.clearLogs()">
-                Clear <span class="glyphicon glyphicon-trash"></span>
-            </button>
-        </h2>
-        <div id="console"></div>
-    </div>
-
 </div>

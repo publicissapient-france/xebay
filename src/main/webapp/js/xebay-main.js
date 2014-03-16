@@ -15,9 +15,6 @@ angular.module('xebayApp').config(['$routeProvider', function($routeProvider) {
     }).when('/play', {
         templateUrl: 'tmpl/play.html',
         controller: 'playController'
-    }).when('/items', {
-        templateUrl: 'tmpl/items.html',
-        controller: 'itemsController'
     }).when('/leaders', {
         templateUrl: 'tmpl/leaders.html',
         controller: 'leadersController'

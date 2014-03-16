@@ -1,19 +1,15 @@
-<div id="api" class="tab-pane">
+<h2>Bid Engine API</h2>
 
-    <h2>Bid Engine API</h2>
+<p>
+    GET /rest/bidEngine/current<br>
+    200 response contains json object<br>
+    <code>{"itemName":"itemName","value":34.4,"timeToLive":3945}</code><br>
+    404 if no more bid offer is available
+</p>
 
-    <p>
-        GET /rest/bidEngine/current<br>
-        200 response contains json object<br>
-        <code>{"itemName":"itemName","value":34.4,"timeToLive":3945}</code><br>
-        404 if no more bid offer is available
-    </p>
-
-    <p>
-        POST /rest/bidEngine/bid<br>
-        200 response contains json object<br>
-        <code>{"itemName":"itemName","value":34.4,"timeToLive":3945}</code><br>
-        404 if no more bid offer is available
-    </p>
-
-</div>
+<p>
+    POST /rest/bidEngine/bid<br>
+    200 response contains json object<br>
+    <code>{"itemName":"itemName","value":34.4,"timeToLive":3945}</code><br>
+    404 if no more bid offer is available
+</p>
