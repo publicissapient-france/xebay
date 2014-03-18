@@ -1,213 +1,44 @@
+'use strict';
 
-var xebay = {
-  "bidOffer": {},
-  "init": function () {
-    $(".registered").hide();
-    $("#register-message-display").hide();
-    $.cookie.json = true;
-    this.getCurrentBidOffer();
-    this.getLeaderboard();
-    var cookie = $.cookie("xebay");
-    if (cookie) {
-      this.signinWith(cookie.key);
-    }
-  },
-  "signin": function () {
-    this.signinWith($("#key").val());
-  },
-  "signinWith": function (key) {
-    $.ajax("/rest/users/info", {
-      "headers": {"Authorization": key},
-      "success": function (data) {
-        xebay.signedin(data, key);
-      },
-      "error": function () {
-        $("#register-message-display").text("Please provide a valid API key").show();
-      }
+angular.module('xebayApp', ['ngRoute','ngCookies']);
+
+angular.module('xebayApp').config(['$routeProvider', function($routeProvider) {
+    $routeProvider.when('/api', {
+        templateUrl: 'tmpl/api.html'
+    }).when('/account', {
+        templateUrl: 'tmpl/account.html',
+        controller: 'accountController'
+    }).when('/play', {
+        templateUrl: 'tmpl/play.html',
+        controller: 'playController'
+    }).when('/leaders', {
+        templateUrl: 'tmpl/leaders.html',
+        controller: 'leadersController'
+    }).when('/users', {
+        templateUrl: 'tmpl/users.html',
+        controller: 'usersController'
+    }).when('/plugins', {
+        templateUrl: 'tmpl/plugins.html',
+        controller: 'pluginsController'
+    }).otherwise({
+        redirectTo: '/play'
     });
-  },
-  "signedin": function (user, key) {
-    $("#register-message-display").text("").hide();
-    $("#name-display").text(user.name);
-    $("#key-display").text(key);
-    $(".registered").show();
-    $(".unregistered").hide();
-    $("#user-display").html(xebay.userTemplate(user));
-    $.cookie("xebay", {"key": key});
-    this.connect(key);
-    if (user.name === "admin") {
-      this.updateUserSet();
-      $(".admin").show();
-    } else {
-      $(".admin").hide();
-    }
-  },
-  "signout": function () {
-    $("#key-display").text("");
-    $(".unregistered").show();
-    $(".registered").hide();
-    $("#user-display").text("");
-    $.removeCookie("xebay");
-    $('#tab-list a:first').tab("show");
-  },
-  "register": function () {
-    var name = $("#name").val();
-    $.ajax("/rest/users/register", {
-      "headers": {"Authorization": $.cookie("xebay").key},
-      "data": {"name": name },
-      "success": xebay.updateUserSet
-    });
-  },
-  "unregister": function(key) {
-    var name = $("#name").val()
-    $.ajax("/rest/users/unregister?key=" + key, {
-      "type":"DELETE",
-      "headers": {"Authorization": $.cookie("xebay").key},
-      "success": xebay.updateUserSet
-    });
-  },
-  "updateUserSet": function() {
-    $.ajax("/rest/users", {
-      "dataType": "json",
-      "headers": {"Authorization": $.cookie("xebay").key},
-      "success": function (userSet) {
-        $("#userSet-display").html(xebay.userSetTemplate(userSet));
-      }
-    });
-  },
-  "getLeaderboard": function () {
-    $.getJSON("/rest/users/publicUsers").done(function (users) {
-      $("#leaderboard").html(xebay.leaderboardTemplate({"users": users}));
-    });
-  },
-  "getCurrentBidOffer": function () {
-    $.ajax("/rest/bidEngine/current", {
-      "dataType": "json",
-      "success": function (currentBidOffer) {
-        xebay.updateCurrentBidOffer(currentBidOffer);
-      },
-      "error": function (jqxhr) {
-        xebay.updateCurrentBidOffer({});
-        setTimeout(xebay.getCurrentBidOffer, 5000);
-      }
-    });
-  },
-  "updateCurrentBidOffer": function (currentBidOffer) {
-    xebay.bidOffer = currentBidOffer;
-    $("#current-bid-offer").html(xebay.currentBidOfferTemplate(xebay.bidOffer));
-    if (xebay.bidOffer.timeToLive && !xebay.timeout) {
-      xebay.updateTimeToLive();
-    }
-  },
-  "updateTimeToLive": function () {
-    var timeToLive = xebay.bidOffer.timeToLive;
-    if (timeToLive < 0) {
-      xebay.timeout = null;
-      xebay.getCurrentBidOffer();
-      return;
-    }
-    var timeToLiveSeconds = twoDigits(Math.floor(timeToLive / 1000));
-    var timeToLiveMilliseconds = Math.floor((timeToLive - (timeToLiveSeconds * 1000)) / 100);
-    $("#timeToLiveSeconds").html(timeToLiveSeconds);
-    $("#timeToLiveMilliseconds").html(timeToLiveMilliseconds);
-    xebay.timeout = setTimeout(xebay.updateTimeToLive, 100);
-    xebay.bidOffer.timeToLive -= 100;
-  },
-  "sendBidDemand": function (increment) {
-    if (!increment) {
-      increment = $("#increment").val();
-    }
-    var bidDemand = {
-      "itemName": xebay.bidOffer.item.name,
-      "value": xebay.bidOffer.item.value + increment
+}]);
+
+angular.module('xebayApp').factory('$xebay', ['$rootScope', function($rootScope) {
+    var xebay = {};
+    xebay.userInfo = {};
+    xebay.connect = function() {
+        $rootScope.$broadcast('$xebay.connect');
     };
-    $.ajax("/rest/bidEngine/bid", {
-      "type": "POST",
-      "headers": { "Authorization": $.cookie("xebay").key },
-      "contentType": "application/json",
-      "data": JSON.stringify(bidDemand)
-    }).done(function () {
-      $("#console").prepend(xebay.bidSuccessTemplate(bidDemand));
-    }).fail(function (jqxhr) {
-      $("#console").prepend(xebay.bidFailTemplate({ cause: jqxhr.responseText }));
-    });
-  },
-  "offer": function (name, value, buttonId) {
-    $.ajax("/rest/bidEngine/offer", {
-      "type": "POST",
-      "headers": { "Authorization": $.cookie("xebay").key },
-      "contentType": "application/json",
-      "data": JSON.stringify({"itemName": name, "value": value}),
-      "success": function () {
-        $("#" + buttonId).text("");
-      }
-    });
-  },
-  "connect": function (key) {
-    this.socket = new WebSocket("ws://" + window.location.host + "/socket/bidEngine/" + key);
-    this.socket.onmessage = this.onMessage;
-    this.socket.onopen = this.connected;
-    this.socket.onclose = this.disconnected;
-    this.socket.onerror = this.disconnected;
-  },
-  "connected": function () {
-    $(".connected").show();
-    $(".disconnected").hide();
-  },
-  "disconnect": function () {
-    this.socket.close();
-    this.clearLogs();
-  },
-  "disconnected": function () {
-    $(".connected").hide();
-    $(".disconnected").show();
-  },
-  "onMessage": function (message) {
-    var socketMessage = JSON.parse(message.data);
-    if (socketMessage.started) {
-      console.log("started" + socketMessage.started);
-      xebay.updateCurrentBidOffer(socketMessage.started);
-      $("#console").prepend(xebay.bidOfferTemplate(socketMessage.started));
-    }
-    if (socketMessage.updated) {
-      console.log("updated" + socketMessage.updated);
-      xebay.updateCurrentBidOffer(socketMessage.updated);
-      $("#console").prepend(xebay.bidOfferTemplate(socketMessage.updated));
-    }
-    if (socketMessage.resolved) {
-      console.log("resolved" + socketMessage.resolved);
-      // TODO
-    }
-    if (socketMessage.messages && socketMessage.messages.length > 0) {
-        console.info("Server says: " + socketMessage.messages);
-    }
-  },
-  "plugin": function(name, active) {
-    $.ajax("/rest/bidEngine/plugin/" + name + "?active=" + active, {
-      "type":"PATCH",
-      "headers": {"Authorization": $.cookie("xebay").key},
-      "success": function (data) {
-        if (active) {
-          $(".btn-success." + name).show().removeClass("hidden");
-          $(".btn-danger." + name).hide();
-        } else{
-          $(".btn-danger." + name).show();
-          $(".btn-success." + name).hide();
-        }
-      },
-      "error": function () {
-        console.log("Unable to change plugin status");
-      }
-    });
-  },
-  "clearLogs": function () {
-    $("#console").find("p").remove();
-  }
-};
-
-function twoDigits(value) {
-  if (value < 10) {
-    return "0" + value;
-  }
-  return value;
-}
+    xebay.isConnected = function () {
+        return typeof xebay.userInfo != 'undefined' && typeof xebay.userInfo.key != 'undefined';
+    };
+    xebay.disconnect = function() {
+        $rootScope.$broadcast('$xebay.disconnect');
+    };
+    xebay.error = function (message) {
+        $rootScope.$broadcast('$xebay.error', message);
+    };
+    return xebay;
+}]);

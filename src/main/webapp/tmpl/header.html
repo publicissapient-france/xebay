@@ -26,18 +26,12 @@
             Please provide a valid API key
         </div>
         <div class="form-group">
-            <input type="password" placeholder="API key" class="form-control" ng-model="xebay.userInfo.key">
+            <input id="key" type="password" placeholder="API key" class="form-control" ng-model="xebay.userInfo.key">
         </div>
         <button type="button" class="btn btn-success" ng-click="signIn()">Sign in</button>
     </form>
 
     <form class="navbar-form navbar-right" ng-show="xebay.userInfo.logged">
-        <button class="btn btn-success" ng-click="connect()" ng-show="!xebay.userInfo.connected">
-            Connect <span class="glyphicon glyphicon-transfer"></span>
-        </button>
-        <button class="btn btn-warning" ng-click="disconnect()" ng-show="xebay.userInfo.connected">
-            Disconnect <span class="glyphicon glyphicon-flash"></span>
-        </button>
         <button type="button" class="btn btn-danger" ng-click="signOut()">Sign out</button>
     </form>
 

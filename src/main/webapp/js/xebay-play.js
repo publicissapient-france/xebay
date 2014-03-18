@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('xebayApp').controller('playController', ['$scope', '$http', '$timeout', 'Xebay', function ($scope, $http, $timeout, Xebay) {
+angular.module('xebayApp').controller('playController', ['$scope', '$http', '$timeout', '$xebay', function ($scope, $http, $timeout, $xebay) {
 
-    $scope.xebay = Xebay;
+    $scope.xebay = $xebay;
 
     $scope.bidOffer = {};
 
@@ -19,8 +19,8 @@ angular.module('xebayApp').controller('playController', ['$scope', '$http', '$ti
     $scope.updateBidOffer = function () {
         var timeToLive = $scope.bidOffer.timeToLive;
         if (timeToLive && timeToLive > 0) {
-            $scope.bidOffer.timeToLiveSeconds = twoDigits(Math.floor(timeToLive / 1000));
-            $scope.bidOffer.timeToLiveMilliseconds = Math.floor((timeToLive - ($scope.bidOffer.timeToLiveSeconds * 1000)) / 100);
+            var timeToLiveSeconds = timeToLive / 1000;
+            $scope.bidOffer.timeToLiveSeconds = (timeToLiveSeconds < 10 ? "0" : "") + timeToLiveSeconds.toFixed(1);
             $scope.bidOffer.timeToLive -= 100;
             $timeout($scope.updateBidOffer, 100);
         } else {
@@ -31,9 +31,56 @@ angular.module('xebayApp').controller('playController', ['$scope', '$http', '$ti
     $scope.sendBidOffer = function (increment) {
         var bidOffer = {itemName: $scope.bidOffer.item.name, value: $scope.bidOffer.item.value + increment};
         $http.post("/rest/bidEngine/bid", bidOffer, {
-            headers: {"Authorization": $scope.xebay.userInfo.key}
+            headers: {"Authorization": $xebay.userInfo.key}
         });
     };
+
+    $scope.connect = function() {
+        if (!$scope.socket) {
+            $scope.socket = new WebSocket('ws://' + window.location.host + '/socket/bidEngine/' + $xebay.userInfo.key);
+            $scope.socket.onerror = $scope.onerror;
+            $scope.socket.onmessage = $scope.onmessage;
+        }
+    };
+
+    $scope.onmessage = function (message) {
+        var socketMessage = JSON.parse(message.data);
+        if (socketMessage.started) {
+            console.info("started %O", socketMessage.started);
+            $scope.bidOffer = socketMessage.started;
+        }
+        if (socketMessage.updated) {
+            console.info("updated %O", socketMessage.updated);
+            $scope.bidOffer = socketMessage.updated;
+        }
+        if (socketMessage.resolved) {
+            console.info("resolved %O", socketMessage.resolved);
+        }
+        if (socketMessage.messages && socketMessage.messages.length > 0) {
+            console.info("messages %O", socketMessage.messages);
+        }
+    };
+
+    $scope.onerror = function() {
+        $timeout($scope.connect, 5000);
+    };
+
+    $scope.disconnect = function() {
+        if ($scope.socket) {
+            $scope.socket.close();
+            delete $scope.socket;
+        }
+    };
+
+    $scope.$on('$xebay.connect', $scope.connect);
+
+    $scope.$on('$xebay.disconnect', $scope.disconnect);
+
+    $scope.$on('$destroy', $scope.disconnect);
+
+    if ($xebay.isConnected()) {
+        $xebay.connect();
+    }
 
     $scope.getBidOffer();
 

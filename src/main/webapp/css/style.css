@@ -15,7 +15,7 @@ body {
 
 .flipboard span {
   position: relative;
-  font-size: 64px;
+  font-size: 32px;
   display: inline-block;
   margin-right: 3px;
 }
@@ -61,4 +61,17 @@ body {
 
 #register-message-display {
   padding: 6px;
+}
+
+.progress-bar {
+    -webkit-transition: width 0.05s ease !important;
+    -moz-transition:  width 0.05s ease !important;
+    -ms-transition:  width 0.05s ease !important;
+    -o-transition:  width 0.05s ease !important;
+    transition:  width 0.05s ease !important;
+}​
+
+img.smallGravatar {
+    width: 25px;
+    height: 25px;
 }

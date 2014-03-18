@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('xebayApp').controller('leadersController', ['$scope', '$http', 'Xebay', function ($scope, $http, Xebay) {
+angular.module('xebayApp').controller('leadersController', ['$scope', '$http', '$xebay', function ($scope, $http, $xebay) {
 
-    $scope.xebay = Xebay;
+    $scope.xebay = $xebay;
 
     $scope.leaders = [];
 

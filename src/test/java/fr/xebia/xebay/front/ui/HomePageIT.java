@@ -25,7 +25,7 @@ public class HomePageIT extends PhantomJsTest {
     public void should_display_current_bid_offer() {
         goTo(homePage);
 
-        assertThat($("#current-bid-offer").getText()).contains("an item", "category");
+        assertThat($("#currentBidOffer").getText()).contains("an item", "category");
     }
 
     @Test
@@ -36,8 +36,8 @@ public class HomePageIT extends PhantomJsTest {
         $("button", withText("Sign in")).click();
 
         await().atMost(2000).until("button").withText("Sign out").isPresent();
-        $("a", withText().startsWith("My infos")).click();
-        assertThat($("#name-display").getText()).isEqualTo("user1");
-        assertThat($("#key-display").getText()).isEqualTo(registerRule.getKey());
+        $("a", withText().startsWith("Account")).click();
+        assertThat($("#name-display").getText()).isEqualTo("Name: user1");
+        assertThat($("#key-display").getText()).isEqualTo("Key: " + registerRule.getKey());
     }
 }

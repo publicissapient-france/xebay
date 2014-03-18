@@ -1,53 +1,46 @@
 'use strict';
 
-angular.module('xebayApp').controller('accountController', ['$scope', '$http', '$cookies', 'Xebay', function ($scope, $http, $cookies, Xebay) {
+angular.module('xebayApp').controller('accountController', ['$scope', '$http', '$cookies', '$xebay', function ($scope, $http, $cookies, $xebay) {
 
     $scope.template = "tmpl/header.html";
 
-    $scope.xebay = Xebay;
+    $scope.xebay = $xebay;
 
     $scope.signIn = function () {
         $http.get('/rest/users/info', {
             headers: {"Authorization" : $scope.xebay.userInfo.key}
         }).success(function(data) {
-            $scope.xebay.userInfo = data;
-            $cookies.xebay = $scope.xebay.userInfo.key;
-            $scope.xebay.userInfo.logged = true;
-            if ($scope.xebay.userInfo.name === "admin") {
-                $scope.xebay.userInfo.admin = true;
+            $xebay.userInfo = data;
+            $cookies.xebay = $xebay.userInfo.key;
+            $xebay.userInfo.logged = true;
+            if ($xebay.userInfo.name === "admin") {
+                $xebay.userInfo.admin = true;
             }
+            $xebay.connect();
         }).error(function (data) {
-            $scope.xebay.userInfo.loginFailed = true;
+            $xebay.userInfo.loginFailed = true;
+            $xebay.error(data);
         });
     };
 
     $scope.signOut = function () {
-        $scope.xebay.userInfo = {};
+        $xebay.userInfo = {};
         delete $cookies.xebay;
+        $xebay.disconnect();
     };
 
     $scope.sendOffer = function (item, value) {
         var itemOffer = {itemName: item.name, value: value};
         $http.post("/rest/bidEngine/offer", itemOffer, {
-            headers: {"Authorization": $scope.xebay.userInfo.key}
+            headers: {"Authorization": $xebay.userInfo.key}
         }).success(function () {
-            // TODO
+            item.offered = true;
         });
     };
 
-    $scope.connect = function () {
-        $scope.xebay.userInfo.connected = true;
-        // TODO
-    };
-
-    $scope.disconnect = function () {
-        $scope.xebay.userInfo.connected = false;
-        // TODO
-    };
-
     if ($cookies.xebay) {
-        $scope.xebay.userInfo = {};
-        $scope.xebay.userInfo.key = $cookies.xebay;
+        $xebay.userInfo = {};
+        $xebay.userInfo.key = $cookies.xebay;
         $scope.signIn();
     }
 

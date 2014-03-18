@@ -1,14 +1,14 @@
 'use strict';
 
-angular.module('xebayApp').controller('usersController', ['$scope', '$http', 'Xebay', function ($scope, $http, Xebay) {
+angular.module('xebayApp').controller('usersController', ['$scope', '$http', '$xebay', function ($scope, $http, $xebay) {
 
-    $scope.xebay = Xebay;
+    $scope.xebay = $xebay;
 
     $scope.users = [];
 
     $scope.fetch = function () {
         $http.get("/rest/users", {
-            headers: {"Authorization": $scope.xebay.userInfo.key}
+            headers: {"Authorization": $xebay.userInfo.key}
         }).success(function(data) {
             $scope.users = data;
         });
@@ -16,7 +16,7 @@ angular.module('xebayApp').controller('usersController', ['$scope', '$http', 'Xe
 
     $scope.register = function() {
         $http.get("/rest/users/register?name=" + $scope.newUserName, {
-            headers: {"Authorization": $scope.xebay.userInfo.key}
+            headers: {"Authorization": $xebay.userInfo.key}
         }).success(function(data) {
             $scope.fetch();
         });
@@ -24,7 +24,7 @@ angular.module('xebayApp').controller('usersController', ['$scope', '$http', 'Xe
 
     $scope.unregister = function (key) {
         $http.delete("/rest/users/unregister?key=" + key, {
-            headers: {"Authorization": $scope.xebay.userInfo.key}
+            headers: {"Authorization": $xebay.userInfo.key}
         }).success(function(data){
             $scope.fetch();
         });

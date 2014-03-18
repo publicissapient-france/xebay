@@ -1,260 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" ng-app="xebayApp">
 <head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="css/bootstrap.min.css"/>
-  <link rel="stylesheet" href="css/style.css"/>
-  <title>Xebay</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
+    <script type="text/javascript" src="js/angular-1.12.14/angular.js"></script>
+    <script type="text/javascript" src="js/angular-1.12.14/angular-cookies.js"></script>
+    <script type="text/javascript" src="js/angular-1.12.14/angular-route.js"></script>
+    <script type="text/javascript" src="js/angular-1.12.14/angular-resource.js"></script>
+    <script type="text/javascript" src="js/xebay.js"></script>
+    <script type="text/javascript" src="js/xebay-account.js"></script>
+    <script type="text/javascript" src="js/xebay-leaders.js"></script>
+    <script type="text/javascript" src="js/xebay-play.js"></script>
+    <script type="text/javascript" src="js/xebay-plugins.js"></script>
+    <script type="text/javascript" src="js/xebay-users.js"></script>
+    <title>Xebay</title>
 </head>
 <body>
 
-<div class="navbar navbar-inverse navbar-fixed-top">
-  <div class="navbar-header">
-    <span class="navbar-brand">Xebay</span>
-  </div>
-  <div class="navbar-collapse collapse">
-    <ul id="tab-list" class="nav navbar-nav">
-      <li class="active"><a href="#play" data-toggle="tab">Play</a></li>
-      <li class="registered"><a href="#precious" data-toggle="tab">Collection</a></li>
-      <li><a href="#api" data-toggle="tab">API</a></li>
-      <li><a href="#leaderboard" data-toggle="tab">Leaderboard</a></li>
-      <li class="registered admin"><a href="#settings" data-toggle="tab">Settings</a></li>
-    </ul>
-    <form id="register" class="navbar-form navbar-right unregistered">
-      <div id="register-message-display" class="form-group alert alert-danger"></div>
-      <div class="form-group">
-        <input id="key" type="password" placeholder="API key" class="form-control">
-      </div>
-      <button type="button" class="btn btn-success" onclick="xebay.signin()">Sign in</button>
-    </form>
-    <div id="unregister" class="registered">
-      <form class="navbar-form navbar-right">
-        <button id="signout" type="button" class="btn btn-warning" onclick="xebay.signout()">Sign out</button>
-      </form>
-      <div class="nav navbar-form navbar-right">
-        <button class="btn btn-success disconnected" onclick="xebay.connect()">
-          Connect <span class="glyphicon glyphicon-transfer"></span>
-        </button>
-        <button class="btn btn-danger connected" onclick="xebay.disconnect()">
-          Disconnect <span class="glyphicon glyphicon-flash"></span>
-        </button>
-      </div>
-      <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">My infos <b class="caret"></b></a>
-          <ul class="dropdown-menu">
-            <li class="my-infos">name: <span id="name-display"></span></li>
-            <li class="my-infos">API key: <span id="key-display"></span></li>
-          </ul>
-        </li>
-      </ul>
+<div class="navbar navbar-inverse navbar-fixed-top" ng-controller="accountController">
+    <div class="navbar-header">
+        <span class="navbar-brand">Xebay</span>
     </div>
-  </div>
+    <div ng-include="template"></div>
 </div>
 
 <div class="container">
-  <div class="row">
-    <div class="tab-content">
-
-      <div id="play" class="tab-pane active">
-
-        <div class="col-md-8">
-          <h2>Current bid offer</h2>
-          <div id="current-bid-offer"></div>
-          <h2>Bid</h2>
-          <div class="unregistered">
-            <p>Please sign in to start bidding !</p>
-          </div>
-          <div class="registered">
-            <div class="row">
-              <div class="col-lg-5">
-                <button class="btn btn-lg btn-success" onclick="xebay.sendBidDemand(1)">+1</button>
-                <button class="btn btn-lg btn-info col-lg-offset-1" onclick="xebay.sendBidDemand(5)">+5</button>
-                <button class="btn btn-sm btn-warning col-lg-offset-1" onclick="xebay.sendBidDemand(10)">+10</button>
-                <button class="btn btn-xs btn-danger col-sm-offset-1" onclick="xebay.sendBidDemand(50)">+50</button>
-              </div>
-              <div class="col-lg-3 input-group input-group-lg">
-                <input id="increment" type="number" class="form-control" placeholder="+Value">
-                <div class="input-group-btn">
-                  <button class="btn btn-primary" onclick="xebay.sendBidDemand()">Bid</button>
-                </div>
-              </div>
-            </div>
-          </div>
+    <div class="row">
+        <div class="tab-content">
+            <div ng-view class="col-md-10 col-md-offset-1"></div>
         </div>
-
-        <div class="col-md-4">
-          <h2>Console &nbsp;<button class="btn" onclick="xebay.clearLogs()">
-            Clear <span class="glyphicon glyphicon-trash"></span>
-          </button></h2>
-          <div id="console"></div>
-        </div>
-
-      </div>
-
-      <div id="precious" class="tab-pane">
-        <h2>My precious</h2>
-        <span id="user-display" class="row"></span>
-      </div>
-
-      <div id="api" class="tab-pane">
-        <h2>Bid Engine API</h2>
-        <p>
-          GET /rest/bidEngine/current<br>
-          200 response contains json object<br>
-          <code>{"itemName":"itemName","value":34.4,"timeToLive":3945}</code><br>
-          404 if no more bid offer is available
-        </p>
-        <p>
-          POST /rest/bidEngine/bid<br>
-          200 response contains json object<br>
-          <code>{"itemName":"itemName","value":34.4,"timeToLive":3945}</code><br>
-          404 if no more bid offer is available
-        </p>
-      </div>
-
-      <div id="leaderboard" class="tab-pane"></div>
-
-      <div id="settings" class="tab-pane">
-        <h2>User list</h2>
-        <span id="userSet-display" class="row"></span>
-        <h2>Plugins</h2>
-        <span id="pluginSet-display" class="row">
-          <table id="userSet" class="table">
-            <tr>
-              <th>Plugin</th>
-              <th></th>
-            </tr>
-            <tr>
-              <td>All Items In Category</td>
-              <td>
-                <button class="btn btn-danger AllItemsInCategory" onclick="xebay.plugin('AllItemsInCategory', true);">
-                  <span class="glyphicon glyphicon-ban-circle"/>
-                </button>
-                <button class="btn btn-success AllItemsInCategory hidden" onclick="xebay.plugin('AllItemsInCategory', false);">
-                  <span class="glyphicon glyphicon-ok-circle"/>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>Bank Buy Everything</td>
-              <td>
-                <button class="btn btn-danger BankBuyEverything" onclick="xebay.plugin('BankBuyEverything', true);">
-                  <span class="glyphicon glyphicon-ban-circle"/>
-                </button>
-                <button class="btn btn-success BankBuyEverything hidden" onclick="xebay.plugin('BankBuyEverything', false);">
-                  <span class="glyphicon glyphicon-ok-circle"/>
-                </button>
-              </td>
-            </tr>
-          </table>
-        </span>
-      </div>
-
     </div>
-  </div>
 </div>
 
-<script type="text/javascript" src="js/jquery-1.10.2.js"></script>
-<script type="text/javascript" src="js/jquery.cookie-1.4.0.js"></script>
-<script type="text/javascript" src="js/bootstrap-3.0.3.min.js"></script>
-<script type="text/javascript" src="js/handlebars-v1.3.0.js"></script>
-<script id="currentBidOfferTemplate" type="text/template">
-  {{#if item}}
-  <p>[{{item.category}}] {{item.name}} {{userName}}</p>
-  <img src="images/{{item.name}}.png"/>
-  <div class="flipboard">
-    <span id="timeToLiveSeconds" class="flipboardchar"></span>
-    <span id="timeToLiveMilliseconds" class="flipboardchar"></span><span>s</span>
-  </div>
-  <div class="flipboard"><span class="flipboardchar">{{item.value}}</span><span>$</span></p></div>
-  {{else}}
-  <p>There is no bid offer.</p>
-  {{/if}}
-</script>
-<script id="bidSuccessTemplate" type="text/template">
-  <p class="alert alert-success col-md-12">Your bid on {{itemName}} at {{value}} points has succeeded.</p>
-</script>
-<script id="bidFailTemplate" type="text/template">
-  <p class="alert alert-danger col-md-12">Your bid has failed because {{cause}}.</p>
-</script>
-<script id="bidOfferTemplate" type="text/template">
-  {{#if ownerName}}
-  <p class="alert alert-info col-md-12">{{userName}} has bid {{value}} points for {{itemName}}.</p>
-  {{/if}}
-</script>
-<script id="userSetTemplate" type="text/template">
-  <table id="userSet" class="table">
-    <tr>
-      <th>Name</th>
-      <th>Key</th>
-      <th></th>
-    </tr>
-    {{#each this}}
-    <tr id="{{key}}">
-      <td>{{name}}</td>
-      <td>{{key}}</td>
-      <td>
-        <button class="btn btn-danger" onclick="xebay.unregister('{{key}}');">
-          <span class="glyphicon glyphicon-trash"/>
-        </button>
-      </td>
-    </tr>
-    {{/each}}
-    <tr>
-      <td colspan="2">
-        <input id="name" type="text" class="form-control" placeholder="Name">
-      </td>
-      <td>
-        <button class="btn btn-success" onclick="xebay.register();">
-          <span class="glyphicon glyphicon-plus"/>
-        </button>
-      </td>
-    </tr>
-  </table>
-</script>
-<script id="userTemplate" type="text/template">
-  <p>Hey {{name}} you have {{balance}}$</p>
-  <table class="table">
-    <tr>
-      <th>Category</th>
-      <th>Item</th>
-      <th>Value</th>
-      <th></th>
-    </tr>
-    {{#each items}}<tr>
-      <td>{{category}}</td>
-      <td><img src="images/{{name}}.png" width="20em" height="20em"/> {{name}}</td>
-      <td>{{value}}</td>
-      <td id="item{{@index}}">
-        <button class="btn btn-success" onclick="xebay.offer('{{name}}', {{value}}, 'item{{@index}}');">
-          Offer <span class="glyphicon glyphicon-usd"></span>
-        </button>
-      </td>
-    </tr>
-    {{else}}<tr><td colspan="3">no items</td></tr>
-    {{/each}}
-  </table>
-</script>
-<script id="leaderboardTemplate" type="text/template">
-  <ol>
-    {{#each users}}<li>{{name}} {{balance}}$ + {{assets}}$</li>
-    {{else}}<li>no users</li>
-    {{/each}}
-  </ol>
-</script>
-<script type="text/javascript" src="js/xebay.js"></script>
-<script type="text/javascript">
-  $(document).ready(function () {
-    xebay.currentBidOfferTemplate = Handlebars.compile($("#currentBidOfferTemplate").html());
-    xebay.bidSuccessTemplate = Handlebars.compile($("#bidSuccessTemplate").html());
-    xebay.bidFailTemplate = Handlebars.compile($("#bidFailTemplate").html());
-    xebay.bidOfferTemplate = Handlebars.compile($("#bidOfferTemplate").html());
-    xebay.userSetTemplate = Handlebars.compile($("#userSetTemplate").html());
-    xebay.userTemplate = Handlebars.compile($("#userTemplate").html());
-    xebay.leaderboardTemplate = Handlebars.compile($("#leaderboardTemplate").html());
-    xebay.init();
-  });
-</script>
 </body>
 </html>

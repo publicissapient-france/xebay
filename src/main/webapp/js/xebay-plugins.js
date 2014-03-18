@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('xebayApp').controller('pluginsController', ['$scope', '$http', 'Xebay', function ($scope, $http, Xebay) {
+angular.module('xebayApp').controller('pluginsController', ['$scope', '$http', '$xebay', function ($scope, $http, $xebay) {
 
-    $scope.xebay = Xebay;
+    $scope.xebay = $xebay;
 
     $scope.plugins = [{name:'AllItemsInCategory', status:false}, {name:'BankBuyEverything', status:false}];
 
@@ -10,7 +10,7 @@ angular.module('xebayApp').controller('pluginsController', ['$scope', '$http', '
         $http({
             method:'PATCH',
             url:"/rest/bidEngine/plugin/" + plugin.name + "?active=" + status,
-            headers: {"Authorization": $scope.xebay.userInfo.key}
+            headers: {"Authorization": $xebay.userInfo.key}
         }).success(function(){
             plugin.status = status;
         });

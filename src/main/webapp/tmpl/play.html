@@ -4,41 +4,54 @@
     <p>There is no offer</p>
 </div>
 
-<div class="thumbnail" ng-show="bidOffer.item">
-    <img ng-src="images/{{bidOffer.item.name}}.png"/>
+<div id="currentBidOffer" class="thumbnail" ng-show="bidOffer.item">
+
+    <img ng-src="{{bidOffer.item.name ? 'images/' + bidOffer.item.name + '.png' : ''}}"/>
 
     <div class="caption">
 
-        <p>Category: {{bidOffer.item.category}}</p>
-
-        <p>Name: {{bidOffer.item.name}}</p>
-
-        <p>Owner: {{bidOffer.userName}} - <img ng-src="images/{{bidOffer.avatarUrl}}.png"/></p>
-
-        <p>Bidder: {{bidOffer.userName}} - <img ng-src="images/{{bidOffer.avatarUrl}}.png"/></p>
-
-        <div class="flipboard">
-            <span class="flipboardchar">{{bidOffer.timeToLiveSeconds}}</span>
-            <span class="flipboardchar">{{bidOffer.timeToLiveMilliseconds}}</span><span>s</span>
-        </div>
-        <div class="flipboard">
-            <span class="flipboardchar">{{bidOffer.item.value}}</span>
-            <span>$</span>
-        </div>
-        <div class="progress progress-striped active">
-            <div class="progress-bar" role="progressbar"
-                 style="width: {{bidOffer.timeToLiveSeconds / 9 * 100}}%;"></div>
+        <div class="progress">
+            <div class="progress-bar" style="width: {{bidOffer.timeToLiveSeconds * 10}}%;"></div>
         </div>
 
-        <div ng-show="bidOffer.item && !xebay.userInfo.logged">
+        <table class="table">
+            <tr>
+                <td>Category</td>
+                <td>{{bidOffer.item.category}}</td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>{{bidOffer.item.name}}</td>
+            </tr>
+            <tr>
+                <td>Owner</td>
+                <td><img ng-src="{{bidOffer.owner.avatarUrl}}" width="20em" height="20em" /> - {{bidOffer.owner.name}}</td>
+            </tr>
+            <tr>
+                <td>Bidder</td>
+                <td><img ng-src="{{bidOffer.bidder.avatarUrl}}" width="20em" height="20em" /> - {{bidOffer.userName}}</td>
+            </tr>
+        </table>
+
+        <p class="flipboard">
+            <span class="flipboardchar">{{bidOffer.timeToLiveSeconds}} s</span>
+        </p>
+
+        <p class="flipboard">
+            <span class="flipboardchar">{{bidOffer.item.value}} $</span>
+        </p>
+
+        <div class="pull-right" ng-show="!xebay.userInfo.logged">
             <p>Sign in to Bid</p>
         </div>
 
-        <div class="btn-group input-group btn-group-lg" ng-show="bidOffer.item && xebay.userInfo.logged">
-            <button class="btn btn-success" ng-click="sendBidOffer(1)">+1</button>
-            <button class="btn btn-info" ng-click="sendBidOffer(5)">+5</button>
-            <button class="btn btn-warning" ng-click="sendBidOffer(10)">+10</button>
-            <button class="btn btn-danger" ng-click="sendBidOffer(50)">+50</button>
+        <div class="pull-right" ng-show="xebay.userInfo.logged">
+            <button class="btn btn-lg btn-success" ng-click="sendBidOffer(1)">+1</button>
+            <button class="btn btn-lg btn-info" ng-click="sendBidOffer(5)">+5</button>
+            <button class="btn btn-lg btn-warning" ng-click="sendBidOffer(10)">+10</button>
+            <button class="btn btn-lg btn-danger" ng-click="sendBidOffer(50)">+50</button>
         </div>
+
     </div>
+
 </div>
