@@ -14,6 +14,7 @@ You can use [editorconfig](http://editorconfig.org) to synchronize this project 
  - rename BidOfferToSell => ItemOffer, BidDemand => BidOffer and BidOffer to OfferResponse (or any better idea because I think names are not relevant) ?
  - add "owner" and "bidder" related information in bidOfferResponse
  - add gravatar url for leader board resource
+ - maybe amounts should be integers, doubles are causing 0.0000000...001 issues
  - engine : it seems that every item is resolved even though no user has bid on it => must check bidEngineListener calls (see browser logs)
  - web : as an owner I can sell my item at a choosen sell price
  - web : provide a user page to update informations (name, avatar, etc.)
