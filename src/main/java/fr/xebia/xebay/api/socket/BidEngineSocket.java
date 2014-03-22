@@ -3,12 +3,11 @@ package fr.xebia.xebay.api.socket;
 import fr.xebia.xebay.api.rest.dto.BidDemand;
 import fr.xebia.xebay.domain.BidEngine;
 import fr.xebia.xebay.domain.BidEngineListener;
-import fr.xebia.xebay.domain.BidException;
+import fr.xebia.xebay.domain.BidOffer;
 import fr.xebia.xebay.domain.internal.Item;
 import fr.xebia.xebay.domain.internal.Items;
 import fr.xebia.xebay.domain.internal.User;
 import fr.xebia.xebay.domain.internal.Users;
-import fr.xebia.xebay.domain.BidOffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,82 +38,60 @@ public class BidEngineSocket implements BidEngineListener {
 
     @OnOpen
     public void onConnect(Session session) {
-        sessions.add(session);
+        synchronized (sessions) {
+            sessions.add(session);
+        }
     }
 
     @OnMessage
     public BidEngineSocketOutput onMessage(BidEngineSocketInput bidInput, @PathParam("key") String key) {
 
-        BidEngineSocketOutput output = new BidEngineSocketOutput();
         if (bidInput == null) {
-            output.addMessage("No messages provided");
-            return output;
-        }
-
-        User user;
-        try {
-            user = users.getUser(key);
-        } catch (Exception e) {
-            output.addMessage("User is unknown");
+            BidEngineSocketOutput output = new BidEngineSocketOutput();
+            output.setError("Provided message is not valid");
             return output;
         }
 
         BidDemand bid = bidInput.getBid();
-        if (bid != null) {
-            try {
-                bidEngine.bid(user, bid.getItemName(), bid.getValue());
-            } catch (BidException e) {
-                output.addMessage(e.getMessage());
-            }
-        }
-
         BidDemand offer = bidInput.getOffer();
-        if (offer != null) {
-            Item item = items.find(offer.getItemName());
-            try {
-                bidEngine.offer(user, item, offer.getValue());
-            } catch (BidException e) {
-                output.addMessage(e.getMessage());
-            }
-        }
 
-        return output;
+        try {
+
+            User user = users.getUser(key);
+            if (bid != null) {
+                bidEngine.bid(user, bid.getItemName(), bid.getValue());
+            } else if (offer != null) {
+                Item item = items.find(offer.getItemName());
+                bidEngine.offer(user, item, offer.getValue());
+            }
+            return null;
+
+        } catch (Exception e) {
+            BidEngineSocketOutput output = new BidEngineSocketOutput();
+            output.setError(e.getMessage());
+            return output;
+        }
     }
 
     @OnClose
     @OnError
     public void onDisconnect(Session session) {
-        sessions.remove(session);
+        synchronized (sessions) {
+            sessions.remove(session);
+        }
     }
 
-    @Override
-    public void onBidOfferStarted(BidOffer startedBidOffer) {
+    public void onBidOffer(BidOffer bidOffer) {
         BidEngineSocketOutput output = new BidEngineSocketOutput();
-        output.setStarted(startedBidOffer);
-        onBidOffer(output);
-    }
-
-    @Override
-    public void onBidOfferUpdated(BidOffer updatedBidOffer) {
-        BidEngineSocketOutput output = new BidEngineSocketOutput();
-        output.setUpdated(updatedBidOffer);
-        onBidOffer(output);
-    }
-
-    @Override
-    public void onBidOfferResolved(BidOffer resolvedBidOffer) {
-        BidEngineSocketOutput output = new BidEngineSocketOutput();
-        output.setResolved(resolvedBidOffer);
-        onBidOffer(output);
-    }
-
-    void onBidOffer(BidEngineSocketOutput output) {
-        sessions.stream().filter(Session::isOpen).forEach(session -> {
-            try {
-                session.getBasicRemote().sendObject(output);
-            } catch (IOException | EncodeException e) {
-                log.error("BidInfo notification in error", e);
-            }
-        });
+        output.setInfo(bidOffer);
+        synchronized (sessions) {
+            sessions.stream().filter(Session::isOpen).forEach(session -> {
+                try {
+                    session.getBasicRemote().sendObject(output);
+                } catch (IOException | EncodeException e) {
+                    log.error("BidInfo notification in error", e);
+                }
+            });
+        }
     }
 }

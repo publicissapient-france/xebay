@@ -6,20 +6,23 @@ import fr.xebia.xebay.domain.BidOffer;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
+@RunWith(MockitoJUnitRunner.class)
 public class BidEngineSocketCoderTest {
 
     BidEngineSocketCoder bidEngineSocketCoder;
 
+    @Mock
     ObjectMapper objectMapper;
 
     @Before
     public void before() {
-
-        objectMapper = Mockito.mock(ObjectMapper.class);
 
         bidEngineSocketCoder = new BidEngineSocketCoder();
         bidEngineSocketCoder.objectMapper = objectMapper;
@@ -28,11 +31,9 @@ public class BidEngineSocketCoderTest {
     @Test
     public void encoder_must_call_mapper_lib_and_return_its_result() throws Exception {
 
-        BidOffer bidOffer = new BidOffer("category", "name", 10d, 10L, "user", false);
+        BidOffer bidOffer = new BidOffer("category", "name", 10d, 10L, "owner", "user", false);
         BidEngineSocketOutput output = new BidEngineSocketOutput();
-        output.setStarted(bidOffer);
-        output.setUpdated(bidOffer);
-        output.setResolved(bidOffer);
+        output.setInfo(bidOffer);
         String expected = UUID.randomUUID().toString();
         Mockito.when(objectMapper.writeValueAsString(output)).thenReturn(expected);
 

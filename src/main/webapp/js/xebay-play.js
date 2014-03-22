@@ -45,19 +45,12 @@ angular.module('xebayApp').controller('playController', ['$scope', '$http', '$ti
 
     $scope.onmessage = function (message) {
         var socketMessage = JSON.parse(message.data);
-        if (socketMessage.started) {
-            console.info("started %O", socketMessage.started);
-            $scope.bidOffer = socketMessage.started;
+        if (socketMessage.info) {
+            console.info("info %O", socketMessage.info);
+            $scope.bidOffer = socketMessage.info;
         }
-        if (socketMessage.updated) {
-            console.info("updated %O", socketMessage.updated);
-            $scope.bidOffer = socketMessage.updated;
-        }
-        if (socketMessage.resolved) {
-            console.info("resolved %O", socketMessage.resolved);
-        }
-        if (socketMessage.messages && socketMessage.messages.length > 0) {
-            console.info("messages %O", socketMessage.messages);
+        if (socketMessage.error) {
+            console.info("error %O", socketMessage.error);
         }
     };
 

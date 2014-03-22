@@ -2,48 +2,25 @@ package fr.xebia.xebay.api.socket;
 
 import fr.xebia.xebay.domain.BidOffer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class BidEngineSocketOutput {
 
-    List<String> messages = new ArrayList<>();
+    BidOffer info;
 
-    BidOffer started;
+    String error;
 
-    BidOffer updated;
-
-    BidOffer resolved;
-
-    public List<String> getMessages() {
-        return messages;
+    public BidOffer getInfo() {
+        return info;
     }
 
-    public void addMessage(String message) {
-        this.messages.add(message);
+    public void setInfo(BidOffer info) {
+        this.info = info;
     }
 
-    public BidOffer getStarted() {
-        return started;
+    public String getError() {
+        return error;
     }
 
-    public void setStarted(BidOffer started) {
-        this.started = started;
-    }
-
-    public BidOffer getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(BidOffer bidded) {
-        this.updated = bidded;
-    }
-
-    public BidOffer getResolved() {
-        return resolved;
-    }
-
-    public void setResolved(BidOffer resolved) {
-        this.resolved = resolved;
+    public void setError(String error) {
+        this.error = error;
     }
 }

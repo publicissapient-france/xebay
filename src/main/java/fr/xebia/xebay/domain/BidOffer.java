@@ -1,18 +1,21 @@
 package fr.xebia.xebay.domain;
 
 public class BidOffer {
+
     private Item item;
     private long timeToLive;
-    private String userName;
+    private String owner;
+    private String bidder;
     private boolean expired;
 
     public BidOffer() {
     }
 
-    public BidOffer(String itemCategory, String itemName, double value, long timeToLive, String userName, boolean expired) {
+    public BidOffer(String itemCategory, String itemName, double value, long timeToLive, String owner, String bidder, boolean expired) {
         this.item = new Item(itemCategory, itemName, value);
         this.timeToLive = timeToLive;
-        this.userName = userName;
+        this.owner = owner;
+        this.bidder = bidder;
         this.expired = expired;
     }
 
@@ -24,8 +27,12 @@ public class BidOffer {
         return timeToLive;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getOwner() {
+        return owner;
+    }
+
+    public String getBidder() {
+        return bidder;
     }
 
     public boolean isExpired() {

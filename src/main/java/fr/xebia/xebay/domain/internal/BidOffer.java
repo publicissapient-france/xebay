@@ -34,7 +34,8 @@ public class BidOffer {
                 item.getName(),
                 currentValue,
                 getTimeToLive(),
-                futureBuyer == null ? (item.getOwner() == BANK ? null : item.getOwner().getName()) : futureBuyer.getName(),
+                item.getOwner() == null ? null : item.getOwner().getName(),
+                futureBuyer == null ? null : futureBuyer.getName(),
                 isExpired);
     }
 

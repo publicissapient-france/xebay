@@ -63,13 +63,13 @@ public class BidEngineSocketTest {
         Mockito.when(sessionMock.getBasicRemote()).thenReturn(basicRemoteMock);
         bidEngineSocket.sessions.add(sessionMock);
 
-        BidOffer bidOffer = new BidOffer("category", "name", 10d, 10L, "user", false);
+        BidOffer bidOffer = new BidOffer("category", "name", 10d, 10L, "owner", "bidder", false);
         ArgumentCaptor<BidEngineSocketOutput> captor = ArgumentCaptor.forClass(BidEngineSocketOutput.class);
 
-        bidEngineSocket.onBidOfferStarted(bidOffer);
+        bidEngineSocket.onBidOffer(bidOffer);
 
         Mockito.verify(basicRemoteMock).sendObject(captor.capture());
-        Assertions.assertThat(captor.getValue().getStarted()).isEqualTo(bidOffer);
+        Assertions.assertThat(captor.getValue().getInfo()).isEqualTo(bidOffer);
     }
 
     @Test
@@ -80,13 +80,13 @@ public class BidEngineSocketTest {
         RemoteEndpoint.Basic basicRemoteMock = Mockito.mock(RemoteEndpoint.Basic.class);
         Mockito.when(sessionMock.getBasicRemote()).thenReturn(basicRemoteMock);
         bidEngineSocket.sessions.add(sessionMock);
-        BidOffer bidOffer = new BidOffer("category", "name", 10d, 10L, "user", false);
+        BidOffer bidOffer = new BidOffer("category", "name", 10d, 10L, "owner", "bidder", false);
         ArgumentCaptor<BidEngineSocketOutput> captor = ArgumentCaptor.forClass(BidEngineSocketOutput.class);
 
-        bidEngineSocket.onBidOfferUpdated(bidOffer);
+        bidEngineSocket.onBidOffer(bidOffer);
 
         Mockito.verify(basicRemoteMock).sendObject(captor.capture());
-        Assertions.assertThat(captor.getValue().getUpdated()).isEqualTo(bidOffer);
+        Assertions.assertThat(captor.getValue().getInfo()).isEqualTo(bidOffer);
     }
 
     @Test
@@ -97,13 +97,13 @@ public class BidEngineSocketTest {
         RemoteEndpoint.Basic basicRemoteMock = Mockito.mock(RemoteEndpoint.Basic.class);
         Mockito.when(sessionMock.getBasicRemote()).thenReturn(basicRemoteMock);
         bidEngineSocket.sessions.add(sessionMock);
-        BidOffer bidOffer = new BidOffer("category", "name", 10d, 10L, "user", false);
+        BidOffer bidOffer = new BidOffer("category", "name", 10d, 10L, "owner", "bidder", false);
         ArgumentCaptor<BidEngineSocketOutput> captor = ArgumentCaptor.forClass(BidEngineSocketOutput.class);
 
-        bidEngineSocket.onBidOfferResolved(bidOffer);
+        bidEngineSocket.onBidOffer(bidOffer);
 
         Mockito.verify(basicRemoteMock).sendObject(captor.capture());
-        Assertions.assertThat(captor.getValue().getResolved()).isEqualTo(bidOffer);
+        Assertions.assertThat(captor.getValue().getInfo()).isEqualTo(bidOffer);
     }
 
     @Test

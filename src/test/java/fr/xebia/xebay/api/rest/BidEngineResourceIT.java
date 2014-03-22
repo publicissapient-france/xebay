@@ -7,7 +7,6 @@ import fr.xebia.xebay.domain.BidOffer;
 import fr.xebia.xebay.domain.Item;
 import fr.xebia.xebay.domain.internal.AdminUser;
 import fr.xebia.xebay.utils.TomcatRule;
-import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.junit.*;
@@ -56,7 +55,7 @@ public class BidEngineResourceIT {
         assertThat(bidOffer.getItem().getCategory()).isEqualTo("category");
         assertThat(bidOffer.getItem().getValue()).isNotNull();
         assertThat(bidOffer.getTimeToLive()).isLessThan(BidEngine.DEFAULT_TIME_TO_LIVE).isNotNegative();
-        assertThat(bidOffer.getUserName()).isNull();
+        assertThat(bidOffer.getBidder()).isNull();
     }
 
     @Test

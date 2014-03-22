@@ -50,7 +50,7 @@ public class PluginsTest {
         resolvesBidOffer(bidEngine);
         BidOffer bidOffer = bidEngine.currentBidOffer();
         assertThat(bidOffer.getItem().getName()).isEqualTo("an item");
-        assertThat(bidOffer.getUserName()).isNull();
+        assertThat(bidOffer.getBidder()).isNull();
         assertThat(bidOffer.getItem().getValue()).isEqualTo(5);
     }
 

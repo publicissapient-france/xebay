@@ -77,7 +77,7 @@ public class BidEngineSocketIT {
             this.wait();
         }
 
-        BidOffer bidOffer = bidOfferList.get(0).getUpdated();
+        BidOffer bidOffer = bidOfferList.get(0).getInfo();
         assertThat(bidOffer.getItem().getName()).isEqualTo("an item");
         assertThat(bidOffer.getItem().getValue()).isEqualTo(currentBidOffer.getItem().getValue() + 10, Offset.offset(0d));
     }

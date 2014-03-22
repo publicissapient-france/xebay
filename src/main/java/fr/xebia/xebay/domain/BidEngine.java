@@ -16,18 +16,16 @@ public class BidEngine {
     private final List<BidEngineListener> listeners = new ArrayList<>();
     private final Items items;
     private final Expirable bidOfferExpiration;
-    private final Queue<BidOfferToSell> bidOffersToSell;
+    private final Queue<BidOfferToSell> bidOffersToSell; // FIXME may be a queue of <Item>
     private final Plugins plugins;
 
-    private int timeToLive;
     private Optional<BidOffer> bidOffer;
 
     public BidEngine(Items items) {
         this.items = items;
         this.bidOfferExpiration = () -> !bidOffer.isPresent() || bidOffer.get().isExpired();
         this.bidOffersToSell = new ArrayDeque<>();
-        this.timeToLive = DEFAULT_TIME_TO_LIVE;
-        this.bidOffer = Optional.of(new BidOffer(this.items.next(), timeToLive));
+        this.bidOffer = Optional.of(new BidOffer(this.items.next(), DEFAULT_TIME_TO_LIVE));
         this.plugins = new Plugins();
     }
 
@@ -35,8 +33,7 @@ public class BidEngine {
         this.items = items;
         this.bidOfferExpiration = bidOfferExpiration;
         this.bidOffersToSell = new ArrayDeque<>();
-        this.timeToLive = DEFAULT_TIME_TO_LIVE;
-        this.bidOffer = Optional.of(new BidOffer(this.items.next(), timeToLive));
+        this.bidOffer = Optional.of(new BidOffer(this.items.next(), DEFAULT_TIME_TO_LIVE));
         this.plugins = new Plugins();
     }
 
@@ -54,7 +51,7 @@ public class BidEngine {
                 .orElseThrow(() -> new BidException(format("current item to bid is not \"%s\"", itemName)))
                 .bid(itemName, newValue, user)
                 .toBidOffer(bidOfferExpiration.isExpired());
-        listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferUpdated(updatedBidOffer));
+        listeners.forEach(bidEngineListener -> bidEngineListener.onBidOffer(updatedBidOffer));
         return updatedBidOffer;
     }
 
@@ -108,22 +105,26 @@ public class BidEngine {
             bidOffer.ifPresent((bidOffer) -> {
                 bidOffer.resolve();
                 plugins.onBidOfferResolved(bidOffer, items);
-                listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferResolved(bidOffer.toBidOffer(true)));
+                listeners.forEach(bidEngineListener -> bidEngineListener.onBidOffer(bidOffer.toBidOffer(true)));
             });
             bidOffer = nextBidOffer();
-            bidOffer.ifPresent((bidOffer) -> listeners.forEach(bidEngineListener -> bidEngineListener.onBidOfferStarted(bidOffer.toBidOffer(true))));
+            // FIXME got java.util.ConcurrentModificationException on line above
+            //java.util.ConcurrentModificationException
+            //at java.util.ArrayList.forEach(ArrayList.java:1237)
+            //at fr.xebia.xebay.domain.BidEngine.lambda$nextBidOfferIfExpired$21(BidEngine.java:114)
+            bidOffer.ifPresent((bidOffer) -> listeners.forEach(bidEngineListener -> bidEngineListener.onBidOffer(bidOffer.toBidOffer(true))));
         }
     }
 
     private Optional<BidOffer> nextBidOffer() {
+
+        // first, look for items offered by users
         if (!bidOffersToSell.isEmpty()) {
-            return Optional.of(bidOffersToSell.poll().toBidOffer(timeToLive));
+            return Optional.of(bidOffersToSell.poll().toBidOffer(DEFAULT_TIME_TO_LIVE));
         }
+
+        // then, look for items offered by bank
         Item nextItem = items.next();
-        if (nextItem == null) {
-            return Optional.empty();
-        } else {
-            return Optional.of(new BidOffer(nextItem, timeToLive));
-        }
+        return nextItem == null ? Optional.empty() : Optional.of(new BidOffer(nextItem, DEFAULT_TIME_TO_LIVE));
     }
 }

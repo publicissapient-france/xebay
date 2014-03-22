@@ -11,6 +11,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -41,9 +43,10 @@ public class BidEngineListenerTest {
         bidEngine.bid(user, "an item", 4.3 + 5);
 
         ArgumentCaptor<BidOffer> argumentCaptor = ArgumentCaptor.forClass(BidOffer.class);
-        verify(bidEngineListener).onBidOfferUpdated(argumentCaptor.capture());
+        verify(bidEngineListener).onBidOffer(argumentCaptor.capture());
         BidOffer updatedBidOffer = argumentCaptor.getValue();
-        assertThat(updatedBidOffer.getUserName()).isNotNull().isEqualTo("user1");
+        assertThat(updatedBidOffer.getOwner()).isNull();
+        assertThat(updatedBidOffer.getBidder()).isNotNull().isEqualTo("user1");
         assertThat(updatedBidOffer.getItem().getName()).isEqualTo("an item");
         assertThat(updatedBidOffer.getItem().getValue()).isEqualTo(9.3);
     }
@@ -57,11 +60,18 @@ public class BidEngineListenerTest {
         resolvesBidOffer(bidEngine);
 
         ArgumentCaptor<BidOffer> argumentCaptor = ArgumentCaptor.forClass(BidOffer.class);
-        verify(bidEngineListener).onBidOfferResolved(argumentCaptor.capture());
-        BidOffer resolvedBidOffer = argumentCaptor.getValue();
-        assertThat(resolvedBidOffer.getUserName()).isNull();
-        assertThat(resolvedBidOffer.getItem().getName()).isEqualTo("an item");
-        assertThat(resolvedBidOffer.getItem().getValue()).isEqualTo(3.87);
+        verify(bidEngineListener, times(2)).onBidOffer(argumentCaptor.capture());
+        List<BidOffer> bidOfferList = argumentCaptor.getAllValues();
+        BidOffer bidOffer1 = bidOfferList.get(0);
+        assertThat(bidOffer1.getOwner()).isNull();
+        assertThat(bidOffer1.getBidder()).isNull();
+        assertThat(bidOffer1.getItem().getName()).isEqualTo("an item");
+        assertThat(bidOffer1.getItem().getValue()).isEqualTo(3.87);
+        BidOffer bidOffer2 = bidOfferList.get(1);
+        assertThat(bidOffer2.getBidder()).isNull();
+        assertThat(bidOffer2.getOwner()).isNull();
+        assertThat(bidOffer2.getItem().getName()).isEqualTo("an item");
+        assertThat(bidOffer2.getItem().getValue()).isEqualTo(3.87);
     }
 
     @Test
@@ -73,11 +83,18 @@ public class BidEngineListenerTest {
         resolvesBidOffer(bidEngine);
 
         ArgumentCaptor<BidOffer> argumentCaptor = ArgumentCaptor.forClass(BidOffer.class);
-        verify(bidEngineListener).onBidOfferStarted(argumentCaptor.capture());
-        BidOffer newBidOffer = argumentCaptor.getValue();
-        assertThat(newBidOffer.getUserName()).isNull();
-        assertThat(newBidOffer.getItem().getName()).isEqualTo("another item");
-        assertThat(newBidOffer.getItem().getValue()).isEqualTo(2.4);
+        verify(bidEngineListener, times(2)).onBidOffer(argumentCaptor.capture());
+        List<BidOffer> bidOfferList = argumentCaptor.getAllValues();
+        BidOffer bidOffer1 = bidOfferList.get(0);
+        assertThat(bidOffer1.getOwner()).isNull();
+        assertThat(bidOffer1.getBidder()).isNull();
+        assertThat(bidOffer1.getItem().getName()).isEqualTo("an item");
+        assertThat(bidOffer1.getItem().getValue()).isEqualTo(3.87);
+        BidOffer bidOffer2 = bidOfferList.get(1);
+        assertThat(bidOffer2.getBidder()).isNull();
+        assertThat(bidOffer2.getOwner()).isNull();
+        assertThat(bidOffer2.getItem().getName()).isEqualTo("another item");
+        assertThat(bidOffer2.getItem().getValue()).isEqualTo(2.4);
     }
 
     private void resolvesBidOffer(BidEngine bidEngine) {

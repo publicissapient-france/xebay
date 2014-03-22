@@ -23,3 +23,5 @@ You can use [editorconfig](http://editorconfig.org) to synchronize this project 
  - convert to BigDecimal
  ...
  - maybe publish an API to list available plugins with status ... maybe
+
+ - game : how much items / how much "value"
