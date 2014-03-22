@@ -41,11 +41,11 @@
             <span class="flipboardchar">{{bidOffer.item.value}} $</span>
         </p>
 
-        <div class="pull-right" ng-show="!xebay.userInfo.logged">
+        <div class="pull-right" ng-show="!xebay.logged">
             <p>Sign in to Bid</p>
         </div>
 
-        <div class="pull-right" ng-show="xebay.userInfo.logged">
+        <div class="pull-right" ng-show="xebay.logged">
             <button class="btn btn-lg btn-success" ng-click="sendBidOffer(1)">+1</button>
             <button class="btn btn-lg btn-info" ng-click="sendBidOffer(5)">+5</button>
             <button class="btn btn-lg btn-warning" ng-click="sendBidOffer(10)">+10</button>

@@ -27,7 +27,7 @@ public class User implements Principal {
         this.name = name;
         this.items = new HashSet<>();
         this.balance = INITIAL_BALANCE;
-        this.avatar = "http://www.gravatar.com/avatar/" + Gravatar.md5Hex(name);
+        this.avatar = Gravatar.gravatarURL(name);
     }
 
     public String getKey() {
@@ -101,7 +101,7 @@ public class User implements Principal {
     }
 
     public PublicUser toPublicUser() {
-        return new PublicUser(name, balance, items.stream().mapToDouble(item -> item.getValue()).sum());
+        return new PublicUser(name, avatar, balance, items.stream().mapToDouble(item -> item.getValue()).sum());
     }
 
     public void credit(double value) {

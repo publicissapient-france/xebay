@@ -36,12 +36,13 @@ public class User {
         return items;
     }
 
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
     @Override
     public String toString() {
         return "Name " + name + " Balance " + balance;
     }
 
-    public String getAvatarUrl() {
-        return avatarUrl;
-    }
 }

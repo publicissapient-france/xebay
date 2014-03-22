@@ -4,7 +4,8 @@ angular.module('xebayApp', ['ngRoute','ngCookies']);
 
 angular.module('xebayApp').config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/api', {
-        templateUrl: 'tmpl/api.html'
+        templateUrl: 'tmpl/api.html',
+        controller: 'apiController'
     }).when('/account', {
         templateUrl: 'tmpl/account.html',
         controller: 'accountController'
@@ -30,9 +31,6 @@ angular.module('xebayApp').factory('$xebay', ['$rootScope', function($rootScope)
     xebay.userInfo = {};
     xebay.connect = function() {
         $rootScope.$broadcast('$xebay.connect');
-    };
-    xebay.isConnected = function () {
-        return typeof xebay.userInfo != 'undefined' && typeof xebay.userInfo.key != 'undefined';
     };
     xebay.disconnect = function() {
         $rootScope.$broadcast('$xebay.disconnect');

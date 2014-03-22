@@ -1,6 +1,5 @@
 package fr.xebia.xebay.domain.utils;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,17 +7,19 @@ import java.security.MessageDigest;
 
 public class Gravatar {
     private static final Logger log = LoggerFactory.getLogger("Gravatar");
+    public static final String GRAVATAR_URL = "http://www.gravatar.com/avatar/";
 
 
     public static String hex(byte[] array) {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < array.length; ++i) {
             sb.append(Integer.toHexString((array[i]
-                    & 0xFF) | 0x100).substring(1,3));
+                    & 0xFF) | 0x100).substring(1, 3));
         }
         return sb.toString();
     }
-    public static String md5Hex (String message) {
+
+    public static String md5Hex(String message) {
         try {
             MessageDigest md =
                     MessageDigest.getInstance("MD5");
@@ -28,5 +29,9 @@ public class Gravatar {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public static String gravatarURL(String message) {
+        return GRAVATAR_URL + md5Hex(message);
     }
 }

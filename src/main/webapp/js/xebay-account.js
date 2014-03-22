@@ -11,10 +11,10 @@ angular.module('xebayApp').controller('accountController', ['$scope', '$http', '
             headers: {"Authorization" : $scope.xebay.userInfo.key}
         }).success(function(data) {
             $xebay.userInfo = data;
+            $xebay.logged = true;
             $cookies.xebay = $xebay.userInfo.key;
-            $xebay.userInfo.logged = true;
             if ($xebay.userInfo.name === "admin") {
-                $xebay.userInfo.admin = true;
+                $xebay.admin = true;
             }
             $xebay.connect();
         }).error(function (data) {
@@ -24,9 +24,13 @@ angular.module('xebayApp').controller('accountController', ['$scope', '$http', '
     };
 
     $scope.signOut = function () {
-        $xebay.userInfo = {};
-        delete $cookies.xebay;
         $xebay.disconnect();
+        if ($xebay.admin) {
+            $xebay.admin = false;
+        }
+        delete $cookies.xebay;
+        $xebay.logged = false;
+        $xebay.userInfo = {};
     };
 
     $scope.sendOffer = function (item, value) {

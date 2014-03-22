@@ -1,21 +1,69 @@
-<h2>HTTP API</h2>
+<h2>API</h2>
 
-<p>
-    GET /rest/bidEngine/current<br>
-    200 response contains json object<br>
-    <code>{"itemName":"itemName","value":34.4,"timeToLive":3945}</code><br>
-    404 if no more bid offer is available
-</p>
+<div class="panel panel-primary">
+    <div class="panel-heading">GET http://{{host}}/rest/bidEngine/current</div>
+    <ul class="list-group">
+        <li class="list-group-item">
+            @Produces : <code>200</code> response with an <code>application/json</code> response object
+            <code>{"itemName":"name","value":10,"timeToLive":3945}</code>
+        </li>
+        <li class="list-group-item">
+            @Produces : <code>404</code> response if no more bid offer is available
+        </li>
+    </ul>
+</div>
 
-<p>
-    POST /rest/bidEngine/bid<br>
-    200 response contains json object<br>
-    <code>{"itemName":"itemName","value":34.4,"timeToLive":3945}</code><br>
-    404 if no more bid offer is available
-</p>
+<div class="panel panel-primary">
+    <div class="panel-heading">POST http://{{host}}/rest/bidEngine/bid</div>
+    <ul class="list-group">
+        <li class="list-group-item">
+            @Consumes : <code>application/json</code> request object
+            <code>{"itemName":"name","value":10}</code> with an <code>Authorization: key</code> header
+        </li>
+        <li class="list-group-item">
+            @Produces : <code>200</code> response with an <code>application/json</code> response object
+            <code>{"itemName":"itemName","name":10,"timeToLive":3945}</code>
+        </li>
+        <li class="list-group-item">
+            @Produces : <code>4XX</code> response if bid is rejected with a <code>text/plain</code> response message
+        </li>
+    </ul>
+</div>
 
-<h2>Web Socket API</h2>
+<div class="panel panel-primary">
+    <div class="panel-heading">POST http://{{host}}/rest/bidEngine/offer</div>
+    <ul class="list-group">
+        <li class="list-group-item">
+            @Consumes : <code>application/json</code> request object
+            <code>{"itemName":"name","value":10}</code> with an <code>Authorization: key</code> header
+        </li>
+        <li class="list-group-item">
+            @Produces : <code>200</code> response with an empty
+        </li>
+        <li class="list-group-item">
+            @Produces : <code>4XX</code> response if offer is rejected with a <code>text/plain</code> response message
+        </li>
+    </ul>
+</div>
 
-<p>
-    @TODO
-</p>
+<div class="panel panel-primary">
+    <div class="panel-heading">WebSocket ws://{{host}}/socket/bidEngine/{key}</div>
+    <ul class="list-group">
+        <li class="list-group-item">
+            @Consumes : <code>application/json</code> object
+            <code>{"bid":{"itemName":"name","value":10}}</code>
+        </li>
+        <li class="list-group-item">
+            @Consumes : <code>application/json</code> object
+            <code>{"offer":{"itemName":"name","value":10}}</code>
+        </li>
+        <li class="list-group-item">
+            @Produces : <code>application/json</code> object
+            <code>{"message":{"itemName":"name","name":10,"timeToLive":3945}}</code>
+        </li>
+        <li class="list-group-item">
+            @Produces : <code>application/json</code> object
+            <code>{"error":"message"}</code>
+        </li>
+    </ul>
+</div>
