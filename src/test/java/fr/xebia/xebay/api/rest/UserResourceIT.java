@@ -86,7 +86,7 @@ public class UserResourceIT {
         Set<PublicUser> users = target.path("publicUsers").request().get(new GenericType<Set<PublicUser>>() {
         });
 
-        assertThat(users).containsExactly(new PublicUser("user1", "avatar", 1000d, 0d));
+        assertThat(users).containsExactly(new PublicUser("user1", 1000d, 0d));
     }
 
     @Test(expected = ForbiddenException.class)

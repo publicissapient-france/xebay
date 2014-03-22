@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('xebayApp', ['ngRoute','ngCookies']);
+angular.module('xebayApp', ['ngRoute','ngCookies', 'ui.gravatar']);
 
 angular.module('xebayApp').config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/api', {

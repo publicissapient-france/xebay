@@ -95,8 +95,8 @@ public class UsersTest {
         Set<PublicUser> publicUsers = users.getUsers();
 
         assertThat(publicUsers).containsExactly(
-                new PublicUser("user2", "avatar", 1000, 0),
-                new PublicUser("user1", "avatar", 950, 45)
+                new PublicUser("user2", 1000, 0),
+                new PublicUser("user1", 950, 45)
         );
     }
 

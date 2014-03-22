@@ -14,25 +14,6 @@
             <div class="progress-bar" style="width: {{bidOffer.timeToLiveSeconds * 10}}%;"></div>
         </div>
 
-        <table class="table">
-            <tr>
-                <td>Category</td>
-                <td>{{bidOffer.item.category}}</td>
-            </tr>
-            <tr>
-                <td>Name</td>
-                <td>{{bidOffer.item.name}}</td>
-            </tr>
-            <tr>
-                <td>Owner</td>
-                <td><img ng-src="{{bidOffer.owner.avatarUrl}}" width="20em" height="20em" /> - {{bidOffer.owner.name}}</td>
-            </tr>
-            <tr>
-                <td>Bidder</td>
-                <td><img ng-src="{{bidOffer.bidder.avatarUrl}}" width="20em" height="20em" /> - {{bidOffer.userName}}</td>
-            </tr>
-        </table>
-
         <p class="flipboard">
             <span class="flipboardchar">{{bidOffer.timeToLiveSeconds}} s</span>
         </p>
@@ -51,6 +32,33 @@
             <button class="btn btn-lg btn-warning" ng-click="sendBidOffer(10)">+10</button>
             <button class="btn btn-lg btn-danger" ng-click="sendBidOffer(50)">+50</button>
         </div>
+
+        <table class="table">
+            <tr>
+                <td>Category</td>
+                <td>{{bidOffer.item.category}}</td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>{{bidOffer.item.name}}</td>
+            </tr>
+            <tr>
+                <td>Owner</td>
+                <td>
+                    <div ng-show="bidOffer.owner">
+                        <img gravatar-src="{{bidOffer.owner}}" width="20em" height="20em"/> {{bidOffer.owner}}
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Bidder</td>
+                <td>
+                    <div ng-show="bidOffer.bidder">
+                        <img gravatar-src="{{bidOffer.bidder}}" width="20em" height="20em"/> {{bidOffer.bidder}}
+                    </div>
+                </td>
+            </tr>
+        </table>
 
     </div>
 

@@ -1,7 +1,6 @@
 package fr.xebia.xebay.domain.internal;
 
 import fr.xebia.xebay.domain.PublicUser;
-import fr.xebia.xebay.domain.utils.Gravatar;
 
 import javax.security.auth.Subject;
 import java.security.Principal;
@@ -18,7 +17,6 @@ public class User implements Principal {
     private final String key;
     private final String name;
     private final Set<Item> items;
-    private final String avatar;
 
     private double balance;
 
@@ -27,7 +25,6 @@ public class User implements Principal {
         this.name = name;
         this.items = new HashSet<>();
         this.balance = INITIAL_BALANCE;
-        this.avatar = Gravatar.gravatarURL(name);
     }
 
     public String getKey() {
@@ -58,7 +55,7 @@ public class User implements Principal {
     }
 
     public fr.xebia.xebay.domain.User toUser() {
-        return new fr.xebia.xebay.domain.User(name, key, avatar, getBalance(), items.stream()
+        return new fr.xebia.xebay.domain.User(name, key, getBalance(), items.stream()
                 .map(Item::toItem)
                 .collect(toSet()));
     }
@@ -96,12 +93,8 @@ public class User implements Principal {
         return false;
     }
 
-    public String getAvatar() {
-        return avatar;
-    }
-
     public PublicUser toPublicUser() {
-        return new PublicUser(name, avatar, balance, items.stream().mapToDouble(item -> item.getValue()).sum());
+        return new PublicUser(name, balance, items.stream().mapToDouble(item -> item.getValue()).sum());
     }
 
     public void credit(double value) {

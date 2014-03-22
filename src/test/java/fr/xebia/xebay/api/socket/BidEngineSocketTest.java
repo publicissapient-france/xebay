@@ -63,7 +63,7 @@ public class BidEngineSocketTest {
         Mockito.when(sessionMock.getBasicRemote()).thenReturn(basicRemoteMock);
         bidEngineSocket.sessions.add(sessionMock);
 
-        BidOffer bidOffer = new BidOffer("category", "name", 10d, 10L, "user", "avatarURL", false);
+        BidOffer bidOffer = new BidOffer("category", "name", 10d, 10L, "user", false);
         ArgumentCaptor<BidEngineSocketOutput> captor = ArgumentCaptor.forClass(BidEngineSocketOutput.class);
 
         bidEngineSocket.onBidOfferStarted(bidOffer);
@@ -80,7 +80,7 @@ public class BidEngineSocketTest {
         RemoteEndpoint.Basic basicRemoteMock = Mockito.mock(RemoteEndpoint.Basic.class);
         Mockito.when(sessionMock.getBasicRemote()).thenReturn(basicRemoteMock);
         bidEngineSocket.sessions.add(sessionMock);
-        BidOffer bidOffer = new BidOffer("category", "name", 10d, 10L, "user", "avatarURL", false);
+        BidOffer bidOffer = new BidOffer("category", "name", 10d, 10L, "user", false);
         ArgumentCaptor<BidEngineSocketOutput> captor = ArgumentCaptor.forClass(BidEngineSocketOutput.class);
 
         bidEngineSocket.onBidOfferUpdated(bidOffer);
@@ -97,7 +97,7 @@ public class BidEngineSocketTest {
         RemoteEndpoint.Basic basicRemoteMock = Mockito.mock(RemoteEndpoint.Basic.class);
         Mockito.when(sessionMock.getBasicRemote()).thenReturn(basicRemoteMock);
         bidEngineSocket.sessions.add(sessionMock);
-        BidOffer bidOffer = new BidOffer("category", "name", 10d, 10L, "user", "avatarURL", false);
+        BidOffer bidOffer = new BidOffer("category", "name", 10d, 10L, "user", false);
         ArgumentCaptor<BidEngineSocketOutput> captor = ArgumentCaptor.forClass(BidEngineSocketOutput.class);
 
         bidEngineSocket.onBidOfferResolved(bidOffer);

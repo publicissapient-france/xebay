@@ -2,13 +2,12 @@
 
 <table class="table">
     <tr>
-        <th>Gravatar</th>
         <th>Name</th>
         <th>Key</th>
         <th></th>
     </tr>
     <tr>
-        <td colspan="3">
+        <td colspan="2">
             <input id="name" type="text" class="form-control" placeholder="Name" ng-model="newUserName">
         </td>
         <td>
@@ -18,8 +17,9 @@
         </td>
     </tr>
     <tr ng-repeat="user in users">
-        <td><img ng-src="{{user.avatarUrl}}" width="20em" height="20em" /></td>
-        <td>{{user.name}}</td>
+        <td>
+            <img gravatar-src="user.name" width="20em" height="20em" /> {{user.name}}
+        </td>
         <td>{{user.key}}</td>
         <td>
             <button class="btn btn-danger" ng-click="unregister(user.key)">

@@ -28,7 +28,7 @@ public class BidEngineSocketCoderTest {
     @Test
     public void encoder_must_call_mapper_lib_and_return_its_result() throws Exception {
 
-        BidOffer bidOffer = new BidOffer("category", "name", 10d, 10L, "user", "avatarURL", false);
+        BidOffer bidOffer = new BidOffer("category", "name", 10d, 10L, "user", false);
         BidEngineSocketOutput output = new BidEngineSocketOutput();
         output.setStarted(bidOffer);
         output.setUpdated(bidOffer);

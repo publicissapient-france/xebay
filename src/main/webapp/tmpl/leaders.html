@@ -3,15 +3,15 @@
 <table class="table">
     <tr>
         <th class="col-md-1">Position</th>
-        <th class="col-md-1">Gravatar</th>
         <th class="col-md-4">Name</th>
         <th class="col-md-2">Balance</th>
         <th class="col-md-2">Assets</th>
     </tr>
     <tr ng-repeat="leader in leaders">
         <td>{{$index + 1}}</td>
-        <td><img ng-src="{{leader.avatarUrl}}" width="20em" height="20em" /></td>
-        <td>{{leader.name}} - </td>
+        <td>
+            <img gravatar-src="leader.name" width="20em" height="20em" /> {{leader.name}}
+        </td>
         <td>{{leader.balance}}$</td>
         <td>{{leader.assets}}$</td>
     </tr>

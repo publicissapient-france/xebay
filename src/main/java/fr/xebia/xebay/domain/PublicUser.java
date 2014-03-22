@@ -1,7 +1,5 @@
 package fr.xebia.xebay.domain;
 
-import fr.xebia.xebay.domain.utils.Gravatar;
-
 import static java.lang.Double.compare;
 import static java.lang.String.format;
 
@@ -9,19 +7,17 @@ public class PublicUser {
     private String name;
     private double balance;
     private double assets;
-    private String avatarUrl;
 
     public PublicUser() {
     }
 
-    public PublicUser(String name, String avatarUrl, double balance, double assets) {
+    public PublicUser(String name, double balance, double assets) {
         if (name == null) {
             throw new NullPointerException("name can't be null when creating PublicUser");
         }
         this.name = name;
         this.balance = balance;
         this.assets = assets;
-        this.avatarUrl = Gravatar.gravatarURL(name);
     }
 
     public String getName() {
@@ -34,10 +30,6 @@ public class PublicUser {
 
     public double getAssets() {
         return assets;
-    }
-
-    public String getAvatarUrl() {
-        return avatarUrl;
     }
 
     @Override
