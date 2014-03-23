@@ -16,6 +16,7 @@
         <maven.tomcat.path>/</maven.tomcat.path>
         <maven.tomcat.uriEncoding>UTF-8</maven.tomcat.uriEncoding>
         <failOnMissingWebXml>false</failOnMissingWebXml>
+        <argLine>-Dfile.encoding=UTF-8</argLine>
     </properties>
 
     <dependencies>
