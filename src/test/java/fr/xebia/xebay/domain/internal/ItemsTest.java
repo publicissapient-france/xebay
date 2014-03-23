@@ -3,6 +3,8 @@ package fr.xebia.xebay.domain.internal;
 import fr.xebia.xebay.domain.BidException;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ItemsTest {
@@ -13,7 +15,7 @@ public class ItemsTest {
         Item item = items.next();
         assertThat(item.getCategory()).isEqualTo("category");
         assertThat(item.getName()).isEqualTo("item");
-        assertThat(item.getValue()).isEqualTo(1d);
+        assertThat(item.getValue()).isEqualTo(new BigDecimal(1));
     }
 
     @Test
@@ -23,7 +25,7 @@ public class ItemsTest {
 
         Item secondItem = items.next();
         assertThat(secondItem.getName()).isEqualTo("second item");
-        assertThat(secondItem.getValue()).isEqualTo(2d);
+        assertThat(secondItem.getValue()).isEqualTo(new BigDecimal(2));
     }
 
     @Test
@@ -48,7 +50,7 @@ public class ItemsTest {
 
         Item item = items.next();
         assertThat(item.getName()).isEqualTo("item");
-        assertThat(item.getValue()).isEqualTo(1d);
+        assertThat(item.getValue()).isEqualTo(new BigDecimal(1));
     }
 
     @Test(expected = BidException.class)
@@ -58,7 +60,7 @@ public class ItemsTest {
 
     @Test
     public void should_returns_first_item() {
-        Items items = new Items(new Item("category", "an item", 4.3));
+        Items items = new Items(new Item("category", "an item", new BigDecimal(4.3)));
 
         Item item = items.next();
 
@@ -67,7 +69,7 @@ public class ItemsTest {
 
     @Test
     public void should_returns_second_item() {
-        Items items = new Items(new Item("category", "an item", 4.3), new Item("category", "another item", 2.4));
+        Items items = new Items(new Item("category", "an item", new BigDecimal(4.3)), new Item("category", "another item", new BigDecimal(2.4)));
         items.next();
 
         Item item = items.next();
@@ -77,7 +79,7 @@ public class ItemsTest {
 
     @Test
     public void should_loop_througth_items() {
-        Items items = new Items(new Item("category", "an item", 4.3), new Item("category", "another item", 2.4));
+        Items items = new Items(new Item("category", "an item", new BigDecimal(4.3)), new Item("category", "another item", new BigDecimal(2.4)));
         items.next();
         items.next();
 
@@ -88,8 +90,8 @@ public class ItemsTest {
 
     @Test
     public void should_not_get_item_if_owned_by_a_user() {
-        Item item = new Item("category", "an item", 4.3);
-        item.concludeTransaction(5, new User("", "user1"));
+        Item item = new Item("category", "an item", new BigDecimal(4.3));
+        item.concludeTransaction(new BigDecimal(5), new User("", "user1"));
         Items items = new Items(item);
 
         Item nextItem = items.next();
@@ -100,10 +102,10 @@ public class ItemsTest {
     @Test
     public void should_not_get_item_if_there_are_all_owned_by_a_user() {
         User buyer = new User("", "user1");
-        Item firstItem = new Item("category", "an item", 4.3);
-        firstItem.concludeTransaction(5, buyer);
-        Item secondItem = new Item("category", "another item", 5);
-        secondItem.concludeTransaction(2.4, buyer);
+        Item firstItem = new Item("category", "an item", new BigDecimal(4.3));
+        firstItem.concludeTransaction(new BigDecimal(5), buyer);
+        Item secondItem = new Item("category", "another item", new BigDecimal(5));
+        secondItem.concludeTransaction(new BigDecimal(2.4), buyer);
         Items items = new Items(firstItem, secondItem);
 
         Item nextItem = items.next();
@@ -113,7 +115,7 @@ public class ItemsTest {
 
     @Test
     public void should_get_an_item_by_his_name() {
-        Item item = new Item("category", "an item", 4.3);
+        Item item = new Item("category", "an item", new BigDecimal(4.3));
         Items items = new Items(item);
 
         Item itemByName = items.get("an item");

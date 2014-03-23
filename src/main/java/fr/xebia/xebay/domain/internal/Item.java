@@ -1,6 +1,8 @@
 package fr.xebia.xebay.domain.internal;
 
-import static java.lang.Math.rint;
+import java.math.BigDecimal;
+
+import static fr.xebia.xebay.domain.utils.Math.round;
 
 public class Item {
     public static final User BANK = null;
@@ -8,13 +10,13 @@ public class Item {
     private final String category;
     private final String name;
 
-    private double value;
+    private BigDecimal value;
     private User owner;
 
-    public Item(String category, String name, double value) {
+    public Item(String category, String name, BigDecimal value) {
         this.category = category;
         this.name = name;
-        this.value = rint(value * 100) / 100;
+        this.value = value;
         this.owner = BANK;
     }
 
@@ -22,7 +24,7 @@ public class Item {
         return name;
     }
 
-    public double getValue() {
+    public BigDecimal getValue() {
         return value;
     }
 
@@ -34,7 +36,7 @@ public class Item {
         return category;
     }
 
-    public void concludeTransaction(double value, User buyer) {
+    public void concludeTransaction(BigDecimal value, User buyer) {
         this.value = value;
 
         if (owner != null) {
@@ -49,8 +51,7 @@ public class Item {
     }
 
     public void depreciate() {
-        double centValue = value * 100;
-        this.value = rint(centValue - (centValue / 10)) / 100;
+        value = value.subtract(value.divide(BigDecimal.TEN));
     }
 
     @Override
@@ -78,6 +79,6 @@ public class Item {
     }
 
     public fr.xebia.xebay.domain.Item toItem() {
-        return new fr.xebia.xebay.domain.Item(category, name, value);
+        return new fr.xebia.xebay.domain.Item(category, name, round(value));
     }
 }

@@ -5,6 +5,8 @@ import fr.xebia.xebay.domain.internal.Item;
 import fr.xebia.xebay.domain.internal.Items;
 import fr.xebia.xebay.domain.internal.Users;
 
+import java.math.BigDecimal;
+
 public enum BidServer {
     BID_SERVER;
 
@@ -15,13 +17,12 @@ public enum BidServer {
     BidServer() {
         users = new Users();
         if (System.getProperty("xebay.test") != null) {
-            items = new Items(new Item("category", "an item", 4.3));
+            items = new Items(new Item("category", "an item", new BigDecimal(4.3)));
             bidEngine = new BidEngine(items, () -> false);
             return;
         }
 
         items = Items.load("items").get();
         bidEngine = new BidEngine(items);
-
     }
 }

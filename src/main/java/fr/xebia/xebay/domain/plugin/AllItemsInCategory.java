@@ -5,6 +5,7 @@ import fr.xebia.xebay.domain.internal.Item;
 import fr.xebia.xebay.domain.internal.Items;
 import fr.xebia.xebay.domain.internal.User;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -14,7 +15,7 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toSet;
 
 public class AllItemsInCategory extends ActivablePlugin {
-    public static final int CREDIT_AMOUNT = 500;
+    public static final BigDecimal CREDIT_AMOUNT = new BigDecimal(500);
 
     protected AllItemsInCategory() {
         super("AllItemsInCategory");
@@ -31,7 +32,8 @@ public class AllItemsInCategory extends ActivablePlugin {
                             allUsers.addAll(existingUsers);
                             allUsers.addAll(newSetWithOneUser);
                             return allUsers;
-                        }))
+                        }
+                ))
                 .forEach((String category, Set<User> users) -> {
                     if (users.size() != 1) {
                         return;

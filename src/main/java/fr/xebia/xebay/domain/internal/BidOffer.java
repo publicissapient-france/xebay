@@ -2,26 +2,35 @@ package fr.xebia.xebay.domain.internal;
 
 import fr.xebia.xebay.domain.BidException;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import static fr.xebia.xebay.domain.internal.Item.BANK;
+import static fr.xebia.xebay.domain.utils.Math.round;
 import static java.lang.Math.max;
 import static java.lang.String.format;
+import static java.math.BigDecimal.ONE;
+import static java.math.BigDecimal.TEN;
+import static java.util.Locale.ENGLISH;
 
 public class BidOffer {
-    private static final double MIN_BID_RATIO = 0.1;
+    private static final BigDecimal MIN_BID_RATIO = ONE.divide(TEN);
+
     public final Item item;
-    public final double initialValue;
+    public final BigDecimal initialValue;
+
     private final long created;
     private final long initialTimeToLive;
-    public double currentValue;
+
+    BigDecimal currentValue;
+
     private User futureBuyer;
 
     public BidOffer(Item item, long initialTimeToLive) {
         this(item, item.getValue(), initialTimeToLive);
     }
 
-    public BidOffer(Item item, double initialValue, long initialTimeToLive) {
+    public BidOffer(Item item, BigDecimal initialValue, long initialTimeToLive) {
         this.item = item;
         this.initialValue = initialValue;
         this.initialTimeToLive = initialTimeToLive;
@@ -32,7 +41,7 @@ public class BidOffer {
     public fr.xebia.xebay.domain.BidOffer toBidOffer(boolean isExpired) {
         return new fr.xebia.xebay.domain.BidOffer(item.getCategory(),
                 item.getName(),
-                currentValue,
+                round(currentValue),
                 getTimeToLive(),
                 item.getOwner() == null ? null : item.getOwner().getName(),
                 futureBuyer == null ? null : futureBuyer.getName(),
@@ -63,36 +72,28 @@ public class BidOffer {
         }
     }
 
-    public BidOffer bid(String name, double newValue, User user) throws BidException {
+    public BidOffer bid(String name, BigDecimal newValue, User user) throws BidException {
         checkUser(user);
         if (!item.getName().equals(name)) {
             throw new BidException(format("current item to bid is not \"%s\"", name));
         }
-        double increment = exactCalcul(newValue - currentValue);
-        if (exactCalcul(currentValue * MIN_BID_RATIO) > increment) {
-            throw new BidException(format("increment %s is less than ten percent of initial value %s of item \"%s\"", Double.toString(increment), Double.toString(item.getValue()), item.getName()));
+        BigDecimal increment = newValue.subtract(currentValue);
+        if (currentValue.multiply(MIN_BID_RATIO).compareTo(increment) > 0) {
+            throw new BidException(format(ENGLISH, "increment %.2f$ is less than ten percent of initial value %.2f$ of item \"%s\"", round(increment), round(item.getValue()), item.getName()));
         }
 
-        if (!user.canBid(currentValue + increment)) {
-            throw new BidException(format("user can't bid %s, not enought money left.", Double.toString(currentValue + increment)));
+        if (!user.canBid(newValue)) {
+            throw new BidException(format(ENGLISH, "user can't bid %.2f$, not enought money left.", round(newValue)));
         }
 
-        return increment(increment, user);
-    }
-
-    private double exactCalcul(double value) {
-        return Math.round(value * 100000) / 100000.0;
+        currentValue = newValue;
+        futureBuyer = user;
+        return this;
     }
 
     private void checkUser(User user) {
         if (null == user || (null == user.getName())) {
             throw new BidException("bad user");
         }
-    }
-
-    private BidOffer increment(double increment, User user) {
-        this.currentValue += increment;
-        this.futureBuyer = user;
-        return this;
     }
 }

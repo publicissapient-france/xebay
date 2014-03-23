@@ -1,5 +1,9 @@
 package fr.xebia.xebay.domain.internal;
 
+import java.math.BigDecimal;
+
+import static java.math.BigDecimal.ZERO;
+
 public class AdminUser extends User {
     public static final String KEY = "4dm1n";
     public static final String ADMIN_ROLE = "admin";
@@ -9,8 +13,8 @@ public class AdminUser extends User {
     }
 
     @Override
-    public double getBalance() {
-        return 0d;
+    public BigDecimal getBalance() {
+        return ZERO;
     }
 
     @Override

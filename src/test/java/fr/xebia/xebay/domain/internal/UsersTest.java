@@ -7,6 +7,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -87,7 +88,7 @@ public class UsersTest {
     public void should_sort_by_balance_plus_asset() {
         Users users = new Users();
         User user = users.create("user1");
-        Item item = new Item("category", "item", 50);
+        Item item = new Item("category", "item", new BigDecimal(50));
         user.buy(item);
         item.depreciate();
         users.create("user2");

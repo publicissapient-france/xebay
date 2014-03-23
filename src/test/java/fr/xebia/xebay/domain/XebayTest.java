@@ -12,7 +12,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.math.BigDecimal;
+
 import static fr.xebia.xebay.domain.BidEngine.DEFAULT_TIME_TO_LIVE;
+import static fr.xebia.xebay.domain.utils.Math.round;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -40,7 +43,7 @@ public class XebayTest {
 
     @Test
     public void server_should_give_a_bid_offer() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", 4.3)));
+        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", new BigDecimal(4.3))));
 
         BidOffer bidOffer = bidEngine.currentBidOffer();
 
@@ -54,7 +57,7 @@ public class XebayTest {
 
     @Test
     public void a_bid_can_be_done() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", 4.3)));
+        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", new BigDecimal(4.3))));
         BidOffer bidOffer = bidEngine.bid(user, "an item", 4.3 + 2.1);
 
         assertThat(bidOffer.getItem().getValue()).isEqualTo(6.4);
@@ -63,7 +66,7 @@ public class XebayTest {
 
     @Test
     public void user_have_to_bid_on_current_item() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", 4.3)));
+        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", new BigDecimal(4.3))));
         expectedException.expect(BidException.class);
         expectedException.expectMessage("current item to bid is not \"another item\"");
 
@@ -72,24 +75,24 @@ public class XebayTest {
 
     @Test
     public void should_not_bid_with_less_than_ten_percent_of_initial_value() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", 4.3)));
+        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", new BigDecimal(4.3))));
         expectedException.expect(BidException.class);
-        expectedException.expectMessage("increment 0.42 is less than ten percent of initial value 4.3 of item \"an item\"");
+        expectedException.expectMessage("increment 0.42$ is less than ten percent of initial value 4.30$ of item \"an item\"");
 
         bidEngine.bid(user, "an item", 4.3 + 0.42);
     }
 
     @Test
     public void should_bid_if_exactly_ten_percent_increment_of_initial_value() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", 38.07)));
+        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", new BigDecimal(38.07))));
         BidOffer bidOffer = bidEngine.bid(user, "an item", 38.07 + 3.807);
 
-        assertThat(bidOffer.getItem().getValue()).isEqualTo(38.07 + 3.807);
+        assertThat(bidOffer.getItem().getValue()).isEqualTo(41.88);
     }
 
     @Test
     public void a_bid_is_valid_until_bid_offer_expires() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", 4.3), new Item("category", "another item", 2.4)), () -> true);
+        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", new BigDecimal(4.3)), new Item("category", "another item", new BigDecimal(2.4))), () -> true);
 
         BidOffer bidOffer = bidEngine.currentBidOffer();
 
@@ -98,22 +101,22 @@ public class XebayTest {
 
     @Test
     public void when_only_one_user_bids_then_he_wins() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", 4.3), new Item("category", "another item", 2.4)), expiration);
+        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", new BigDecimal(4.3)), new Item("category", "another item", new BigDecimal(2.4))), expiration);
         bidEngine.bid(user, "an item", 4.3 + 0.7);
 
         resolvesBidOffer(bidEngine);
 
-        assertThat(user.getBalance()).isEqualTo(User.INITIAL_BALANCE - 5);
+        assertThat(user.getBalance()).isEqualTo(new BigDecimal(995));
         Item purchasedItem = user.getItems().iterator().next();
         assertThat(purchasedItem.getName()).isEqualTo("an item");
-        assertThat(purchasedItem.getValue()).isEqualTo(5.0);
+        assertThat(purchasedItem.getValue()).isEqualTo(new BigDecimal(5));
         assertThat(purchasedItem.getOwner()).isEqualTo(user);
     }
 
     @Test
     public void should_makes_offer() {
-        Item anItem = new Item("category", "an item", 4.3);
-        Item anotherItem = new Item("category", "another item", 2.4);
+        Item anItem = new Item("category", "an item", new BigDecimal(4.3));
+        Item anotherItem = new Item("category", "another item", new BigDecimal(2.4));
         BidEngine bidEngine = new BidEngine(new Items(anItem, anotherItem), expiration);
         bidEngine.bid(user, "an item", 4.3 + 0.7);
         resolvesBidOffer(bidEngine);
@@ -130,8 +133,8 @@ public class XebayTest {
 
     @Test
     public void should_not_makes_offer_if_item_doesnt_belong_to_user() {
-        Item anItem = new Item("category", "an item", 4.3);
-        Item anotherItem = new Item("category", "another item", 2.4);
+        Item anItem = new Item("category", "an item", new BigDecimal(4.3));
+        Item anotherItem = new Item("category", "another item", new BigDecimal(2.4));
         BidEngine bidEngine = new BidEngine(new Items(anItem, anotherItem), expiration);
         expectedException.expect(BidForbiddenException.class);
         expectedException.expectMessage("item \"another item\" doesn't belong to user \"user1\"");
@@ -141,8 +144,8 @@ public class XebayTest {
 
     @Test
     public void should_not_makes_offer_if_item_is_current_offer() {
-        Item anItem = new Item("category", "an item", 4.3);
-        Item anotherItem = new Item("category", "another item", 2.4);
+        Item anItem = new Item("category", "an item", new BigDecimal(4.3));
+        Item anotherItem = new Item("category", "another item", new BigDecimal(2.4));
 
         BidEngine bidEngine = new BidEngine(new Items(anItem, anotherItem), expiration);
         bidEngine.bid(user, "an item", 4.3 + 2.1);
@@ -157,22 +160,23 @@ public class XebayTest {
 
     @Test
     public void should_not_makes_offer_if_item_is_null() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", 4.3)), expiration);
+        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", new BigDecimal(4.3))), expiration);
         expectedException.expect(NullPointerException.class);
         bidEngine.offer(user, null, 5.9);
     }
 
     @Test
     public void should_not_makes_offer_if_user_is_null() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", 4.3)), expiration);
+        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", new BigDecimal(4.3))), expiration);
         expectedException.expect(NullPointerException.class);
-        bidEngine.offer(null, new Item("category", "an item", 4.3), 5.9);
+
+        bidEngine.offer(null, new Item("category", "an item", new BigDecimal(4.3)), 5.9);
     }
 
     @Test
     public void should_not_makes_offer_if_item_is_already_offered() {
-        Item anItem = new Item("category", "an item", 4.3);
-        Item anotherItem = new Item("category", "another item", 2.4);
+        Item anItem = new Item("category", "an item", new BigDecimal(4.3));
+        Item anotherItem = new Item("category", "another item", new BigDecimal(2.4));
 
         BidEngine bidEngine = new BidEngine(new Items(anItem, anotherItem), expiration);
 
@@ -188,7 +192,7 @@ public class XebayTest {
 
     @Test
     public void a_user_can_buy_an_item_offered_by_another() {
-        Item anItem = new Item("category", "an item", 4.3);
+        Item anItem = new Item("category", "an item", new BigDecimal(4.3));
         BidEngine bidEngine = new BidEngine(new Items(anItem), expiration);
         User seller = users.create("seller");
         User buyer = users.create("buyer");
@@ -227,7 +231,7 @@ public class XebayTest {
 
     @Test
     public void when_a_bid_is_won_seller_increase_money() {
-        Item anItem = new Item("category", "an item", 4.3);
+        Item anItem = new Item("category", "an item", new BigDecimal(4.3));
 
         User seller = users.create("seller");
         User buyer = users.create("buyer");
@@ -244,12 +248,12 @@ public class XebayTest {
         resolvesBidOffer(bidEngine);
 
         assertThat(seller.getItems()).isEmpty();
-        assertThat(seller.getBalance()).isEqualTo(1000.8);
+        assertThat(round(seller.getBalance())).isEqualTo(1000.8);
     }
 
     @Test
     public void when_nobody_bid_then_item_value_loose_ten_percent_of_its_value() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", 4.33)), expiration);
+        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", new BigDecimal(4.33))), expiration);
 
         resolvesBidOffer(bidEngine);
 
@@ -258,30 +262,29 @@ public class XebayTest {
 
     @Test
     public void user_cant_bid_without_enough_balance() {
-        int initialItemValue = User.INITIAL_BALANCE - 100;
-        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", initialItemValue), new Item("category", "another item", 5)));
+        BigDecimal initialItemValue = User.INITIAL_BALANCE.subtract(new BigDecimal(100));
+        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", initialItemValue), new Item("category", "another item", new BigDecimal(5))));
         expectedException.expect(BidException.class);
-        expectedException.expectMessage("user can't bid 1001.0, not enought money left.");
+        expectedException.expectMessage("user can't bid 1001.00$, not enought money left.");
 
-        bidEngine.bid(user, "an item", initialItemValue + 101);
+        bidEngine.bid(user, "an item", 1001);
     }
 
     @Test(expected = BidException.class)
     public void if_user_cant_bid_current_offer_keep_unchanged() {
-        int initialItemValue = User.INITIAL_BALANCE - 100;
-        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", initialItemValue), new Item("category", "another item", 5)));
+        BigDecimal initialItemValue = User.INITIAL_BALANCE.subtract(new BigDecimal(100));
+        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", initialItemValue), new Item("category", "another item", new BigDecimal(5))));
         try {
-            bidEngine.bid(user, "an item", initialItemValue + 101);
+            bidEngine.bid(user, "an item", 101);
         } finally {
             assertThat(user.getBalance()).isEqualTo(User.INITIAL_BALANCE);
-            BidOffer bidOffer = bidEngine.currentBidOffer();
-            assertThat(bidOffer.getItem().getValue()).isEqualTo(initialItemValue);
+            assertThat(bidEngine.currentBidOffer().getItem().getValue()).isEqualTo(900);
         }
     }
 
     @Test
     public void should_not_offer_item_that_is_owned_by_a_user() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", 4.3)), expiration);
+        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", new BigDecimal(4.3))), expiration);
         bidEngine.bid(user, "an item", 4.3 + 2.1);
         resolvesBidOffer(bidEngine);
 

@@ -3,22 +3,24 @@ package fr.xebia.xebay.domain.internal;
 import fr.xebia.xebay.domain.PublicUser;
 
 import javax.security.auth.Subject;
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
 
-import static java.lang.Math.abs;
+import static fr.xebia.xebay.domain.utils.Math.round;
+import static java.math.BigDecimal.ZERO;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.toSet;
 
 public class User implements Principal {
-    public static final int INITIAL_BALANCE = 1000;
+    public static final BigDecimal INITIAL_BALANCE = new BigDecimal(1000);
 
     private final String key;
     private final String name;
     private final Set<Item> items;
 
-    private double balance;
+    private BigDecimal balance;
 
     public User(String key, String name) {
         this.key = key;
@@ -40,22 +42,22 @@ public class User implements Principal {
         return unmodifiableSet(items);
     }
 
-    public double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
     public void buy(Item item) {
-        balance -= item.getValue();
+        balance = balance.subtract(item.getValue());
         items.add(item);
     }
 
     public void sell(Item item) {
-        balance += item.getValue();
+        balance = balance.add(item.getValue());
         items.remove(item);
     }
 
     public fr.xebia.xebay.domain.User toUser() {
-        return new fr.xebia.xebay.domain.User(name, key, getBalance(), items.stream()
+        return new fr.xebia.xebay.domain.User(name, key, round(getBalance()), items.stream()
                 .map(Item::toItem)
                 .collect(toSet()));
     }
@@ -85,8 +87,8 @@ public class User implements Principal {
         return name;
     }
 
-    public boolean canBid(double cost) {
-        return this.balance > cost;
+    public boolean canBid(BigDecimal cost) {
+        return balance.compareTo(cost) > 0;
     }
 
     public boolean isInRole(String role) {
@@ -94,10 +96,12 @@ public class User implements Principal {
     }
 
     public PublicUser toPublicUser() {
-        return new PublicUser(name, balance, items.stream().mapToDouble(item -> item.getValue()).sum());
+        return new PublicUser(name, round(balance), round(items.stream()
+                .map(item -> item.getValue())
+                .reduce(ZERO, (a, b) -> a.add(b))));
     }
 
-    public void credit(double value) {
-        balance += abs(value);
+    public void credit(BigDecimal value) {
+        balance = balance.add(value.abs());
     }
 }

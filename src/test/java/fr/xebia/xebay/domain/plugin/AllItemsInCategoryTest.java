@@ -7,6 +7,8 @@ import fr.xebia.xebay.domain.internal.User;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
 import static fr.xebia.xebay.domain.BidEngine.DEFAULT_TIME_TO_LIVE;
 import static fr.xebia.xebay.domain.internal.Item.BANK;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,7 +34,7 @@ public class AllItemsInCategoryTest {
 
         plugin.onActivation(items);
 
-        assertThat(userToCredit.getBalance()).isEqualTo(1500);
+        assertThat(userToCredit.getBalance()).isEqualTo(new BigDecimal(1500));
     }
 
     @Test
@@ -46,7 +48,7 @@ public class AllItemsInCategoryTest {
 
         plugin.onActivation(items);
 
-        assertThat(userToCredit.getBalance()).isEqualTo(1000);
+        assertThat(userToCredit.getBalance()).isEqualTo(new BigDecimal(1000));
     }
 
     @Test
@@ -59,7 +61,7 @@ public class AllItemsInCategoryTest {
 
         plugin.onActivation(items);
 
-        assertThat(userToCredit.getBalance()).isEqualTo(2000);
+        assertThat(userToCredit.getBalance()).isEqualTo(new BigDecimal(2000));
     }
 
     @Test
@@ -81,7 +83,7 @@ public class AllItemsInCategoryTest {
 
         plugin.onBidOfferResolvedIfActivated(bidOffer, items);
 
-        assertThat(userToCredit.getBalance()).isEqualTo(1500);
+        assertThat(userToCredit.getBalance()).isEqualTo(new BigDecimal(1500));
     }
 
     @Test
@@ -96,7 +98,7 @@ public class AllItemsInCategoryTest {
 
         plugin.onBidOfferResolvedIfActivated(bidOffer, items);
 
-        assertThat(userToCredit.getBalance()).isEqualTo(1000);
+        assertThat(userToCredit.getBalance()).isEqualTo(new BigDecimal(1000));
     }
 
     @Test

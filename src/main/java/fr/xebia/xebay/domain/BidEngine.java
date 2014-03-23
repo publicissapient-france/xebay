@@ -6,6 +6,7 @@ import fr.xebia.xebay.domain.internal.Item;
 import fr.xebia.xebay.domain.internal.User;
 import fr.xebia.xebay.domain.plugin.Plugins;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import static java.lang.String.format;
@@ -49,7 +50,7 @@ public class BidEngine {
         nextBidOfferIfExpired();
         fr.xebia.xebay.domain.BidOffer updatedBidOffer = bidOffer
                 .orElseThrow(() -> new BidException(format("current item to bid is not \"%s\"", itemName)))
-                .bid(itemName, newValue, user)
+                .bid(itemName, new BigDecimal(newValue), user)
                 .toBidOffer(bidOfferExpiration.isExpired());
         listeners.forEach(bidEngineListener -> bidEngineListener.onBidOffer(updatedBidOffer));
         return updatedBidOffer;
@@ -66,13 +67,13 @@ public class BidEngine {
     public void offer(User user, Item item, double initialValue) {
         nextBidOfferIfExpired();
         checkUserOffer(user, item);
-        BidOfferToSell bidOfferToSell = checkOffer(item, initialValue);
+        BidOfferToSell bidOfferToSell = checkOffer(item, new BigDecimal(initialValue));
         if (plugins.authorize(bidOfferToSell)) {
             bidOffersToSell.offer(bidOfferToSell);
         }
     }
 
-    private BidOfferToSell checkOffer(Item item, double initialValue) {
+    private BidOfferToSell checkOffer(Item item, BigDecimal initialValue) {
         if (bidOffer.isPresent() && bidOffer.get().item.equals(item)) {
             throw new BidForbiddenException(format("item \"%s\" is the current offer thus can't be offered", item.getName()));
         }
