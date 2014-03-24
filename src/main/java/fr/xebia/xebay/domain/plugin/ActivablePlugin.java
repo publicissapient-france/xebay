@@ -27,6 +27,10 @@ public abstract class ActivablePlugin implements Plugin {
         activated = false;
     }
 
+    public fr.xebia.xebay.domain.Plugin toPlugin() {
+        return new fr.xebia.xebay.domain.Plugin(name, activated);
+    }
+
     protected void onActivation(Items items) {
     }
 

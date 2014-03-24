@@ -5,6 +5,7 @@ import fr.xebia.xebay.api.rest.jersey.PATCH;
 import fr.xebia.xebay.api.rest.security.UserAuthorization;
 import fr.xebia.xebay.domain.BidEngine;
 import fr.xebia.xebay.domain.BidOffer;
+import fr.xebia.xebay.domain.Plugin;
 import fr.xebia.xebay.domain.internal.Item;
 import fr.xebia.xebay.domain.internal.Items;
 import fr.xebia.xebay.domain.internal.User;
@@ -17,6 +18,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.util.Set;
 
 import static fr.xebia.xebay.BidServer.BID_SERVER;
 import static fr.xebia.xebay.domain.internal.AdminUser.ADMIN_ROLE;
@@ -85,14 +87,26 @@ public class BidEngineResource {
     }
 
     @PATCH
-    @Path("/plugin/{name}")
+    @Path("/plugin/{name}/activate")
     @UserAuthorization
     @RolesAllowed(ADMIN_ROLE)
-    public void status(@PathParam("name") String name, @QueryParam("active") boolean active) {
-        if (active) {
-            bidEngine.activate(name);
-        } else {
-            bidEngine.deactivate(name);
-        }
+    public void activate(@PathParam("name") String name) {
+        bidEngine.activate(name);
+    }
+
+    @PATCH
+    @Path("/plugin/{name}/deactivate")
+    @UserAuthorization
+    @RolesAllowed(ADMIN_ROLE)
+    public void deactivate(@PathParam("name") String name) {
+        bidEngine.deactivate(name);
+    }
+
+    @GET
+    @Path("/plugins")
+    @UserAuthorization
+    @RolesAllowed(ADMIN_ROLE)
+    public Set<Plugin> plugins() {
+        return bidEngine.getPlugins();
     }
 }

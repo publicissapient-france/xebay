@@ -1,7 +1,9 @@
 package fr.xebia.xebay.api.rest;
 
+import com.google.common.collect.Sets;
 import fr.xebia.xebay.api.rest.dto.BidDemand;
 import fr.xebia.xebay.domain.BidEngine;
+import fr.xebia.xebay.domain.Plugin;
 import fr.xebia.xebay.domain.internal.Item;
 import fr.xebia.xebay.domain.internal.Items;
 import fr.xebia.xebay.domain.internal.User;
@@ -16,7 +18,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.SecurityContext;
 import java.math.BigDecimal;
+import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -73,15 +78,34 @@ public class BidEngineResourceTest {
     }
 
     @Test
-    public void should_call_bidEngine_to_toggle_plugin_status() throws Exception {
+    public void should_call_bidEngine_to_activate_plugin() {
         String name = "pluginName";
 
-        bidEngineResource.status(name, true);
+        bidEngineResource.activate(name);
 
         verify(bidEngine, times(1)).activate(name);
+    }
 
-        bidEngineResource.status(name, false);
+    @Test
+    public void should_call_bidEngine_to_deactivate_plugin() {
+        String name = "pluginName";
+
+        bidEngineResource.deactivate(name);
 
         verify(bidEngine, times(1)).deactivate(name);
+    }
+
+    @Test
+    public void should_call_bidEngine_to_get_plugins_list() {
+        when(bidEngine.getPlugins()).thenReturn(Sets.newHashSet(
+                new Plugin("first plugin", true),
+                new Plugin("second plugin", false)
+        ));
+
+        Set<Plugin> pluginResults = bidEngineResource.plugins();
+
+        assertThat(pluginResults).hasSize(2).extracting("name", "activated").containsOnly(
+                tuple("first plugin", true),
+                tuple("second plugin", false));
     }
 }

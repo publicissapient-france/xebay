@@ -1,89 +1,47 @@
 package fr.xebia.xebay.domain.plugin;
 
-import fr.xebia.xebay.domain.BidEngine;
-import fr.xebia.xebay.domain.BidOffer;
-import fr.xebia.xebay.domain.Expirable;
+import fr.xebia.xebay.domain.Plugin;
 import fr.xebia.xebay.domain.internal.Item;
 import fr.xebia.xebay.domain.internal.Items;
-import fr.xebia.xebay.domain.internal.User;
-import fr.xebia.xebay.domain.internal.Users;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.groups.Tuple.tuple;
 
-@RunWith(MockitoJUnitRunner.class)
 public class PluginsTest {
-    @Mock
-    private Expirable expiration;
+    @Test
+    public void should_activate_plugin() {
+        Plugins plugins = new Plugins();
 
-    private User user;
+        plugins.activate("BankBuyEverything", new Items(new Item("category", "name", new BigDecimal(4.3))));
 
-    @Before
-    public void createUsersAndUser() {
-        Users users = new Users();
-        user = users.create("user1");
-    }
-
-    @Before
-    public void bidOffersNeverExpires() {
-        when(expiration.isExpired()).thenReturn(false);
+        assertThat(getPlugin(plugins, "BankBuyEverything").isActivated()).isTrue();
     }
 
     @Test
-    public void plugin_bank_buy_everything() {
-        Item anItem = new Item("category", "an item", new BigDecimal(4.3));
-        Item anotherItem = new Item("category", "another item", new BigDecimal(2.4));
-        BidEngine bidEngine = new BidEngine(new Items(anItem, anotherItem), expiration);
-        bidEngine.activate("BankBuyEverything");
-        bidEngine.bid(user, "an item", 5.0);
-        resolvesBidOffer(bidEngine);
+    public void should_deactivate_plugin() {
+        Plugins plugins = new Plugins();
 
-        bidEngine.offer(user, anItem, 5.0);
+        plugins.activate("AllItemsInCategory", new Items(new Item("category", "name", new BigDecimal(4.3))));
 
-        assertThat(user.getBalance().doubleValue()).isEqualTo(1000);
-        assertThat(user.getItems()).isEmpty();
-        resolvesBidOffer(bidEngine);
-        BidOffer bidOffer = bidEngine.currentBidOffer();
-        assertThat(bidOffer.getItem().getName()).isEqualTo("an item");
-        assertThat(bidOffer.getBidder()).isNull();
-        assertThat(bidOffer.getItem().getValue()).isEqualTo(5);
+        assertThat(getPlugin(plugins, "AllItemsInCategory").isActivated()).isTrue();
     }
 
     @Test
-    public void plugin_all_items_in_category_on_activation() {
-        Item anItem = new Item("category", "an item", new BigDecimal(4.3));
-        BidEngine bidEngine = new BidEngine(new Items(anItem), expiration);
-        bidEngine.bid(user, "an item", 5.0);
-        resolvesBidOffer(bidEngine);
+    public void should_return_set_of_plugins() {
+        Plugins plugins = new Plugins();
 
-        bidEngine.activate("AllItemsInCategory");
+        Set<fr.xebia.xebay.domain.Plugin> pluginSet = plugins.toPluginSet();
 
-        assertThat(user.getBalance().doubleValue()).isEqualTo(1495);
+        assertThat(pluginSet).hasSize(2).extracting("name", "activated").containsOnly(
+                tuple("BankBuyEverything", false),
+                tuple("AllItemsInCategory", false));
     }
 
-    @Test
-    public void plugin_all_items_in_category_on_bid_offer_resolved() {
-        Item anItem = new Item("category", "an item", new BigDecimal(4.3));
-        BidEngine bidEngine = new BidEngine(new Items(anItem), expiration);
-        bidEngine.activate("AllItemsInCategory");
-        bidEngine.bid(user, "an item", 5.0);
-
-        resolvesBidOffer(bidEngine);
-
-        assertThat(user.getBalance().doubleValue()).isEqualTo(1495);
-    }
-
-    private void resolvesBidOffer(BidEngine bidEngine) {
-        boolean previousExpirationState = expiration.isExpired();
-        when(expiration.isExpired()).thenReturn(true);
-        bidEngine.currentBidOffer();
-        when(expiration.isExpired()).thenReturn(previousExpirationState);
+    private Plugin getPlugin(Plugins plugins, String pluginName) {
+        return plugins.getPlugin(pluginName).map(plugin -> plugin.toPlugin()).get();
     }
 }

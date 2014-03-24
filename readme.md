@@ -19,6 +19,5 @@ You can use [editorconfig](http://editorconfig.org) to synchronize this project 
  - web : as a visitor, I should see graph of values of each items
  - web : as a user i should see my collection changes as I acquire items (needs a browser refresh at the moment)
  - publish news with "active rules"
- - maybe publish an API to list available plugins with status ... maybe
  - game : how much items / how much "value"
 

@@ -101,6 +101,10 @@ public class BidEngine {
         items.userIsUnregistered(user);
     }
 
+    public Set<Plugin> getPlugins() {
+        return plugins.toPluginSet();
+    }
+
     private void nextBidOfferIfExpired() {
         if (bidOfferExpiration.isExpired()) {
             bidOffer.ifPresent((bidOffer) -> {

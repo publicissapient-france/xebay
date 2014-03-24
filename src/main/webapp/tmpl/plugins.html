@@ -8,10 +8,10 @@
     <tr ng-repeat="plugin in plugins">
         <td>{{plugin.name}}</td>
         <td>
-            <button class="btn btn-danger {{plugin.name}}" ng-click="toggleStatus(plugin, true)" ng-show="!plugin.status">
+            <button class="btn btn-danger {{plugin.name}}" ng-click="toggleActivation(plugin)" ng-show="!plugin.activated">
                 <span class="glyphicon glyphicon-ban-circle"/>
             </button>
-            <button class="btn btn-success {{plugin.name}}" ng-click="toggleStatus(plugin, false)" ng-show="plugin.status">
+            <button class="btn btn-success {{plugin.name}}" ng-click="toggleActivation(plugin)" ng-show="plugin.activated">
                 <span class="glyphicon glyphicon-ok-circle"/>
             </button>
         </td>

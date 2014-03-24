@@ -5,6 +5,7 @@ import fr.xebia.xebay.api.rest.dto.BidDemand;
 import fr.xebia.xebay.domain.BidEngine;
 import fr.xebia.xebay.domain.BidOffer;
 import fr.xebia.xebay.domain.Item;
+import fr.xebia.xebay.domain.Plugin;
 import fr.xebia.xebay.domain.internal.AdminUser;
 import fr.xebia.xebay.utils.TomcatRule;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
@@ -21,8 +22,10 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -141,17 +144,32 @@ public class BidEngineResourceIT {
                 .post(Entity.entity(null, MediaType.APPLICATION_JSON_TYPE), Item.class);
     }
 
-    @Test
+    @Test(expected = ForbiddenException.class)
     public void user_can_not_change_plugin_status() {
-
-        expectedException.expect(ForbiddenException.class);
-
-        target.path("plugin").path("name").queryParam("active", true).request().header(HttpHeaders.AUTHORIZATION, registerRule.getKey()).method("PATCH", Void.TYPE);
+        target.path("plugin").path("BankBuyEverything").path("activate").request()
+                .header(HttpHeaders.AUTHORIZATION, registerRule.getKey())
+                .method("PATCH", Void.TYPE);
     }
 
     @Test
     public void admin_can_change_plugin_status() {
+        try {
+            target.path("plugin").path("BankBuyEverything").path("activate").request()
+                    .header(HttpHeaders.AUTHORIZATION, AdminUser.KEY)
+                    .method("PATCH", Void.TYPE);
 
-        target.path("plugin").path("name").queryParam("active", true).request().header(HttpHeaders.AUTHORIZATION, AdminUser.KEY).method("PATCH", Void.TYPE);
+            Set<Plugin> plugins = target.path("plugins").request()
+                    .header(HttpHeaders.AUTHORIZATION, AdminUser.KEY)
+                    .get(new GenericType<Set<Plugin>>() {
+                    });
+            assertThat(plugins.stream()
+                    .filter(plugin -> plugin.getName().equals("BankBuyEverything"))
+                    .findFirst().get()
+                    .isActivated()).isTrue();
+        } finally {
+            target.path("plugin").path("BankBuyEverything").path("deactivate").request()
+                    .header(HttpHeaders.AUTHORIZATION, AdminUser.KEY)
+                    .method("PATCH", Void.TYPE);
+        }
     }
 }

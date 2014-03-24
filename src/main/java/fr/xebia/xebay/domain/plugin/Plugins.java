@@ -5,8 +5,10 @@ import fr.xebia.xebay.domain.internal.BidOfferToSell;
 import fr.xebia.xebay.domain.internal.Items;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
+
+import static java.util.stream.Collectors.toSet;
 
 public class Plugins implements Plugin {
     private final Set<ActivablePlugin> plugins;
@@ -32,14 +34,18 @@ public class Plugins implements Plugin {
     }
 
     public void activate(String pluginName, Items items) {
-        ifPresent(pluginName, plugin -> plugin.activate(items));
+        getPlugin(pluginName).ifPresent(plugin -> plugin.activate(items));
     }
 
     public void deactivate(String pluginName) {
-        ifPresent(pluginName, plugin -> plugin.deactivate());
+        getPlugin(pluginName).ifPresent(plugin -> plugin.deactivate());
     }
 
-    private void ifPresent(String pluginName, Consumer<ActivablePlugin> doSomethingOnPlugin) {
-        plugins.stream().filter((plugin) -> plugin.getName().equals(pluginName)).findFirst().ifPresent(doSomethingOnPlugin);
+    public Set<fr.xebia.xebay.domain.Plugin> toPluginSet() {
+        return plugins.stream().map(plugin -> plugin.toPlugin()).collect(toSet());
+    }
+
+    Optional<ActivablePlugin> getPlugin(String pluginName) {
+        return plugins.stream().filter((plugin) -> plugin.getName().equals(pluginName)).findFirst();
     }
 }
