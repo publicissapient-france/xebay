@@ -33,8 +33,8 @@ angular.module('xebayApp').controller('accountController', ['$scope', '$http', '
         $xebay.userInfo = {};
     };
 
-    $scope.sendOffer = function (item, value) {
-        var itemOffer = {itemName: item.name, value: value};
+    $scope.sendOffer = function (item) {
+        var itemOffer = {itemName: item.name, value: item.value};
         $http.post("/rest/bidEngine/offer", itemOffer, {
             headers: {"Authorization": $xebay.userInfo.key}
         }).success(function () {

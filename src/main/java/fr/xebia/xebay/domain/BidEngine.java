@@ -90,7 +90,6 @@ public class BidEngine {
         }
     }
 
-
     public void addListener(BidEngineListener bidEngineListener) {
         nextBidOfferIfExpired();
         listeners.add(bidEngineListener);
