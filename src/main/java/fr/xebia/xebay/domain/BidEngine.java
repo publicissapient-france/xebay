@@ -14,10 +14,10 @@ import static java.lang.String.format;
 public class BidEngine {
     public static final int DEFAULT_TIME_TO_LIVE = 10000;
 
-    private final List<BidEngineListener> listeners = new ArrayList<>();
+    private final List<BidEngineListener> listeners = Collections.synchronizedList(new ArrayList<>());
     private final Items items;
     private final Expirable bidOfferExpiration;
-    private final Queue<BidOfferToSell> bidOffersToSell; // FIXME may be a queue of <Item>
+    private final Queue<BidOfferToSell> bidOffersToSell;
     private final Plugins plugins;
 
     private Optional<BidOffer> bidOffer;
@@ -52,16 +52,8 @@ public class BidEngine {
                 .orElseThrow(() -> new BidException(format("current item to bid is not \"%s\"", itemName)))
                 .bid(itemName, new BigDecimal(newValue), user)
                 .toBidOffer(bidOfferExpiration.isExpired());
-        listeners.forEach(bidEngineListener -> bidEngineListener.onBidOffer(updatedBidOffer));
+        notifyListeners(updatedBidOffer);
         return updatedBidOffer;
-    }
-
-    public void activate(String pluginName) {
-        plugins.activate(pluginName, items);
-    }
-
-    public void deactivate(String pluginName) {
-        plugins.deactivate(pluginName);
     }
 
     public void offer(User user, Item item, double initialValue) {
@@ -90,18 +82,9 @@ public class BidEngine {
         }
     }
 
-    public void addListener(BidEngineListener bidEngineListener) {
-        nextBidOfferIfExpired();
-        listeners.add(bidEngineListener);
-    }
-
     public void userIsUnregistered(User user) {
         bidOffer.ifPresent((bidOffer) -> bidOffer.userIsUnregistered(user));
         items.userIsUnregistered(user);
-    }
-
-    public Set<Plugin> getPlugins() {
-        return plugins.toPluginSet();
     }
 
     private void nextBidOfferIfExpired() {
@@ -109,14 +92,10 @@ public class BidEngine {
             bidOffer.ifPresent((bidOffer) -> {
                 bidOffer.resolve();
                 plugins.onBidOfferResolved(bidOffer, items);
-                listeners.forEach(bidEngineListener -> bidEngineListener.onBidOffer(bidOffer.toBidOffer(true)));
+                notifyListeners(bidOffer.toBidOffer(true));
             });
             bidOffer = nextBidOffer();
-            // FIXME got java.util.ConcurrentModificationException on line above
-            //java.util.ConcurrentModificationException
-            //at java.util.ArrayList.forEach(ArrayList.java:1237)
-            //at fr.xebia.xebay.domain.BidEngine.lambda$nextBidOfferIfExpired$21(BidEngine.java:114)
-            bidOffer.ifPresent((bidOffer) -> listeners.forEach(bidEngineListener -> bidEngineListener.onBidOffer(bidOffer.toBidOffer(true))));
+            bidOffer.ifPresent((bidOffer) -> notifyListeners(bidOffer.toBidOffer(true)));
         }
     }
 
@@ -130,5 +109,30 @@ public class BidEngine {
         // then, look for items offered by bank
         Item nextItem = items.next();
         return nextItem == null ? Optional.empty() : Optional.of(new BidOffer(nextItem, DEFAULT_TIME_TO_LIVE));
+    }
+
+    public Set<Plugin> getPlugins() {
+        return plugins.toPluginSet();
+    }
+
+    public void activate(String pluginName) {
+        plugins.activate(pluginName, items);
+    }
+
+    public void deactivate(String pluginName) {
+        plugins.deactivate(pluginName);
+    }
+
+    public void addListener(BidEngineListener bidEngineListener) {
+        nextBidOfferIfExpired();
+        synchronized (listeners) {
+            listeners.add(bidEngineListener);
+        }
+    }
+
+    private void notifyListeners(fr.xebia.xebay.domain.BidOffer bidOffer) {
+        synchronized (listeners) {
+            listeners.forEach(bidEngineListener -> bidEngineListener.onBidOffer(bidOffer));
+        }
     }
 }
