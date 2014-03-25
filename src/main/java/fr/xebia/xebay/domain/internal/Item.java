@@ -13,6 +13,8 @@ public class Item {
     private BigDecimal value;
     private User owner;
 
+    private boolean offered = false;
+
     public Item(String category, String name, BigDecimal value) {
         this.category = category;
         this.name = name;
@@ -47,11 +49,21 @@ public class Item {
             buyer.buy(this);
         }
 
+        offered = false;
         owner = buyer;
     }
 
     public void depreciate() {
+        offered = false;
         value = value.subtract(value.divide(BigDecimal.TEN));
+    }
+
+    public boolean isOffered() {
+        return offered;
+    }
+
+    public void setOffered(){
+        offered = true;
     }
 
     @Override
@@ -79,6 +91,6 @@ public class Item {
     }
 
     public fr.xebia.xebay.domain.Item toItem() {
-        return new fr.xebia.xebay.domain.Item(category, name, round(value));
+        return new fr.xebia.xebay.domain.Item(category, name, round(value), offered);
     }
 }

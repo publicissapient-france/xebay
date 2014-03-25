@@ -31,7 +31,7 @@ public class BidEngineSocketCoderTest {
     @Test
     public void encoder_must_call_mapper_lib_and_return_its_result() throws Exception {
 
-        BidOffer bidOffer = new BidOffer("category", "name", 10d, 10L, "owner", "user", false);
+        BidOffer bidOffer = new BidOffer("category", "name", 10d, 10L, "owner", "user", false, false);
         BidEngineSocketOutput output = new BidEngineSocketOutput();
         output.setInfo(bidOffer);
         String expected = UUID.randomUUID().toString();

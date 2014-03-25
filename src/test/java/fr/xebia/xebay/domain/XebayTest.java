@@ -191,6 +191,24 @@ public class XebayTest {
     }
 
     @Test
+    public void should_flag_items_on_sale() {
+        Item anItem = new Item("category", "an item", new BigDecimal(4.3));
+        BidEngine bidEngine = new BidEngine(new Items(anItem), expiration);
+        bidEngine.bid(user, anItem.getName(), 6);
+        resolvesBidOffer(bidEngine);
+
+        bidEngine.offer(user, anItem, 7);
+        resolvesBidOffer(bidEngine);
+
+        assertThat(anItem.isOffered()).isTrue();
+
+        bidEngine.bid(user, anItem.getName(), 8);
+        resolvesBidOffer(bidEngine);
+
+        assertThat(anItem.isOffered()).isFalse();
+    }
+
+    @Test
     public void a_user_can_buy_an_item_offered_by_another() {
         Item anItem = new Item("category", "an item", new BigDecimal(4.3));
         BidEngine bidEngine = new BidEngine(new Items(anItem), expiration);

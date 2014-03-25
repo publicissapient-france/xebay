@@ -61,6 +61,7 @@ public class BidEngine {
         checkUserOffer(user, item);
         BidOfferToSell bidOfferToSell = checkOffer(item, new BigDecimal(initialValue));
         if (plugins.authorize(bidOfferToSell)) {
+            item.setOffered();
             bidOffersToSell.offer(bidOfferToSell);
         }
     }

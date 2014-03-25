@@ -11,8 +11,8 @@ public class BidOffer {
     public BidOffer() {
     }
 
-    public BidOffer(String itemCategory, String itemName, double value, long timeToLive, String owner, String bidder, boolean expired) {
-        this.item = new Item(itemCategory, itemName, value);
+    public BidOffer(String itemCategory, String itemName, double value, long timeToLive, String owner, String bidder, boolean expired, boolean onSale) {
+        this.item = new Item(itemCategory, itemName, value, onSale);
         this.timeToLive = timeToLive;
         this.owner = owner;
         this.bidder = bidder;

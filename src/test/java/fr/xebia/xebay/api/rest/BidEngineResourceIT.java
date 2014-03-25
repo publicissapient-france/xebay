@@ -59,6 +59,7 @@ public class BidEngineResourceIT {
         assertThat(bidOffer.getItem().getValue()).isNotNull();
         assertThat(bidOffer.getTimeToLive()).isLessThan(BidEngine.DEFAULT_TIME_TO_LIVE).isNotNegative();
         assertThat(bidOffer.getBidder()).isNull();
+        assertThat(bidOffer.getItem().isOffered()).isFalse();
     }
 
     @Test
