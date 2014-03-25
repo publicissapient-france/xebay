@@ -19,7 +19,6 @@ angular.module('xebayApp').controller('accountController', ['$scope', '$http', '
             $xebay.connect();
         }).error(function (data) {
             $xebay.userInfo.loginFailed = true;
-            $xebay.error(data);
         });
     };
 

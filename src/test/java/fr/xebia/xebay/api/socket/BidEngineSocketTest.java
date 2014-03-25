@@ -69,7 +69,7 @@ public class BidEngineSocketTest {
         bidEngineSocket.onBidOffer(bidOffer);
 
         Mockito.verify(basicRemoteMock).sendObject(captor.capture());
-        Assertions.assertThat(captor.getValue().getInfo()).isEqualTo(bidOffer);
+        Assertions.assertThat(captor.getValue().getBidOffer()).isEqualTo(bidOffer);
     }
 
     @Test
@@ -86,7 +86,7 @@ public class BidEngineSocketTest {
         bidEngineSocket.onBidOffer(bidOffer);
 
         Mockito.verify(basicRemoteMock).sendObject(captor.capture());
-        Assertions.assertThat(captor.getValue().getInfo()).isEqualTo(bidOffer);
+        Assertions.assertThat(captor.getValue().getBidOffer()).isEqualTo(bidOffer);
     }
 
     @Test
@@ -103,7 +103,7 @@ public class BidEngineSocketTest {
         bidEngineSocket.onBidOffer(bidOffer);
 
         Mockito.verify(basicRemoteMock).sendObject(captor.capture());
-        Assertions.assertThat(captor.getValue().getInfo()).isEqualTo(bidOffer);
+        Assertions.assertThat(captor.getValue().getBidOffer()).isEqualTo(bidOffer);
     }
 
     @Test

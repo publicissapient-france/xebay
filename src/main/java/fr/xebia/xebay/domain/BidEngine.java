@@ -118,16 +118,24 @@ public class BidEngine {
 
     public void activate(String pluginName) {
         plugins.activate(pluginName, items);
+        notifyListeners(pluginName + " is now active");
     }
 
     public void deactivate(String pluginName) {
         plugins.deactivate(pluginName);
+        notifyListeners(pluginName + " is now inactive");
     }
 
     public void addListener(BidEngineListener bidEngineListener) {
         nextBidOfferIfExpired();
         synchronized (listeners) {
             listeners.add(bidEngineListener);
+        }
+    }
+
+    private void notifyListeners(String info) {
+        synchronized (listeners) {
+            listeners.forEach(bidEngineListener -> bidEngineListener.onInfo(info));
         }
     }
 

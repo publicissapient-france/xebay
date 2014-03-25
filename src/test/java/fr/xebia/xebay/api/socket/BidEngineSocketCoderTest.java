@@ -33,7 +33,7 @@ public class BidEngineSocketCoderTest {
 
         BidOffer bidOffer = new BidOffer("category", "name", 10d, 10L, "owner", "user", false, false);
         BidEngineSocketOutput output = new BidEngineSocketOutput();
-        output.setInfo(bidOffer);
+        output.setBidOffer(bidOffer);
         String expected = UUID.randomUUID().toString();
         Mockito.when(objectMapper.writeValueAsString(output)).thenReturn(expected);
 

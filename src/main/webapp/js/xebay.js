@@ -27,8 +27,11 @@ angular.module('xebayApp').config(['$routeProvider', function($routeProvider) {
 }]);
 
 angular.module('xebayApp').factory('$xebay', ['$rootScope', '$timeout', function($rootScope, $timeout) {
+
     var xebay = {};
+
     xebay.userInfo = {};
+
     xebay.connect = function() {
         if (!xebay.socket) {
             xebay.socket = new WebSocket('ws://' + window.location.host + '/socket/bidEngine/' + xebay.userInfo.key);
@@ -36,26 +39,30 @@ angular.module('xebayApp').factory('$xebay', ['$rootScope', '$timeout', function
             xebay.socket.onmessage = xebay.onmessage;
         }
     };
+
     xebay.disconnect = function() {
         if (xebay.socket) {
             xebay.socket.close();
             delete xebay.socket;
         }
     };
+
     xebay.onmessage = function(message) {
         var socketMessage = JSON.parse(message.data);
+        if (socketMessage.bidOffer) {
+            $rootScope.$broadcast('$xebay.bidOffer', socketMessage.bidOffer);
+        }
         if (socketMessage.info) {
-            $rootScope.$broadcast('$xebay.bidOffer', socketMessage.info);
+            console.info(socketMessage.info);
         }
         if (socketMessage.error) {
-            console.error("error %s", socketMessage.error);
+            console.error(socketMessage.error);
         }
     };
+
     xebay.onerror = function() {
         $timeout(xebay.connect, 5000);
     };
-    xebay.error = function(message) {
-        $rootScope.$broadcast('$xebay.error', message);
-    };
+
     return xebay;
 }]);

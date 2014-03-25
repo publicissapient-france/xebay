@@ -4,16 +4,18 @@ import fr.xebia.xebay.domain.BidOffer;
 
 public class BidEngineSocketOutput {
 
-    BidOffer info;
+    BidOffer bidOffer;
+
+    String info;
 
     String error;
 
-    public BidOffer getInfo() {
-        return info;
+    public BidOffer getBidOffer() {
+        return bidOffer;
     }
 
-    public void setInfo(BidOffer info) {
-        this.info = info;
+    public void setBidOffer(BidOffer bidOffer) {
+        this.bidOffer = bidOffer;
     }
 
     public String getError() {
@@ -23,4 +25,13 @@ public class BidEngineSocketOutput {
     public void setError(String error) {
         this.error = error;
     }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
+
 }

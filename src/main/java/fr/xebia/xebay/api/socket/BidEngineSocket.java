@@ -81,15 +81,25 @@ public class BidEngineSocket implements BidEngineListener {
         }
     }
 
+    public void onInfo(String info) {
+        BidEngineSocketOutput output = new BidEngineSocketOutput();
+        output.setInfo(info);
+        sendOutput(output);
+    }
+
     public void onBidOffer(BidOffer bidOffer) {
         BidEngineSocketOutput output = new BidEngineSocketOutput();
-        output.setInfo(bidOffer);
+        output.setBidOffer(bidOffer);
+        sendOutput(output);
+    }
+
+    void sendOutput(BidEngineSocketOutput output) {
         synchronized (sessions) {
             sessions.stream().filter(Session::isOpen).forEach(session -> {
                 try {
                     session.getBasicRemote().sendObject(output);
                 } catch (IOException | EncodeException e) {
-                    log.error("BidInfo notification in error", e);
+                    log.error("Socket notification in error", e);
                 }
             });
         }
