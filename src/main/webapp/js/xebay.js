@@ -26,16 +26,35 @@ angular.module('xebayApp').config(['$routeProvider', function($routeProvider) {
     });
 }]);
 
-angular.module('xebayApp').factory('$xebay', ['$rootScope', function($rootScope) {
+angular.module('xebayApp').factory('$xebay', ['$rootScope', '$timeout', function($rootScope, $timeout) {
     var xebay = {};
     xebay.userInfo = {};
     xebay.connect = function() {
-        $rootScope.$broadcast('$xebay.connect');
+        if (!xebay.socket) {
+            xebay.socket = new WebSocket('ws://' + window.location.host + '/socket/bidEngine/' + xebay.userInfo.key);
+            xebay.socket.onerror = onerror;
+            xebay.socket.onmessage = xebay.onmessage;
+        }
     };
     xebay.disconnect = function() {
-        $rootScope.$broadcast('$xebay.disconnect');
+        if (xebay.socket) {
+            xebay.socket.close();
+            delete xebay.socket;
+        }
     };
-    xebay.error = function (message) {
+    xebay.onmessage = function(message) {
+        var socketMessage = JSON.parse(message.data);
+        if (socketMessage.info) {
+            $rootScope.$broadcast('$xebay.bidOffer', socketMessage.info);
+        }
+        if (socketMessage.error) {
+            console.error("error %s", socketMessage.error);
+        }
+    };
+    xebay.onerror = function() {
+        $timeout(xebay.connect, 5000);
+    };
+    xebay.error = function(message) {
         $rootScope.$broadcast('$xebay.error', message);
     };
     return xebay;

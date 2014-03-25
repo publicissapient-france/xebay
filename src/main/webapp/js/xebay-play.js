@@ -35,50 +35,15 @@ angular.module('xebayApp').controller('playController', ['$scope', '$http', '$ti
         });
     };
 
-    $scope.connect = function() {
-        if (!$scope.socket) {
-            $scope.socket = new WebSocket('ws://' + window.location.host + '/socket/bidEngine/' + $xebay.userInfo.key);
-            $scope.socket.onerror = $scope.onerror;
-            $scope.socket.onmessage = $scope.onmessage;
-        }
-    };
-
-    $scope.onmessage = function (message) {
-        var socketMessage = JSON.parse(message.data);
-        if (socketMessage.info) {
-            console.info("info %O", socketMessage.info);
-            $scope.bidOffer = socketMessage.info;
-        }
-        if (socketMessage.error) {
-            console.info("error %O", socketMessage.error);
-        }
-    };
-
-    $scope.onerror = function() {
-        $timeout($scope.connect, 5000);
-    };
-
-    $scope.disconnect = function() {
-        if ($scope.socket) {
-            $scope.socket.close();
-            delete $scope.socket;
-        }
-    };
-
-    $scope.$on('$xebay.connect', $scope.connect);
-
-    $scope.$on('$xebay.disconnect', $scope.disconnect);
+    $scope.$on('$xebay.bidOffer', function (event, bidOffer) {
+        $scope.bidOffer = bidOffer;
+    });
 
     $scope.$on('$destroy', function () {
-        $scope.disconnect();
         if ($scope.timeout) {
             $timeout.cancel($scope.timeout);
         }
     });
-
-    if ($xebay.logged) {
-        $xebay.connect();
-    }
 
     $scope.getBidOffer();
 
