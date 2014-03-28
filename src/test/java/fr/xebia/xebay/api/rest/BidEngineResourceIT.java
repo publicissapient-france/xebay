@@ -36,6 +36,7 @@ public class BidEngineResourceIT {
     public RegisterRule registerRule = new RegisterRule();
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
+
     private Client client;
     private WebTarget target;
 
@@ -63,22 +64,6 @@ public class BidEngineResourceIT {
     }
 
     @Test
-    public void a_registered_user_can_post_form_bid() throws Exception {
-        BidOffer currentBidOffer = target.path("current").request().get(BidOffer.class);
-
-        Form form = new Form();
-        form.param("name", currentBidOffer.getItem().getName());
-        form.param("value", String.valueOf(currentBidOffer.getItem().getValue() + 0.7));
-
-        BidOffer bidOffer = target.path("/bid").request()
-                .header(HttpHeaders.AUTHORIZATION, registerRule.getKey())
-                .post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), BidOffer.class);
-        assertThat(bidOffer.getItem().getName()).isEqualTo("an item");
-        assertThat(bidOffer.getItem().getValue()).isEqualTo(5);
-        assertThat(bidOffer.getTimeToLive()).isLessThan(BidEngine.DEFAULT_TIME_TO_LIVE).isNotNegative();
-    }
-
-    @Test
     public void cant_bid_if_user_not_registered() {
         String fakeKey = "fake key";
 
@@ -93,7 +78,7 @@ public class BidEngineResourceIT {
 
         target.path("/bid").request()
                 .header(HttpHeaders.AUTHORIZATION, fakeKey)
-                .post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), BidOffer.class);
+                .post(Entity.entity(form, MediaType.APPLICATION_JSON_TYPE), BidOffer.class);
     }
 
     @Test

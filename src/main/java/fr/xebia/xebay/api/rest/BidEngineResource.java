@@ -54,15 +54,6 @@ public class BidEngineResource {
 
     @POST
     @Path("/bid")
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @UserAuthorization
-    public BidOffer bid(@FormParam("name") String itemName, @FormParam("value") Double newValue, @Context SecurityContext securityContext) {
-        User user = (User) securityContext.getUserPrincipal();
-        return bidEngine.bid(user, itemName, newValue);
-    }
-
-    @POST
-    @Path("/bid")
     @Consumes(MediaType.APPLICATION_JSON)
     @UserAuthorization
     public BidOffer bid(BidDemand bidDemand, @Context SecurityContext securityContext) {
