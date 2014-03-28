@@ -1,4 +1,4 @@
-package fr.xebia.xebay.api.rest.dto;
+package fr.xebia.xebay.api.dto;
 
 public class BidDemand {
 

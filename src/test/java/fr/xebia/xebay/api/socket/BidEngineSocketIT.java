@@ -1,7 +1,7 @@
 package fr.xebia.xebay.api.socket;
 
 import fr.xebia.xebay.api.RegisterRule;
-import fr.xebia.xebay.api.rest.dto.BidDemand;
+import fr.xebia.xebay.api.dto.BidDemand;
 import fr.xebia.xebay.domain.internal.AdminUser;
 import fr.xebia.xebay.domain.BidOffer;
 import fr.xebia.xebay.utils.TomcatRule;

@@ -1,5 +1,6 @@
 package fr.xebia.xebay.api.rest;
 
+import fr.xebia.xebay.api.dto.BidDemand;
 import fr.xebia.xebay.api.rest.security.SecurityContextImpl;
 import fr.xebia.xebay.domain.BidException;
 import fr.xebia.xebay.domain.internal.User;
@@ -47,7 +48,7 @@ public class AuthenticationTest {
         User badUser = mock(User.class);
         when(badUser.getName()).thenReturn(null);
 
-        bidEngineResource.bid("an item", 4.3 + 20.0, new SecurityContextImpl(badUser)); //todo fake user without right
+        bidEngineResource.bid(new BidDemand("an item", 4.3 + 20.0), new SecurityContextImpl(badUser)); //todo fake user without right
     }
 
     @Test
@@ -55,6 +56,6 @@ public class AuthenticationTest {
         BidEngineResource bidEngineResource = new BidEngineResource();
         BidOffer bidOffer = bidEngineResource.currentBidOffer();
 
-        bidEngineResource.bid(bidOffer.getItem().getName(), bidOffer.getItem().getValue() + 20.0, new SecurityContextImpl(new User("abc", "user1")));
+        bidEngineResource.bid(new BidDemand(bidOffer.getItem().getName(), bidOffer.getItem().getValue() + 20.0), new SecurityContextImpl(new User("abc", "user1")));
     }
 }

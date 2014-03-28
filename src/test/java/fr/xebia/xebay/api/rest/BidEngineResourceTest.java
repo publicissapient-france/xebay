@@ -1,7 +1,7 @@
 package fr.xebia.xebay.api.rest;
 
 import com.google.common.collect.Sets;
-import fr.xebia.xebay.api.rest.dto.BidDemand;
+import fr.xebia.xebay.api.dto.BidDemand;
 import fr.xebia.xebay.domain.BidEngine;
 import fr.xebia.xebay.domain.Plugin;
 import fr.xebia.xebay.domain.internal.Item;

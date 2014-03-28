@@ -1,6 +1,6 @@
 package fr.xebia.xebay.api.rest;
 
-import fr.xebia.xebay.api.rest.dto.BidDemand;
+import fr.xebia.xebay.api.dto.BidDemand;
 import fr.xebia.xebay.api.rest.jersey.PATCH;
 import fr.xebia.xebay.api.rest.security.UserAuthorization;
 import fr.xebia.xebay.domain.BidEngine;

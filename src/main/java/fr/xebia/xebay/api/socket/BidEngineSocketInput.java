@@ -1,6 +1,6 @@
 package fr.xebia.xebay.api.socket;
 
-import fr.xebia.xebay.api.rest.dto.BidDemand;
+import fr.xebia.xebay.api.dto.BidDemand;
 
 public class BidEngineSocketInput {
 
