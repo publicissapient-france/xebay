@@ -9,8 +9,11 @@ public abstract class ActivablePlugin implements Plugin {
 
     private boolean activated;
 
-    protected ActivablePlugin(String pluginName) {
+    private String description;
+
+    protected ActivablePlugin(String pluginName, String description) {
         this.name = pluginName;
+        this.description = description;
         this.activated = false;
     }
 
@@ -28,7 +31,7 @@ public abstract class ActivablePlugin implements Plugin {
     }
 
     public fr.xebia.xebay.domain.Plugin toPlugin() {
-        return new fr.xebia.xebay.domain.Plugin(name, activated);
+        return new fr.xebia.xebay.domain.Plugin(name, description, activated);
     }
 
     protected void onActivation(Items items) {

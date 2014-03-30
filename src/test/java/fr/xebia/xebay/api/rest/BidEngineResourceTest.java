@@ -98,14 +98,14 @@ public class BidEngineResourceTest {
     @Test
     public void should_call_bidEngine_to_get_plugins_list() {
         when(bidEngine.getPlugins()).thenReturn(Sets.newHashSet(
-                new Plugin("first plugin", true),
-                new Plugin("second plugin", false)
+                new Plugin("first plugin", "1st", true),
+                new Plugin("second plugin", "2nd", false)
         ));
 
         Set<Plugin> pluginResults = bidEngineResource.plugins();
 
-        assertThat(pluginResults).hasSize(2).extracting("name", "activated").containsOnly(
-                tuple("first plugin", true),
-                tuple("second plugin", false));
+        assertThat(pluginResults).hasSize(2).extracting("name", "description", "activated").containsOnly(
+                tuple("first plugin", "1st", true),
+                tuple("second plugin", "2nd", false));
     }
 }

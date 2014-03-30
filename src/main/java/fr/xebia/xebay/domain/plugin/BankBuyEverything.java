@@ -4,7 +4,7 @@ import fr.xebia.xebay.domain.internal.BidOfferToSell;
 
 public class BankBuyEverything extends ActivablePlugin {
     protected BankBuyEverything() {
-        super("BankBuyEverything");
+        super("BankBuyEverything", "Bank buy everything !");
     }
 
     @Override

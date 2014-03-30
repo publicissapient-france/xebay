@@ -3,10 +3,12 @@ package fr.xebia.xebay.domain;
 public class Plugin {
     private String name;
     private boolean activated;
+    private String description;
 
-    public Plugin(String name, boolean activated) {
+    public Plugin(String name, String description, boolean activated) {
         this.name = name;
         this.activated = activated;
+        this.description = description;
     }
 
     public Plugin() {
@@ -18,6 +20,10 @@ public class Plugin {
 
     public boolean isActivated() {
         return activated;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     @Override
