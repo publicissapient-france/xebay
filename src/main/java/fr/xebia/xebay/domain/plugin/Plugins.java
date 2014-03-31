@@ -38,11 +38,11 @@ public class Plugins implements Plugin {
     }
 
     public void deactivate(String pluginName) {
-        getPlugin(pluginName).ifPresent(plugin -> plugin.deactivate());
+        getPlugin(pluginName).ifPresent(ActivablePlugin::deactivate);
     }
 
     public Set<fr.xebia.xebay.domain.Plugin> toPluginSet() {
-        return plugins.stream().map(plugin -> plugin.toPlugin()).collect(toSet());
+        return plugins.stream().map(ActivablePlugin::toPlugin).collect(toSet());
     }
 
     Optional<ActivablePlugin> getPlugin(String pluginName) {

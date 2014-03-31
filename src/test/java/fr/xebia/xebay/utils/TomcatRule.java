@@ -12,6 +12,14 @@ public class TomcatRule extends ExternalResource {
     private Tomcat tomcat;
     private boolean test = true;
 
+    public static void main(String[] args) throws Throwable {
+        TomcatRule webServer = new TomcatRule();
+        Runtime.getRuntime().addShutdownHook(new Thread(webServer::after));
+        webServer.test = false;
+        webServer.before();
+        webServer.tomcat.getServer().await();
+    }
+
     @Override
     protected void before() throws Throwable {
         if (launchedFromMaven()) {
@@ -49,13 +57,5 @@ public class TomcatRule extends ExternalResource {
     private boolean launchedFromMaven() {
         // maven builds put "localRepository" property to system properties
         return System.getProperty("localRepository") != null;
-    }
-
-    public static void main(String[] args) throws Throwable {
-        TomcatRule webServer = new TomcatRule();
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> webServer.after()));
-        webServer.test = false;
-        webServer.before();
-        webServer.tomcat.getServer().await();
     }
 }
