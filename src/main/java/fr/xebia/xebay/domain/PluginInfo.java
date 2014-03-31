@@ -1,17 +1,17 @@
 package fr.xebia.xebay.domain;
 
-public class Plugin {
+public class PluginInfo {
     private String name;
     private boolean activated;
     private String description;
 
-    public Plugin(String name, String description, boolean activated) {
+    public PluginInfo(String name, String description, boolean activated) {
         this.name = name;
         this.activated = activated;
         this.description = description;
     }
 
-    public Plugin() {
+    public PluginInfo() {
     }
 
     public String getName() {
@@ -31,7 +31,7 @@ public class Plugin {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Plugin plugin = (Plugin) o;
+        PluginInfo plugin = (PluginInfo) o;
 
         return name.equals(plugin.name);
     }

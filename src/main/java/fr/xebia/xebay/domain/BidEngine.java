@@ -112,7 +112,7 @@ public class BidEngine {
         return nextItem == null ? Optional.empty() : Optional.of(new BidOffer(nextItem, DEFAULT_TIME_TO_LIVE));
     }
 
-    public Set<Plugin> getPlugins() {
+    public Set<PluginInfo> getPlugins() {
         return plugins.toPluginSet();
     }
 

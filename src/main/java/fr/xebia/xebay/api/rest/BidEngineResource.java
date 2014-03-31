@@ -5,7 +5,7 @@ import fr.xebia.xebay.api.rest.jersey.PATCH;
 import fr.xebia.xebay.api.rest.security.UserAuthorization;
 import fr.xebia.xebay.domain.BidEngine;
 import fr.xebia.xebay.domain.BidOffer;
-import fr.xebia.xebay.domain.Plugin;
+import fr.xebia.xebay.domain.PluginInfo;
 import fr.xebia.xebay.domain.internal.Item;
 import fr.xebia.xebay.domain.internal.Items;
 import fr.xebia.xebay.domain.internal.User;
@@ -94,10 +94,9 @@ public class BidEngineResource {
     }
 
     @GET
-    @Path("/plugins")
+    @Path("/news")
     @UserAuthorization
-    @RolesAllowed(ADMIN_ROLE)
-    public Set<Plugin> plugins() {
+    public Set<PluginInfo> plugins() {
         return bidEngine.getPlugins();
     }
 }

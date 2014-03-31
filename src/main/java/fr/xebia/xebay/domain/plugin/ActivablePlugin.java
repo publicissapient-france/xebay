@@ -1,5 +1,6 @@
 package fr.xebia.xebay.domain.plugin;
 
+import fr.xebia.xebay.domain.PluginInfo;
 import fr.xebia.xebay.domain.internal.BidOffer;
 import fr.xebia.xebay.domain.internal.BidOfferToSell;
 import fr.xebia.xebay.domain.internal.Items;
@@ -9,7 +10,7 @@ public abstract class ActivablePlugin implements Plugin {
 
     private boolean activated;
 
-    private String description;
+    private final String description;
 
     protected ActivablePlugin(String pluginName, String description) {
         this.name = pluginName;
@@ -21,6 +22,10 @@ public abstract class ActivablePlugin implements Plugin {
         return name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public void activate(Items items) {
         activated = true;
         onActivation(items);
@@ -30,8 +35,8 @@ public abstract class ActivablePlugin implements Plugin {
         activated = false;
     }
 
-    public fr.xebia.xebay.domain.Plugin toPlugin() {
-        return new fr.xebia.xebay.domain.Plugin(name, description, activated);
+    public PluginInfo toPlugin() {
+        return new PluginInfo(name, description, activated);
     }
 
     protected void onActivation(Items items) {
