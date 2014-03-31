@@ -15,4 +15,14 @@ public class BidOfferTest {
         assertThat(bidOffer.initialValue).isEqualTo(new BigDecimal(4.3));
         assertThat(bidOffer.currentValue).isEqualTo(new BigDecimal(4.3));
     }
+
+    @Test
+    public void should_always_bid_with_ten_percent_of_initial_value() {
+        String itemName = "an item";
+        User user = new User("key", "email@provider.net");
+        BidOffer offer = new BidOffer(new Item("category", itemName, new BigDecimal(4)), DEFAULT_TIME_TO_LIVE);
+        offer.bid(itemName, new BigDecimal(4.4), user);
+
+        offer.bid(itemName, new BigDecimal(4.8), user);
+    }
 }

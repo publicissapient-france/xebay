@@ -77,9 +77,9 @@ public class BidOffer {
         if (!item.getName().equals(name)) {
             throw new BidException(format("current item to bid is not \"%s\"", name));
         }
-        BigDecimal increment = newValue.subtract(currentValue);
+        BigDecimal increment = newValue.subtract(initialValue);
         if (currentValue.multiply(MIN_BID_RATIO).compareTo(increment) > 0) {
-            throw new BidException(format(ENGLISH, "increment %.2f$ is less than ten percent of initial value %.2f$ of item \"%s\"", round(increment), round(item.getValue()), item.getName()));
+            throw new BidException(format(ENGLISH, "increment %.2f$ is less than ten percent of initial value %.2f$ of item \"%s\"", round(increment), round(initialValue), item.getName()));
         }
 
         if (!user.canBid(newValue)) {
