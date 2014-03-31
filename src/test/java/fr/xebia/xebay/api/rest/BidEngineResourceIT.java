@@ -25,8 +25,10 @@ import javax.ws.rs.core.Form;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
+import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BidEngineResourceIT {
@@ -148,14 +150,21 @@ public class BidEngineResourceIT {
                     .header(HttpHeaders.AUTHORIZATION, AdminUser.KEY)
                     .get(new GenericType<Set<Plugin>>() {
                     });
-            assertThat(plugins.stream()
-                    .filter(plugin -> plugin.getName().equals("BankBuyEverything"))
-                    .findFirst().get()
-                    .isActivated()).isTrue();
+
+            assertThat(getPluginByName(plugins, "BankBuyEverything").isActivated()).isTrue();
         } finally {
             target.path("plugin").path("BankBuyEverything").path("deactivate").request()
                     .header(HttpHeaders.AUTHORIZATION, AdminUser.KEY)
                     .method("PATCH", Void.TYPE);
         }
+    }
+
+    private Plugin getPluginByName(Set<Plugin> plugins, String pluginName) {
+        for (Plugin plugin : plugins) {
+            if (plugin.getName().equals(pluginName)) {
+                return plugin;
+            }
+        }
+        throw new NoSuchElementException(format("plugin %s was not found", pluginName));
     }
 }
