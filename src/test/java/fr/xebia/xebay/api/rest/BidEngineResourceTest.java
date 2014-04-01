@@ -3,7 +3,7 @@ package fr.xebia.xebay.api.rest;
 import com.google.common.collect.Sets;
 import fr.xebia.xebay.api.dto.BidDemand;
 import fr.xebia.xebay.domain.BidEngine;
-import fr.xebia.xebay.domain.Plugin;
+import fr.xebia.xebay.domain.PluginInfo;
 import fr.xebia.xebay.domain.internal.Item;
 import fr.xebia.xebay.domain.internal.Items;
 import fr.xebia.xebay.domain.internal.User;
@@ -98,11 +98,11 @@ public class BidEngineResourceTest {
     @Test
     public void should_call_bidEngine_to_get_plugins_list() {
         when(bidEngine.getPlugins()).thenReturn(Sets.newHashSet(
-                new Plugin("first plugin", "1st", true),
-                new Plugin("second plugin", "2nd", false)
+                new PluginInfo("first plugin", "1st", true),
+                new PluginInfo("second plugin", "2nd", false)
         ));
 
-        Set<Plugin> pluginResults = bidEngineResource.plugins();
+        Set<PluginInfo> pluginResults = bidEngineResource.plugins();
 
         assertThat(pluginResults).hasSize(2).extracting("name", "description", "activated").containsOnly(
                 tuple("first plugin", "1st", true),

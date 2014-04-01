@@ -1,5 +1,6 @@
 package fr.xebia.xebay.domain.plugin;
 
+import fr.xebia.xebay.domain.PluginInfo;
 import fr.xebia.xebay.domain.internal.BidOffer;
 import fr.xebia.xebay.domain.internal.BidOfferToSell;
 import fr.xebia.xebay.domain.internal.Items;
@@ -41,8 +42,12 @@ public class Plugins implements Plugin {
         getPlugin(pluginName).ifPresent(ActivablePlugin::deactivate);
     }
 
-    public Set<fr.xebia.xebay.domain.Plugin> toPluginSet() {
-        return plugins.stream().map(ActivablePlugin::toPlugin).collect(toSet());
+    public String getDescription(String pluginName) {
+        return getPlugin(pluginName).get().getDescription();
+    }
+
+    public Set<PluginInfo> toPluginSet() {
+        return plugins.stream().map(plugin -> plugin.toPlugin()).collect(toSet());
     }
 
     Optional<ActivablePlugin> getPlugin(String pluginName) {

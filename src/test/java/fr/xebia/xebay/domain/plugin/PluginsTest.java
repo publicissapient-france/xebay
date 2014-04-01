@@ -1,6 +1,6 @@
 package fr.xebia.xebay.domain.plugin;
 
-import fr.xebia.xebay.domain.Plugin;
+import fr.xebia.xebay.domain.PluginInfo;
 import fr.xebia.xebay.domain.internal.Item;
 import fr.xebia.xebay.domain.internal.Items;
 import org.junit.Test;
@@ -34,14 +34,23 @@ public class PluginsTest {
     public void should_return_set_of_plugins() {
         Plugins plugins = new Plugins();
 
-        Set<fr.xebia.xebay.domain.Plugin> pluginSet = plugins.toPluginSet();
+        Set<PluginInfo> pluginSet = plugins.toPluginSet();
 
         assertThat(pluginSet).hasSize(2).extracting("name", "activated").containsOnly(
                 tuple("BankBuyEverything", false),
                 tuple("AllItemsInCategory", false));
     }
 
-    private Plugin getPlugin(Plugins plugins, String pluginName) {
+    @Test
+    public void should_get_plugin_description() {
+        Plugins plugins = new Plugins();
+
+        plugins.activate("AllItemsInCategory", new Items(new Item("category", "name", new BigDecimal(4.3))));
+
+        assertThat(plugins.getDescription("AllItemsInCategory")).isEqualTo("Bonus to user having all items in category");
+    }
+
+    private PluginInfo getPlugin(Plugins plugins, String pluginName) {
         return plugins.getPlugin(pluginName).map(plugin -> plugin.toPlugin()).get();
     }
 }

@@ -5,7 +5,7 @@ import fr.xebia.xebay.api.dto.BidDemand;
 import fr.xebia.xebay.domain.BidEngine;
 import fr.xebia.xebay.domain.BidOffer;
 import fr.xebia.xebay.domain.Item;
-import fr.xebia.xebay.domain.Plugin;
+import fr.xebia.xebay.domain.PluginInfo;
 import fr.xebia.xebay.domain.internal.AdminUser;
 import fr.xebia.xebay.utils.TomcatRule;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
@@ -30,6 +30,7 @@ import java.util.Set;
 
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
 
 public class BidEngineResourceIT {
     @ClassRule
@@ -146,12 +147,14 @@ public class BidEngineResourceIT {
                     .header(HttpHeaders.AUTHORIZATION, AdminUser.KEY)
                     .method("PATCH", Void.TYPE);
 
-            Set<Plugin> plugins = target.path("plugins").request()
+            Set<PluginInfo> pluginInfos = target.path("news").request()
                     .header(HttpHeaders.AUTHORIZATION, AdminUser.KEY)
-                    .get(new GenericType<Set<Plugin>>() {
+                    .get(new GenericType<Set<PluginInfo>>() {
                     });
-
-            assertThat(getPluginByName(plugins, "BankBuyEverything").isActivated()).isTrue();
+            assertThat(pluginInfos.stream()
+                    .filter(plugin -> plugin.getName().equals("BankBuyEverything"))
+                    .findFirst().get()
+                    .isActivated()).isTrue();
         } finally {
             target.path("plugin").path("BankBuyEverything").path("deactivate").request()
                     .header(HttpHeaders.AUTHORIZATION, AdminUser.KEY)
@@ -159,12 +162,16 @@ public class BidEngineResourceIT {
         }
     }
 
-    private Plugin getPluginByName(Set<Plugin> plugins, String pluginName) {
-        for (Plugin plugin : plugins) {
-            if (plugin.getName().equals(pluginName)) {
-                return plugin;
-            }
-        }
-        throw new NoSuchElementException(format("plugin %s was not found", pluginName));
+    @Test
+    public void user_can_retrieve_news(){
+        Set<PluginInfo> pluginInfos = target.path("news").request()
+                .header(HttpHeaders.AUTHORIZATION, registerRule.getKey())
+                .get(new GenericType<Set<PluginInfo>>() {
+                });
+        assertThat(pluginInfos).hasSize(2);
+        assertThat(pluginInfos)
+        .extracting("name", "description", "activated").containsOnly(
+                tuple("BankBuyEverything", "Bank buy everything !", false),
+                tuple("AllItemsInCategory", "Bonus to user having all items in category", false));
     }
 }

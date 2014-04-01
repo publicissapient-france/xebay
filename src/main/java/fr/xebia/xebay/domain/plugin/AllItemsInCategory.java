@@ -18,7 +18,7 @@ public class AllItemsInCategory extends ActivablePlugin {
     public static final BigDecimal CREDIT_AMOUNT = new BigDecimal(500);
 
     protected AllItemsInCategory() {
-        super("AllItemsInCategory", "Credit 500 to user having all items in category");
+        super("AllItemsInCategory", "Bonus to user having all items in category");
     }
 
     @Override

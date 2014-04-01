@@ -1,5 +1,6 @@
 package fr.xebia.xebay.domain.internal;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -24,5 +25,15 @@ public class BidOfferTest {
         offer.bid(itemName, new BigDecimal(4.4), user);
 
         offer.bid(itemName, new BigDecimal(4.8), user);
+    }
+
+    @Test
+    @Ignore
+    public void should_always_bid_with_ten_percent_of_initial_value2() {
+        String itemName = "an item";
+        User user = new User("key", "email@provider.net");
+        BidOffer offer = new BidOffer(new Item("category", itemName, new BigDecimal(43.173)), DEFAULT_TIME_TO_LIVE);
+
+        offer.bid(itemName, new BigDecimal(47.48700000000000187583282240666449069976806640625), user);
     }
 }
