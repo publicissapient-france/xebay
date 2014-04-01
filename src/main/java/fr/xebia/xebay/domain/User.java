@@ -7,6 +7,7 @@ public class User {
     private String key;
     private double balance;
     private Set<Item> items;
+    private boolean mailed;
 
     public User(String name, String key, double balance, Set<Item> items) {
         this.name = name;
@@ -32,6 +33,14 @@ public class User {
 
     public Set<Item> getItems() {
         return items;
+    }
+
+    public boolean isMailed() {
+        return mailed;
+    }
+
+    public void setMailed(boolean mailed) {
+        this.mailed = mailed;
     }
 
     @Override

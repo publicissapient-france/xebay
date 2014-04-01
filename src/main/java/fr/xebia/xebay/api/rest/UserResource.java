@@ -1,16 +1,15 @@
 package fr.xebia.xebay.api.rest;
 
 import fr.xebia.xebay.api.rest.security.UserAuthorization;
-import fr.xebia.xebay.domain.internal.Users;
 import fr.xebia.xebay.domain.PublicUser;
 import fr.xebia.xebay.domain.User;
+import fr.xebia.xebay.domain.internal.Users;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
-import java.util.HashSet;
 import java.util.Set;
 
 import static fr.xebia.xebay.BidServer.BID_SERVER;
@@ -57,6 +56,16 @@ public class UserResource {
     public String register(@QueryParam("name") String name) {
         fr.xebia.xebay.domain.internal.User user = users.create(name);
         return user.getKey();
+    }
+
+    @POST
+    @Path("/mail")
+    @UserAuthorization
+    @RolesAllowed(ADMIN_ROLE)
+    public void sendKey(String key) {
+        fr.xebia.xebay.domain.internal.User user = users.getUser(key);
+        BID_SERVER.mailSender.sendKey(user.getName(), user.getKey());
+        user.setMailed(true);
     }
 
     @DELETE

@@ -22,6 +22,8 @@ public class User implements Principal {
 
     private BigDecimal balance;
 
+    private boolean mailed;
+
     public User(String key, String name) {
         this.key = key;
         this.name = name;
@@ -57,9 +59,11 @@ public class User implements Principal {
     }
 
     public fr.xebia.xebay.domain.User toUser() {
-        return new fr.xebia.xebay.domain.User(name, key, round(getBalance()), items.stream()
+        fr.xebia.xebay.domain.User user = new fr.xebia.xebay.domain.User(name, key, round(getBalance()), items.stream()
                 .map(Item::toItem)
                 .collect(toSet()));
+        user.setMailed(mailed);
+        return user;
     }
 
     @Override
@@ -103,5 +107,13 @@ public class User implements Principal {
 
     public void credit(BigDecimal value) {
         balance = balance.add(value.abs());
+    }
+
+    public void setMailed(boolean mailed) {
+        this.mailed = mailed;
+    }
+
+    public boolean isMailed() {
+        return mailed;
     }
 }

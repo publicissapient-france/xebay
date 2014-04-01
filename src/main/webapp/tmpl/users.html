@@ -5,9 +5,10 @@
         <th>Name</th>
         <th>Key</th>
         <th></th>
+        <th></th>
     </tr>
     <tr>
-        <td colspan="2">
+        <td colspan="3">
             <input id="name" type="text" class="form-control" placeholder="Name" ng-model="newUserName">
         </td>
         <td>
@@ -24,6 +25,11 @@
         <td>
             <button class="btn btn-danger" ng-click="unregister(user.key)">
                 <span class="glyphicon glyphicon-trash"/>
+            </button>
+        </td>
+        <td>
+            <button class="btn btn-{{user.mailed ? 'success' : 'danger'}}" ng-click="sendKey(user)">
+                <span class="glyphicon glyphicon-envelope"/>
             </button>
         </td>
     </tr>

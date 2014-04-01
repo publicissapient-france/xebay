@@ -88,6 +88,11 @@
             <version>1.1.1</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.7</version>
+        </dependency>
 
         <!-- tests -->
         <dependency>
@@ -189,6 +194,12 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <systemProperties>
+                        <mail.username>${mail.username}</mail.username>
+                        <mail.password>${mail.password}</mail.password>
+                    </systemProperties>
+                </configuration>
             </plugin>
 
             <!-- Integration tests with failsafe -->

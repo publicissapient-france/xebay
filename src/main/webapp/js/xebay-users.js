@@ -22,6 +22,14 @@ angular.module('xebayApp').controller('usersController', ['$scope', '$http', '$x
         });
     };
 
+    $scope.sendKey = function(user) {
+        $http.post("/rest/users/mail", user.key, {
+            headers: {"Authorization": $xebay.userInfo.key}
+        }).success(function(data) {
+            user.mailed = true;
+        });
+    };
+
     $scope.unregister = function (key) {
         $http.delete("/rest/users/unregister?key=" + key, {
             headers: {"Authorization": $xebay.userInfo.key}
