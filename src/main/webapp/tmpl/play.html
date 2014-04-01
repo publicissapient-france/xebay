@@ -14,26 +14,32 @@
             <div class="progress-bar" style="width: {{bidOffer.timeToLiveSeconds * 10}}%;"></div>
         </div>
 
-        <p class="flipboard">
-            <span class="flipboardchar">{{bidOffer.timeToLiveSeconds}} s</span>
-        </p>
-
-        <p class="flipboard">
-            <span class="flipboardchar">{{bidOffer.item.value}} $</span>
-        </p>
-
-        <div class="pull-right" ng-show="!xebay.logged">
-            <p>Sign in to Bid</p>
-        </div>
-
-        <div class="pull-right" ng-show="xebay.logged">
-            <button class="btn btn-lg btn-success" ng-click="sendBidOffer(1)">+1</button>
-            <button class="btn btn-lg btn-info" ng-click="sendBidOffer(5)">+5</button>
-            <button class="btn btn-lg btn-warning" ng-click="sendBidOffer(10)">+10</button>
-            <button class="btn btn-lg btn-danger" ng-click="sendBidOffer(50)">+50</button>
-        </div>
-
         <table class="table">
+            <tr>
+                <td colspan="2">
+                    <p class="flipboard">
+                        <span class="flipboardchar">{{bidOffer.timeToLiveSeconds}} s</span>
+                    </p>
+
+                    <p class="flipboard">
+                        <span class="flipboardchar">{{bidOffer.item.value}} $</span>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div ng-show="!xebay.logged">
+                        <p>Sign in to start bidding</p>
+                    </div>
+
+                    <div ng-show="xebay.logged">
+                        <button class="btn btn-lg btn-success" ng-click="sendBidOffer(1)">+1</button>
+                        <button class="btn btn-lg btn-info" ng-click="sendBidOffer(5)">+5</button>
+                        <button class="btn btn-lg btn-warning" ng-click="sendBidOffer(10)">+10</button>
+                        <button class="btn btn-lg btn-danger" ng-click="sendBidOffer(50)">+50</button>
+                    </div>
+                </td>
+            </tr>
             <tr>
                 <td>Category</td>
                 <td>{{bidOffer.item.category}}</td>

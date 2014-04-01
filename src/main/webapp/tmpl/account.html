@@ -1,14 +1,23 @@
 <h2>Account</h2>
 
 <div class="thumbnail">
-    <img gravatar-src="xebay.userInfo.name">
+    <img gravatar-src="xebay.userInfo.name" gravatar-size="120">
 
     <div class="caption">
-        <p id="name-display">Name: {{xebay.userInfo.name}}</p>
-
-        <p id="key-display">Key: {{xebay.userInfo.key}}</p>
-
-        <p>Balance: {{xebay.userInfo.balance}}$</p>
+        <table class="table">
+            <tr>
+                <td>Name</td>
+                <td id="name-display">{{xebay.userInfo.name}}</td>
+            </tr>
+            <tr>
+                <td>Key</td>
+                <td id="key-display">{{xebay.userInfo.key}}</td>
+            </tr>
+            <tr>
+                <td>Balance</td>
+                <td>{{xebay.userInfo.balance}} $</td>
+            </tr>
+        </table>
     </div>
 </div>
 
@@ -20,9 +29,9 @@
 
 <table class="table" ng-show="xebay.userInfo.items.length > 0">
     <tr>
-        <th class="col-md-2">Category</th>
-        <th class="col-md-7">Item</th>
-        <th class="col-md-1">Value</th>
+        <th class="col-md-3">Category</th>
+        <th class="col-md-5">Item</th>
+        <th class="col-md-2">Value</th>
         <th class="col-md-1"></th>
     </tr>
     <tr ng-repeat="item in xebay.userInfo.items">

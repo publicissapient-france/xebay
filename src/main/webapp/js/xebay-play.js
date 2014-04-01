@@ -4,6 +4,8 @@ angular.module('xebayApp').controller('playController', ['$scope', '$http', '$ti
 
     $scope.xebay = $xebay;
 
+    $scope.template = 'tmpl/play.html';
+
     $scope.bidOffer = {};
 
     $scope.getBidOffer = function () {

@@ -9,9 +9,6 @@ angular.module('xebayApp').config(['$routeProvider', function($routeProvider) {
     }).when('/account', {
         templateUrl: 'tmpl/account.html',
         controller: 'accountController'
-    }).when('/play', {
-        templateUrl: 'tmpl/play.html',
-        controller: 'playController'
     }).when('/leaders', {
         templateUrl: 'tmpl/leaders.html',
         controller: 'leadersController'
@@ -22,7 +19,7 @@ angular.module('xebayApp').config(['$routeProvider', function($routeProvider) {
         templateUrl: 'tmpl/plugins.html',
         controller: 'pluginsController'
     }).otherwise({
-        redirectTo: '/play'
+        redirectTo: '/leaders'
     });
 }]);
 

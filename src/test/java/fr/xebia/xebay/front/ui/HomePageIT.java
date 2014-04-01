@@ -37,7 +37,7 @@ public class HomePageIT extends PhantomJsTest {
 
         await().atMost(2000).until("button").withText("Sign out").isPresent();
         $("a", withText().startsWith("Account")).click();
-        assertThat($("#name-display").getText()).isEqualTo("Name: user1");
-        assertThat($("#key-display").getText()).isEqualTo("Key: " + registerRule.getKey());
+        assertThat($("#name-display").getText()).isEqualTo("user1");
+        assertThat($("#key-display").getText()).isEqualTo(registerRule.getKey());
     }
 }
