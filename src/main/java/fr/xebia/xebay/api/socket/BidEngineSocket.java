@@ -4,6 +4,7 @@ import fr.xebia.xebay.api.dto.BidDemand;
 import fr.xebia.xebay.domain.BidEngine;
 import fr.xebia.xebay.domain.BidEngineListener;
 import fr.xebia.xebay.domain.BidOffer;
+import fr.xebia.xebay.domain.PluginInfo;
 import fr.xebia.xebay.domain.internal.Item;
 import fr.xebia.xebay.domain.internal.Items;
 import fr.xebia.xebay.domain.internal.User;
@@ -81,13 +82,13 @@ public class BidEngineSocket implements BidEngineListener {
         }
     }
 
-    public void onInfo(String info) {
+    public void onNews(PluginInfo news) {
         BidEngineSocketOutput output = new BidEngineSocketOutput();
-        output.setInfo(info);
+        output.setNews(news);
         sendOutput(output);
     }
 
-    public void onBidOffer(BidOffer bidOffer) {
+    public void onBid(BidOffer bidOffer) {
         BidEngineSocketOutput output = new BidEngineSocketOutput();
         output.setBidOffer(bidOffer);
         sendOutput(output);

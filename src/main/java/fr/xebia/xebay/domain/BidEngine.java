@@ -118,12 +118,12 @@ public class BidEngine {
 
     public void activate(String pluginName) {
         plugins.activate(pluginName, items);
-        notifyListeners(pluginName + " is now active");
+        notifyListeners(plugins.getPluginInfo(pluginName));
     }
 
     public void deactivate(String pluginName) {
         plugins.deactivate(pluginName);
-        notifyListeners(pluginName + " is now inactive");
+        notifyListeners(plugins.getPluginInfo(pluginName));
     }
 
     public void addListener(BidEngineListener bidEngineListener) {
@@ -133,15 +133,15 @@ public class BidEngine {
         }
     }
 
-    private void notifyListeners(String info) {
+    private void notifyListeners(PluginInfo info) {
         synchronized (listeners) {
-            listeners.forEach(bidEngineListener -> bidEngineListener.onInfo(info));
+            listeners.forEach(bidEngineListener -> bidEngineListener.onNews(info));
         }
     }
 
     private void notifyListeners(fr.xebia.xebay.domain.BidOffer bidOffer) {
         synchronized (listeners) {
-            listeners.forEach(bidEngineListener -> bidEngineListener.onBidOffer(bidOffer));
+            listeners.forEach(bidEngineListener -> bidEngineListener.onBid(bidOffer));
         }
     }
 }

@@ -66,7 +66,7 @@ public class BidEngineSocketTest {
         BidOffer bidOffer = new BidOffer("category", "name", 10d, 10L, "owner", "bidder", false, false);
         ArgumentCaptor<BidEngineSocketOutput> captor = ArgumentCaptor.forClass(BidEngineSocketOutput.class);
 
-        bidEngineSocket.onBidOffer(bidOffer);
+        bidEngineSocket.onBid(bidOffer);
 
         Mockito.verify(basicRemoteMock).sendObject(captor.capture());
         Assertions.assertThat(captor.getValue().getBidOffer()).isEqualTo(bidOffer);
@@ -83,7 +83,7 @@ public class BidEngineSocketTest {
         BidOffer bidOffer = new BidOffer("category", "name", 10d, 10L, "owner", "bidder", false, false);
         ArgumentCaptor<BidEngineSocketOutput> captor = ArgumentCaptor.forClass(BidEngineSocketOutput.class);
 
-        bidEngineSocket.onBidOffer(bidOffer);
+        bidEngineSocket.onBid(bidOffer);
 
         Mockito.verify(basicRemoteMock).sendObject(captor.capture());
         Assertions.assertThat(captor.getValue().getBidOffer()).isEqualTo(bidOffer);
@@ -100,7 +100,7 @@ public class BidEngineSocketTest {
         BidOffer bidOffer = new BidOffer("category", "name", 10d, 10L, "owner", "bidder", false, false);
         ArgumentCaptor<BidEngineSocketOutput> captor = ArgumentCaptor.forClass(BidEngineSocketOutput.class);
 
-        bidEngineSocket.onBidOffer(bidOffer);
+        bidEngineSocket.onBid(bidOffer);
 
         Mockito.verify(basicRemoteMock).sendObject(captor.capture());
         Assertions.assertThat(captor.getValue().getBidOffer()).isEqualTo(bidOffer);

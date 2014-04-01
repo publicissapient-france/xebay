@@ -46,6 +46,10 @@ public class Plugins implements Plugin {
         return getPlugin(pluginName).get().getDescription();
     }
 
+    public PluginInfo getPluginInfo(String pluginName) {
+        return plugins.stream().filter(plugin -> plugin.getName().equals(pluginName)).map(ActivablePlugin::toPlugin).findFirst().orElse(null);
+    }
+
     public Set<PluginInfo> toPluginSet() {
         return plugins.stream().map(plugin -> plugin.toPlugin()).collect(toSet());
     }

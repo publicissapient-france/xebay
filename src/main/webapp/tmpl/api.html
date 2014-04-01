@@ -47,6 +47,19 @@
 </div>
 
 <div class="panel panel-primary">
+    <div class="panel-heading">GET http://{{host}}/rest/bidEngine/news</div>
+    <ul class="list-group">
+        <li class="list-group-item">
+            @Consumes : empty request body with an <code>Authorization: {key}</code> header
+        </li>
+        <li class="list-group-item">
+            @Produces : <code>200</code> response with an <code>application/json</code> response object list
+            <code>[{"name":"name","activated":false,"description":"..."}, ...]</code>
+        </li>
+    </ul>
+</div>
+
+<div class="panel panel-primary">
     <div class="panel-heading">WebSocket ws://{{host}}/socket/bidEngine/{key}</div>
     <ul class="list-group">
         <li class="list-group-item">
@@ -63,25 +76,11 @@
         </li>
         <li class="list-group-item">
             @Produces : <code>application/json</code> object
-            <code>{"info":"message"}</code>
+            <code>{"news":{"name":"name","activated":false,"description":"..."}}</code>
         </li>
         <li class="list-group-item">
             @Produces : <code>application/json</code> object
             <code>{"error":"message"}</code>
-        </li>
-    </ul>
-</div>
-
-
-<div class="panel panel-primary">
-    <div class="panel-heading">GET http://{{host}}/rest/bidEngine/news</div>
-    <ul class="list-group">
-        <li class="list-group-item">
-            @Consumes : empty request body with an <code>Authorization: {key}</code> header
-        </li>
-        <li class="list-group-item">
-            @Produces : <code>200</code> response with an <code>application/json</code> response object list
-            <code>[{"name":"name","activated":false,"description":"..."}]</code>
         </li>
     </ul>
 </div>

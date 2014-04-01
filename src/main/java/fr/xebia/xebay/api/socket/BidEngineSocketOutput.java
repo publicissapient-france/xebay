@@ -1,12 +1,13 @@
 package fr.xebia.xebay.api.socket;
 
 import fr.xebia.xebay.domain.BidOffer;
+import fr.xebia.xebay.domain.PluginInfo;
 
 public class BidEngineSocketOutput {
 
     BidOffer bidOffer;
 
-    String info;
+    PluginInfo news;
 
     String error;
 
@@ -26,12 +27,12 @@ public class BidEngineSocketOutput {
         this.error = error;
     }
 
-    public String getInfo() {
-        return info;
+    public PluginInfo getNews() {
+        return news;
     }
 
-    public void setInfo(String info) {
-        this.info = info;
+    public void setNews(PluginInfo news) {
+        this.news = news;
     }
 
 }

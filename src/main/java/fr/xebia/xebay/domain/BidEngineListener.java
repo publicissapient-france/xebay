@@ -2,8 +2,8 @@ package fr.xebia.xebay.domain;
 
 public interface BidEngineListener {
 
-    void onBidOffer(BidOffer bidOffer);
+    void onBid(BidOffer bidOffer);
 
-    void onInfo(String message);
+    void onNews(PluginInfo news);
 
 }
