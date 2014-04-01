@@ -4,17 +4,17 @@
         <li>
             <a href="#/api">API</a>
         </li>
-        <li ng-show="xebay.logged">
-            <a href="#/account">Account</a>
-        </li>
         <li>
             <a href="#/leaders">Leaders</a>
         </li>
-        <li ng-show="xebay.admin">
-            <a href="#/users">Users</a>
+        <li ng-show="xebay.logged">
+            <a href="#/account">Account</a>
+        </li>
+        <li ng-show="xebay.logged">
+            <a href="#/plugins">Plugins</a>
         </li>
         <li ng-show="xebay.admin">
-            <a href="#/plugins">Plugins</a>
+            <a href="#/users">Users</a>
         </li>
     </ul>
 

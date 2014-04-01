@@ -2,6 +2,8 @@
 
 angular.module('xebayApp').controller('pluginsController', ['$scope', '$http', '$xebay', function ($scope, $http, $xebay) {
 
+    $scope.xebay = $xebay;
+
     $http({
         method: 'GET',
         url: "/rest/bidEngine/news",

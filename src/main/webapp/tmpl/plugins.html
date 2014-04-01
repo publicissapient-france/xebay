@@ -10,12 +10,18 @@
         <td>{{plugin.name}}</td>
         <td>{{plugin.description}}</td>
         <td>
-            <button class="btn btn-danger {{plugin.name}}" ng-click="toggleActivation(plugin)" ng-show="!plugin.activated">
-                <span class="glyphicon glyphicon-ban-circle"/>
+            <button class="btn btn-danger {{plugin.name}}" ng-click="toggleActivation(plugin)" ng-show="!plugin.activated && xebay.admin">
+                <span class="glyphicon glyphicon-ban-circle"></span>
             </button>
-            <button class="btn btn-success {{plugin.name}}" ng-click="toggleActivation(plugin)" ng-show="plugin.activated">
-                <span class="glyphicon glyphicon-ok-circle"/>
+            <button class="btn btn-success {{plugin.name}}" ng-click="toggleActivation(plugin)" ng-show="plugin.activated && xebay.admin">
+                <span class="glyphicon glyphicon-ok-circle"></span>
             </button>
+            <span class="label label-danger" ng-show="!plugin.activated && !xebay.admin">
+                <span class="glyphicon glyphicon-ban-circle"></span>
+            </span>
+            <span class="label label-success" ng-show="plugin.activated && !xebay.admin">
+                <span class="glyphicon glyphicon-ok-circle"></span>
+            </span>
         </td>
     </tr>
 </table>

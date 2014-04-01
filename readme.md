@@ -14,7 +14,7 @@ You can use [editorconfig](http://editorconfig.org) to synchronize this project 
  - rename BidOfferToSell => ItemOffer, BidDemand => BidOffer and BidOffer to OfferResponse (or any better idea because I think names are not relevant) ?
  - web : as a visitor, I should see graph of values of each items
  - persist users (name, key)
- - an owner can bid on its own item, OK, but when no other user buys the item, item value is still increased, OK, but user balance is not decreased
+ - an owner can bid on its own item, OK, but when no other user buys the item, item value is still increased, OK, but user balance is not decreased, KO
 
 nice to have :
 
