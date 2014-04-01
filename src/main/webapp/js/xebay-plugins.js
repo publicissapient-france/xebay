@@ -4,7 +4,7 @@ angular.module('xebayApp').controller('pluginsController', ['$scope', '$http', '
 
     $http({
         method: 'GET',
-        url: "/rest/bidEngine/plugins",
+        url: "/rest/bidEngine/news",
         headers: {"Authorization": $xebay.userInfo.key}
     }).success(function (data) {
         $scope.plugins = data;

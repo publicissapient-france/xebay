@@ -34,7 +34,7 @@
         <th class="col-md-2">Value</th>
         <th class="col-md-1"></th>
     </tr>
-    <tr ng-repeat="item in xebay.userInfo.items">
+    <tr ng-repeat="item in xebay.userInfo.items | orderBy:'name'">
         <td>{{item.category}}</td>
         <td>
             <img ng-src="images/{{item.name}}.png" width="20em" height="20em"/> {{item.name}}
