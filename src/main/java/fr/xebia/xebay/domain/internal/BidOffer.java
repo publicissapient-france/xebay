@@ -79,11 +79,11 @@ public class BidOffer {
         }
         BigDecimal increment = newValue.subtract(initialValue);
         if (currentValue.multiply(MIN_BID_RATIO).compareTo(increment) >= 0) {
-            throw new BidException(format(ENGLISH, "increment %.3f$ is less than ten percent of initial value %.3f$ of item \"%s\"", increment, initialValue, item.getName()));
+            throw new BidException(format(ENGLISH, "increment %.2f$ is less than ten percent of initial value %.2f$ of item \"%s\"", increment, initialValue, item.getName()));
         }
 
         if (!user.canBid(newValue)) {
-            throw new BidException(format(ENGLISH, "user can't bid %.3f$, not enought money left.", newValue));
+            throw new BidException(format(ENGLISH, "user can't bid %.2f$, not enought money left.", newValue));
         }
 
         currentValue = newValue;

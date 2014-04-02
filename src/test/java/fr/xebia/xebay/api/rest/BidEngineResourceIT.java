@@ -171,7 +171,7 @@ public class BidEngineResourceIT {
         assertThat(pluginInfos).hasSize(2);
         assertThat(pluginInfos)
         .extracting("name", "description", "activated").containsOnly(
-                tuple("BankBuyEverything", "Bank buy everything !", false),
+                tuple("BankBuyEverything", "Bank buy every item sold at his cost price !", false),
                 tuple("AllItemsInCategory", "Bonus to user having all items in category", false));
     }
 }
