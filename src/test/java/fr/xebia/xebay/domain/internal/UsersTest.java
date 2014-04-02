@@ -120,4 +120,22 @@ public class UsersTest {
 
         assertThat(userSet).isNotNull().extracting("name", String.class).containsOnly("user1", "user2");
     }
+
+
+    @Test
+    public void should_persist_created_users_and_not_admin() {
+        Users users = new Users();
+        User user1 = users.create("user1");
+        user1.buy(new Item("category", "an item", new BigDecimal(4.3)));
+        users.create("user2");
+
+        Set<User> createdUsers = Users.loadUsers();
+        assertThat(createdUsers).hasSize((2)).extracting("name", String.class).containsOnly("user1", "user2");
+    }
+
+    private Set<User> load_users() {
+        return Users.loadUsers();
+    }
+
+
 }

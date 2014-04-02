@@ -1,9 +1,15 @@
 package fr.xebia.xebay.domain.internal;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.xebia.xebay.domain.BidException;
 import fr.xebia.xebay.domain.UserNotAllowedException;
 import fr.xebia.xebay.domain.PublicUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -15,6 +21,8 @@ import static java.util.stream.Collectors.toSet;
 import static java.util.stream.IntStream.range;
 
 public class Users {
+    private static final Logger log = LoggerFactory.getLogger("Users");
+
     private static final String CHARS_IN_KEY = "" +
             "abcdefghijklmnopqrstuvwxyz" +
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
@@ -25,8 +33,12 @@ public class Users {
     private final Random random;
 
     public Users() {
+        this(new HashSet<User>());
+    }
+
+    public Users(Set<User> savedUsers) {
         this.random = new Random();
-        this.users = new HashSet<>();
+        this.users = savedUsers;
         this.users.add(new AdminUser());
     }
 
@@ -53,6 +65,7 @@ public class Users {
         } while (containsKey(key));
         User newUser = new User(key, name);
         users.add(newUser);
+        saveUsers(users);
         return newUser;
     }
 
@@ -62,6 +75,7 @@ public class Users {
         }
         User user = getUser(key);
         users.remove(user);
+        saveUsers(users);
         return user;
     }
 
@@ -86,4 +100,37 @@ public class Users {
     private boolean containsName(String name) {
         return users.stream().anyMatch((user) -> user.getName().equals(name));
     }
+
+    public static Set<User> loadUsers(){
+        Set<SerializedUser> usersInFile = null;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            usersInFile = mapper.readValue(new File("users.json"), new TypeReference<Set<SerializedUser>>() {
+            });
+        } catch (IOException e) {
+            log.debug("Could not load saved users");
+            return new HashSet<>();
+
+        }
+        log.info("serialized users " + usersInFile.stream().toString());
+        Set<User> users = usersInFile.stream()
+                .filter(user -> !AdminUser.isAdmin(user))
+                .map((user) -> new User(user.getKey(), user.getName())).collect(toSet());
+        log.info(" users " + users.stream().toString());
+        return users;
+    }
+
+    public void saveUsers(Set<User> users){
+        ObjectMapper mapper = new ObjectMapper();
+        Set<SerializedUser> serializedUsers = users.stream()
+                .filter(user -> ! user.isInRole(ADMIN_ROLE))
+                .map((user) -> new SerializedUser(user.getKey(), user.getName())).collect(toSet());
+        try {
+            mapper.writeValue(new File("users.json"), serializedUsers);
+        } catch (IOException e) {
+            log.debug("Could not persist users");
+        }
+
+    }
+
 }

@@ -31,4 +31,8 @@ public class AdminUser extends User {
     public boolean isInRole(String role) {
         return ADMIN_ROLE.equals(role);
     }
+
+    public static boolean isAdmin(SerializedUser user) {
+        return ("admin".equals(user.getName())) && KEY.equals(user.getKey());
+    }
 }
