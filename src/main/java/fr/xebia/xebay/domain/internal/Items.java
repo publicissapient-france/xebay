@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static fr.xebia.xebay.domain.internal.Item.BANK;
+import static java.math.RoundingMode.HALF_UP;
 
 public class Items {
     private final Item[] items;
@@ -72,7 +73,7 @@ public class Items {
                         String name = matcher.group("withoutQuote") != null ? matcher.group("withoutQuote") : matcher.group("withQuotes");
 
                         if (matcher.find()) {
-                            items.add(new Item(category.trim(), name.trim(), new BigDecimal(matcher.group("withoutQuote").trim())));
+                            items.add(new Item(category.trim(), name.trim(), new BigDecimal(matcher.group("withoutQuote").trim()).setScale(2, HALF_UP)));
                         }
                     }
                 }

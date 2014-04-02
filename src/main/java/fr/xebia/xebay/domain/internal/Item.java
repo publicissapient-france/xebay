@@ -1,8 +1,9 @@
 package fr.xebia.xebay.domain.internal;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
-import static fr.xebia.xebay.domain.utils.Math.round;
+import static java.math.RoundingMode.HALF_UP;
 
 public class Item {
     public static final User BANK = null;
@@ -55,7 +56,7 @@ public class Item {
 
     public void depreciate() {
         offered = false;
-        value = value.subtract(value.divide(BigDecimal.TEN));
+        value = value.subtract(value.divide(BigDecimal.TEN)).setScale(2, HALF_UP);
     }
 
     public boolean isOffered() {
@@ -91,6 +92,6 @@ public class Item {
     }
 
     public fr.xebia.xebay.domain.Item toItem() {
-        return new fr.xebia.xebay.domain.Item(category, name, round(value), offered);
+        return new fr.xebia.xebay.domain.Item(category, name, value.doubleValue(), offered);
     }
 }

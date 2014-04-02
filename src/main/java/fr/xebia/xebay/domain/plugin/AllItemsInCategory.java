@@ -15,7 +15,7 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toSet;
 
 public class AllItemsInCategory extends ActivablePlugin {
-    public static final BigDecimal CREDIT_AMOUNT = new BigDecimal(500);
+    public static final BigDecimal CREDIT_AMOUNT = new BigDecimal(500).setScale(2, java.math.RoundingMode.HALF_UP);
 
     protected AllItemsInCategory() {
         super("AllItemsInCategory", "Bonus to user having all items in category");

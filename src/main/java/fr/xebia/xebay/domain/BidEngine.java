@@ -7,6 +7,7 @@ import fr.xebia.xebay.domain.internal.User;
 import fr.xebia.xebay.domain.plugin.Plugins;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 import static java.lang.String.format;
@@ -50,7 +51,7 @@ public class BidEngine {
         nextBidOfferIfExpired();
         fr.xebia.xebay.domain.BidOffer updatedBidOffer = bidOffer
                 .orElseThrow(() -> new BidException(format("current item to bid is not \"%s\"", itemName)))
-                .bid(itemName, new BigDecimal(newValue), user)
+                .bid(itemName, new BigDecimal(newValue).setScale(2, RoundingMode.HALF_UP), user)
                 .toBidOffer(bidOfferExpiration.isExpired());
         notifyListeners(updatedBidOffer);
         return updatedBidOffer;
@@ -59,7 +60,7 @@ public class BidEngine {
     public void offer(User user, Item item, double initialValue) {
         nextBidOfferIfExpired();
         checkUserOffer(user, item);
-        BidOfferToSell bidOfferToSell = checkOffer(item, new BigDecimal(initialValue));
+        BidOfferToSell bidOfferToSell = checkOffer(item, new BigDecimal(initialValue).setScale(2, BigDecimal.ROUND_HALF_UP));
         if (plugins.authorize(bidOfferToSell)) {
             item.setOffered();
             bidOffersToSell.offer(bidOfferToSell);

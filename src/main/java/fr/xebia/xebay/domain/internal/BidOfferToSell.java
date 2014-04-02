@@ -3,7 +3,6 @@ package fr.xebia.xebay.domain.internal;
 import java.math.BigDecimal;
 
 import static fr.xebia.xebay.domain.internal.Item.BANK;
-import static fr.xebia.xebay.domain.utils.Math.areEquals;
 
 public class BidOfferToSell {
     private final Item item;
@@ -19,7 +18,7 @@ public class BidOfferToSell {
     }
 
     public boolean isInitialValueAtItemPrice() {
-        return areEquals(initialValue, item.getValue());
+        return initialValue.equals(item.getValue());
     }
 
     public void backToBankAtItemPrice() {

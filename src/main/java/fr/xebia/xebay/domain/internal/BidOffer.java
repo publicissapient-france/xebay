@@ -5,7 +5,6 @@ import fr.xebia.xebay.domain.BidException;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import static fr.xebia.xebay.domain.utils.Math.round;
 import static java.lang.Math.max;
 import static java.lang.String.format;
 import static java.math.BigDecimal.ONE;
@@ -40,7 +39,7 @@ public class BidOffer {
     public fr.xebia.xebay.domain.BidOffer toBidOffer(boolean isExpired) {
         return new fr.xebia.xebay.domain.BidOffer(item.getCategory(),
                 item.getName(),
-                round(currentValue),
+                currentValue.doubleValue(),
                 getTimeToLive(),
                 item.getOwner() == null ? null : item.getOwner().getName(),
                 futureBuyer == null ? null : futureBuyer.getName(),

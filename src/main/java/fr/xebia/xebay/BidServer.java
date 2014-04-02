@@ -8,6 +8,8 @@ import fr.xebia.xebay.domain.internal.Users;
 
 import java.math.BigDecimal;
 
+import static java.math.RoundingMode.HALF_UP;
+
 public enum BidServer {
     BID_SERVER;
 
@@ -20,7 +22,7 @@ public enum BidServer {
         users = new Users();
         mailSender = new MailSender();
         if (System.getProperty("xebay.test") != null) {
-            items = new Items(new Item("category", "an item", new BigDecimal(4.3)));
+            items = new Items(new Item("category", "an item", new BigDecimal(4.3).setScale(2, HALF_UP)));
             bidEngine = new BidEngine(items, () -> false);
             return;
         }

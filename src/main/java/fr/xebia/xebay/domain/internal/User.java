@@ -8,13 +8,12 @@ import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
 
-import static fr.xebia.xebay.domain.utils.Math.round;
 import static java.math.BigDecimal.ZERO;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.toSet;
 
 public class User implements Principal {
-    public static final BigDecimal INITIAL_BALANCE = new BigDecimal(1000);
+    public static final BigDecimal INITIAL_BALANCE = new BigDecimal(1000).setScale(2, java.math.RoundingMode.HALF_UP);
 
     private final String key;
     private final String name;
@@ -59,7 +58,7 @@ public class User implements Principal {
     }
 
     public fr.xebia.xebay.domain.User toUser() {
-        fr.xebia.xebay.domain.User user = new fr.xebia.xebay.domain.User(name, key, round(getBalance()), items.stream()
+        fr.xebia.xebay.domain.User user = new fr.xebia.xebay.domain.User(name, key, balance.doubleValue(), items.stream()
                 .map(Item::toItem)
                 .collect(toSet()));
         user.setMailed(mailed);
@@ -100,9 +99,9 @@ public class User implements Principal {
     }
 
     public PublicUser toPublicUser() {
-        return new PublicUser(name, round(balance), round(items.stream()
-                .map(item -> item.getValue())
-                .reduce(ZERO, (a, b) -> a.add(b))));
+        return new PublicUser(name, balance.doubleValue(), items.stream()
+                .map(Item::getValue)
+                .reduce(ZERO, (a, b) -> a.add(b)).doubleValue());
     }
 
     public void credit(BigDecimal value) {
