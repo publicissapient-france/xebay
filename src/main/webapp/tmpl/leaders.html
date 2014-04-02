@@ -6,13 +6,15 @@
         <th class="col-md-4">Name</th>
         <th class="col-md-2">Assets</th>
         <th class="col-md-2">Balance</th>
+        <th class="col-md-2">Sum</th>
     </tr>
-    <tr ng-repeat="leader in leaders | orderBy:'assets' | orderBy:'balance'">
+    <tr ng-repeat="leader in leaders | orderBy:'balance + assets':true">
         <td>{{$index + 1}}</td>
         <td>
             <img gravatar-src="leader.name" width="20em" height="20em" /> {{leader.name}}
         </td>
         <td>{{leader.assets}}$</td>
         <td>{{leader.balance}}$</td>
+        <td>{{leader.balance + leader.assets}}$</td>
     </tr>
 </table>
