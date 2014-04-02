@@ -151,10 +151,8 @@ public class BidEngineResourceIT {
                     .header(HttpHeaders.AUTHORIZATION, AdminUser.KEY)
                     .get(new GenericType<Set<PluginInfo>>() {
                     });
-            assertThat(pluginInfos.stream()
-                    .filter(plugin -> plugin.getName().equals("BankBuyEverything"))
-                    .findFirst().get()
-                    .isActivated()).isTrue();
+
+            assertThat(getPluginByName(pluginInfos, "BankBuyEverything").isActivated()).isTrue();
         } finally {
             target.path("plugin").path("BankBuyEverything").path("deactivate").request()
                     .header(HttpHeaders.AUTHORIZATION, AdminUser.KEY)
@@ -163,15 +161,24 @@ public class BidEngineResourceIT {
     }
 
     @Test
-    public void user_can_retrieve_news(){
+    public void user_can_retrieve_news() {
         Set<PluginInfo> pluginInfos = target.path("news").request()
                 .header(HttpHeaders.AUTHORIZATION, registerRule.getKey())
                 .get(new GenericType<Set<PluginInfo>>() {
                 });
         assertThat(pluginInfos).hasSize(2);
         assertThat(pluginInfos)
-        .extracting("name", "description", "activated").containsOnly(
+                .extracting("name", "description", "activated").containsOnly(
                 tuple("BankBuyEverything", "Bank buy every item sold at his cost price !", false),
                 tuple("AllItemsInCategory", "Bonus to user having all items in category", false));
+    }
+
+    private PluginInfo getPluginByName(Set<PluginInfo> plugins, String pluginName) {
+        for (PluginInfo plugin : plugins) {
+            if (plugin.getName().equals(pluginName)) {
+                return plugin;
+            }
+        }
+        throw new NoSuchElementException(format("plugin %s was not found", pluginName));
     }
 }
