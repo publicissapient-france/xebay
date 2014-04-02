@@ -8,12 +8,10 @@ import java.util.Date;
 import static fr.xebia.xebay.domain.utils.Math.round;
 import static java.lang.Math.max;
 import static java.lang.String.format;
-import static java.math.BigDecimal.ONE;
-import static java.math.BigDecimal.TEN;
 import static java.util.Locale.ENGLISH;
 
 public class BidOffer {
-    private static final BigDecimal MIN_BID_RATIO = ONE.divide(TEN);
+    private static final BigDecimal MIN_BID_RATIO = new BigDecimal(".09");
 
     public final Item item;
     public final BigDecimal initialValue;
