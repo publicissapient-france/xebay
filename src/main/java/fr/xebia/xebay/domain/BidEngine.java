@@ -17,7 +17,7 @@ public class BidEngine {
     private final List<BidEngineListener> listeners = Collections.synchronizedList(new ArrayList<>());
     private final Items items;
     private final Expirable bidOfferExpiration;
-    private final Queue<BidOfferToSell> bidOffersToSell;
+    private final Deque<BidOfferToSell> bidOffersToSell;
     private final Plugins plugins;
 
     private Optional<BidOffer> bidOffer;
@@ -62,7 +62,7 @@ public class BidEngine {
         BidOfferToSell bidOfferToSell = checkOffer(item, new BigDecimal(initialValue));
         if (plugins.authorize(bidOfferToSell)) {
             item.setOffered();
-            bidOffersToSell.offer(bidOfferToSell);
+            bidOffersToSell.offerLast(bidOfferToSell);
         }
     }
 
@@ -104,7 +104,7 @@ public class BidEngine {
 
         // first, look for items offered by users
         if (!bidOffersToSell.isEmpty()) {
-            return Optional.of(bidOffersToSell.poll().toBidOffer(DEFAULT_TIME_TO_LIVE));
+            return Optional.of(bidOffersToSell.pollFirst().toBidOffer(DEFAULT_TIME_TO_LIVE));
         }
 
         // then, look for items offered by bank
