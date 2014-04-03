@@ -54,7 +54,7 @@ public class BidEngineListenerTest {
 
     @Test
     public void should_be_notified_when_bid_offer_is_resolved() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", new BigDecimal(4.3))), expiration);
+        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", new BigDecimal(4.3)),new Item("category", "another item", new BigDecimal(2.4))), expiration);
         BidEngineListener bidEngineListener = mock(BidEngineListener.class);
         bidEngine.addListener(bidEngineListener);
 
@@ -63,18 +63,16 @@ public class BidEngineListenerTest {
         ArgumentCaptor<BidOffer> argumentCaptor = ArgumentCaptor.forClass(BidOffer.class);
         verify(bidEngineListener, times(2)).onBid(argumentCaptor.capture());
         List<BidOffer> bidOfferList = argumentCaptor.getAllValues();
-        BidOffer bidOffer1 = bidOfferList.get(0);
-        assertThat(bidOffer1.getOwner()).isNull();
-        assertThat(bidOffer1.getBidder()).isNull();
-        assertThat(bidOffer1.getItem().getName()).isEqualTo("an item");
-        assertThat(bidOffer1.getItem().getValue()).isEqualTo(3.87);
-        assertThat(bidOffer1.isExpired()).isTrue();
-        BidOffer bidOffer2 = bidOfferList.get(1);
-        assertThat(bidOffer2.getBidder()).isNull();
-        assertThat(bidOffer2.getOwner()).isNull();
-        assertThat(bidOffer2.getItem().getName()).isEqualTo("an item");
-        assertThat(bidOffer2.getItem().getValue()).isEqualTo(3.87);
-        assertThat(bidOffer2.isExpired()).isFalse();
+        BidOffer anItem = bidOfferList.get(0);
+        assertThat(anItem.getOwner()).isNull();
+        assertThat(anItem.getBidder()).isNull();
+        assertThat(anItem.getItem().getName()).isEqualTo("an item");
+        assertThat(anItem.getItem().getValue()).isEqualTo(3.87);
+        BidOffer anotherItem = bidOfferList.get(1);
+        assertThat(anotherItem.getBidder()).isNull();
+        assertThat(anotherItem.getOwner()).isNull();
+        assertThat(anotherItem.getItem().getName()).isEqualTo("another item");
+        assertThat(anotherItem.getItem().getValue()).isEqualTo(2.4);
     }
 
     @Test

@@ -24,7 +24,7 @@ public class BidEngine {
 
     public BidEngine(Items items) {
         this.items = items;
-        this.bidOfferExpiration = () -> !bidOffer.isPresent() || bidOffer.get().isExpired();
+        this.bidOfferExpiration = () -> !bidOffer.isPresent() || bidOffer.get().getTimeToLive() == 0;
         this.bidOffersToSell = new ArrayDeque<>();
         this.bidOffer = Optional.of(new BidOffer(this.items.next(), DEFAULT_TIME_TO_LIVE));
         this.plugins = new Plugins();
@@ -40,7 +40,7 @@ public class BidEngine {
 
     public fr.xebia.xebay.domain.BidOffer currentBidOffer() {
         nextBidOfferIfExpired();
-        return bidOffer.isPresent() ? bidOffer.get().toBidOffer(bidOfferExpiration.isExpired()) : null;
+        return bidOffer.isPresent() ? bidOffer.get().toBidOffer() : null;
     }
 
     public fr.xebia.xebay.domain.BidOffer bid(User user, String itemName, double newValue) throws BidException {
@@ -51,7 +51,7 @@ public class BidEngine {
         fr.xebia.xebay.domain.BidOffer updatedBidOffer = bidOffer
                 .orElseThrow(() -> new BidException(format("current item to bid is not \"%s\"", itemName)))
                 .bid(itemName, new BigDecimal(newValue), user)
-                .toBidOffer(bidOfferExpiration.isExpired());
+                .toBidOffer();
         notifyListeners(updatedBidOffer);
         return updatedBidOffer;
     }
@@ -93,10 +93,10 @@ public class BidEngine {
             bidOffer.ifPresent((bidOffer) -> {
                 bidOffer.resolve();
                 plugins.onBidOfferResolved(bidOffer, items);
-                notifyListeners(bidOffer.toBidOffer(true));
+                notifyListeners(bidOffer.toBidOffer());
             });
             bidOffer = nextBidOffer();
-            bidOffer.ifPresent((bidOffer) -> notifyListeners(bidOffer.toBidOffer(false)));
+            bidOffer.ifPresent((bidOffer) -> notifyListeners(bidOffer.toBidOffer()));
         }
     }
 

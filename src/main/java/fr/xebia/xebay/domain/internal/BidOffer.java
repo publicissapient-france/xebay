@@ -35,14 +35,13 @@ public class BidOffer {
         this.currentValue = initialValue;
     }
 
-    public fr.xebia.xebay.domain.BidOffer toBidOffer(boolean isExpired) {
+    public fr.xebia.xebay.domain.BidOffer toBidOffer() {
         return new fr.xebia.xebay.domain.BidOffer(item.getCategory(),
                 item.getName(),
                 round(currentValue),
                 getTimeToLive(),
                 item.getOwner() == null ? null : item.getOwner().getName(),
                 futureBuyer == null ? null : futureBuyer.getName(),
-                isExpired,
                 item.isOffered());
     }
 
@@ -58,10 +57,6 @@ public class BidOffer {
     public long getTimeToLive() {
         long millisecondsSinceCreated = new Date().getTime() - created;
         return max(0, initialTimeToLive - millisecondsSinceCreated);
-    }
-
-    public boolean isExpired() {
-        return getTimeToLive() == 0;
     }
 
     public void userIsUnregistered(User user) {

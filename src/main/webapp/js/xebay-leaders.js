@@ -13,7 +13,7 @@ angular.module('xebayApp').controller('leadersController', ['$scope', '$http', '
     };
 
     $scope.$on('$xebay.bidOffer', function(event, bidOffer) {
-        if (bidOffer && bidOffer.expired && bidOffer.owner) {
+        if (bidOffer && bidOffer.timeToLive === 0 && bidOffer.owner) {
             $scope.fetch();
         }
     });
