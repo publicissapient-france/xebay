@@ -96,7 +96,7 @@ public class BidEngine {
                 notifyListeners(bidOffer.toBidOffer(true));
             });
             bidOffer = nextBidOffer();
-            bidOffer.ifPresent((bidOffer) -> notifyListeners(bidOffer.toBidOffer(true)));
+            bidOffer.ifPresent((bidOffer) -> notifyListeners(bidOffer.toBidOffer(false)));
         }
     }
 

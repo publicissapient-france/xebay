@@ -68,11 +68,13 @@ public class BidEngineListenerTest {
         assertThat(bidOffer1.getBidder()).isNull();
         assertThat(bidOffer1.getItem().getName()).isEqualTo("an item");
         assertThat(bidOffer1.getItem().getValue()).isEqualTo(3.87);
+        assertThat(bidOffer1.isExpired()).isTrue();
         BidOffer bidOffer2 = bidOfferList.get(1);
         assertThat(bidOffer2.getBidder()).isNull();
         assertThat(bidOffer2.getOwner()).isNull();
         assertThat(bidOffer2.getItem().getName()).isEqualTo("an item");
         assertThat(bidOffer2.getItem().getValue()).isEqualTo(3.87);
+        assertThat(bidOffer2.isExpired()).isFalse();
     }
 
     @Test
