@@ -88,7 +88,7 @@ public class BidEngine {
         items.userIsUnregistered(user);
     }
 
-    private void nextBidOfferIfExpired() {
+    private synchronized void nextBidOfferIfExpired() {
         if (bidOfferExpiration.isExpired()) {
             bidOffer.ifPresent((bidOffer) -> {
                 bidOffer.resolve();
