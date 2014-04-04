@@ -76,7 +76,7 @@ public class XebayTest {
     public void should_not_bid_with_less_than_ten_percent_of_initial_value() {
         BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", new BigDecimal(4.3))));
         expectedException.expect(BidException.class);
-        expectedException.expectMessage("increment 0.39$ is less than ten percent of initial value 4.30$ of item \"an item\"");
+        expectedException.expectMessage("you have bid 4.69$ which is less than 4.69$ (current value 4.30$ + ten percent of initial value 4.30$)"); // TODO reintroduce 10%
 
         bidEngine.bid(user, "an item", 4.3 + 0.43 - 0.043); // TODO we substract 0.043 to have 9% increment
     }

@@ -11,7 +11,7 @@ import static java.lang.String.format;
 import static java.util.Locale.ENGLISH;
 
 public class BidOffer {
-    private static final BigDecimal MIN_BID_RATIO = new BigDecimal(".09");
+    private static final BigDecimal MIN_BID_RATIO = new BigDecimal(".09"); // TODO reintroduce ten percent
 
     public final Item item;
     public final BigDecimal initialValue;
@@ -73,7 +73,8 @@ public class BidOffer {
         BigDecimal minIncrement = initialValue.multiply(MIN_BID_RATIO);
         BigDecimal increment = newValue.subtract(currentValue);
         if (increment.compareTo(minIncrement) < 0) {
-            throw new BidException(format(ENGLISH, "increment %.2f$ is less than ten percent of initial value %.2f$ of item \"%s\"", increment, initialValue, item.getName()));
+            throw new BidException(format(ENGLISH, "you have bid %.2f$ which is less than %.2f$ (current value %.2f$ + ten percent of initial value %.2f$)",
+                    newValue, currentValue.add(minIncrement), currentValue, initialValue));
         }
 
         if (!user.canBid(newValue)) {
