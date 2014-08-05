@@ -1,5 +1,6 @@
 package fr.xebia.xebay.domain.internal;
 
+import fr.xebia.xebay.domain.Amount;
 import fr.xebia.xebay.domain.BidException;
 import fr.xebia.xebay.domain.PublicUser;
 import fr.xebia.xebay.domain.UserNotAllowedException;
@@ -7,7 +8,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.math.BigDecimal;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -88,7 +88,7 @@ public class UsersTest {
     public void should_sort_by_balance_plus_asset() {
         Users users = new Users();
         User user = users.create("user1");
-        Item item = new Item("category", "item", new BigDecimal(50));
+        Item item = new Item("category", "item", new Amount(50));
         user.buy(item);
         item.depreciate();
         users.create("user2");
@@ -126,7 +126,7 @@ public class UsersTest {
     public void should_persist_created_users_and_not_admin() {
         Users users = new Users();
         User user1 = users.create("user1");
-        user1.buy(new Item("category", "an item", new BigDecimal(4.3)));
+        user1.buy(new Item("category", "an item", new Amount(4.3)));
         users.create("user2");
 
         Set<User> createdUsers = Users.loadUsers();

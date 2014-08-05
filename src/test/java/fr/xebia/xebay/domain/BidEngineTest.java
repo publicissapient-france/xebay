@@ -7,8 +7,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.math.BigDecimal;
-
 public class BidEngineTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -22,7 +20,7 @@ public class BidEngineTest {
 
     @Test
     public void admin_should_not_bid() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", new BigDecimal(4.3))));
+        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", new Amount(4.3))));
         expectedException.expect(BidException.class);
         expectedException.expectMessage("admin is not authorized to bid");
 

@@ -1,25 +1,22 @@
 package fr.xebia.xebay.domain.internal;
 
+import fr.xebia.xebay.domain.Amount;
 import fr.xebia.xebay.domain.BidException;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
-import static fr.xebia.xebay.domain.utils.Math.round;
 import static java.lang.Math.max;
 import static java.lang.String.format;
 import static java.util.Locale.ENGLISH;
 
 public class BidOffer {
-    private static final BigDecimal MIN_BID_RATIO = new BigDecimal(".09"); // TODO reintroduce ten percent
-
     public final Item item;
-    public final BigDecimal initialValue;
+    public final Amount initialValue;
 
     private final long created;
     private final long initialTimeToLive;
 
-    BigDecimal currentValue;
+    Amount currentValue;
 
     private User futureBuyer;
 
@@ -27,7 +24,7 @@ public class BidOffer {
         this(item, item.getValue(), initialTimeToLive);
     }
 
-    public BidOffer(Item item, BigDecimal initialValue, long initialTimeToLive) {
+    public BidOffer(Item item, Amount initialValue, long initialTimeToLive) {
         this.item = item;
         this.initialValue = initialValue;
         this.initialTimeToLive = initialTimeToLive;
@@ -38,7 +35,7 @@ public class BidOffer {
     public fr.xebia.xebay.domain.BidOffer toBidOffer() {
         return new fr.xebia.xebay.domain.BidOffer(item.getCategory(),
                 item.getName(),
-                round(currentValue),
+                currentValue.value(),
                 getTimeToLive(),
                 item.getOwner() == null ? null : item.getOwner().getName(),
                 futureBuyer == null ? null : futureBuyer.getName(),
@@ -65,20 +62,20 @@ public class BidOffer {
         }
     }
 
-    public BidOffer bid(String name, BigDecimal newValue, User user) throws BidException {
+    public BidOffer bid(String name, Amount newValue, User user) throws BidException {
         checkUser(user);
         if (!item.getName().equals(name)) {
             throw new BidException(format("current item to bid is not \"%s\"", name));
         }
-        BigDecimal minIncrement = initialValue.multiply(MIN_BID_RATIO);
-        BigDecimal increment = newValue.subtract(currentValue);
+        Amount minIncrement = initialValue.minIncrement();
+        Amount increment = newValue.add(new Amount(-currentValue.value()));
         if (increment.compareTo(minIncrement) < 0) {
             throw new BidException(format(ENGLISH, "you have bid %.2f$ which is less than %.2f$ (current value %.2f$ + ten percent of initial value %.2f$)",
-                    newValue, currentValue.add(minIncrement), currentValue, initialValue));
+                    newValue.value(), currentValue.add(minIncrement).value(), currentValue.value(), initialValue.value()));
         }
 
         if (!user.canBid(newValue)) {
-            throw new BidException(format(ENGLISH, "user can't bid %.2f$, not enought money left.", newValue));
+            throw new BidException(format(ENGLISH, "user can't bid %.2f$, not enought money left.", newValue.value()));
         }
 
         currentValue = newValue;

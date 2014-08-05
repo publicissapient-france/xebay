@@ -1,11 +1,11 @@
 package fr.xebia.xebay.domain.plugin;
 
+import fr.xebia.xebay.domain.Amount;
 import fr.xebia.xebay.domain.internal.BidOffer;
 import fr.xebia.xebay.domain.internal.Item;
 import fr.xebia.xebay.domain.internal.Items;
 import fr.xebia.xebay.domain.internal.User;
 
-import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -15,7 +15,7 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toSet;
 
 public class AllItemsInCategory extends ActivablePlugin {
-    public static final BigDecimal CREDIT_AMOUNT = new BigDecimal(500);
+    public static final Amount CREDIT_AMOUNT = new Amount(500);
 
     protected AllItemsInCategory() {
         super("AllItemsInCategory", "Bonus to user having all items in category");

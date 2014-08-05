@@ -1,5 +1,6 @@
 package fr.xebia.xebay.domain.plugin;
 
+import fr.xebia.xebay.domain.Amount;
 import fr.xebia.xebay.domain.BidEngine;
 import fr.xebia.xebay.domain.BidOffer;
 import fr.xebia.xebay.domain.Expirable;
@@ -12,8 +13,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -38,8 +37,8 @@ public class BidEngineWithPluginsTest {
 
     @Test
     public void plugin_bank_buy_everything() {
-        Item anItem = new Item("category", "an item", new BigDecimal(4.3));
-        Item anotherItem = new Item("category", "another item", new BigDecimal(2.4));
+        Item anItem = new Item("category", "an item", new Amount(4.3));
+        Item anotherItem = new Item("category", "another item", new Amount(2.4));
         BidEngine bidEngine = new BidEngine(new Items(anItem, anotherItem), expiration);
         bidEngine.activate("BankBuyEverything");
         bidEngine.bid(user, "an item", 5.0);
@@ -47,7 +46,7 @@ public class BidEngineWithPluginsTest {
 
         bidEngine.offer(user, anItem, 5.0);
 
-        assertThat(user.getBalance().doubleValue()).isEqualTo(1000);
+        assertThat(user.getBalance()).isEqualTo(new Amount(1000));
         assertThat(user.getItems()).isEmpty();
         resolvesBidOffer(bidEngine);
         BidOffer bidOffer = bidEngine.currentBidOffer();
@@ -58,26 +57,26 @@ public class BidEngineWithPluginsTest {
 
     @Test
     public void plugin_all_items_in_category_on_activation() {
-        Item anItem = new Item("category", "an item", new BigDecimal(4.3));
+        Item anItem = new Item("category", "an item", new Amount(4.3));
         BidEngine bidEngine = new BidEngine(new Items(anItem), expiration);
         bidEngine.bid(user, "an item", 5.0);
         resolvesBidOffer(bidEngine);
 
         bidEngine.activate("AllItemsInCategory");
 
-        assertThat(user.getBalance().doubleValue()).isEqualTo(1495);
+        assertThat(user.getBalance()).isEqualTo(new Amount(1495));
     }
 
     @Test
     public void plugin_all_items_in_category_on_bid_offer_resolved() {
-        Item anItem = new Item("category", "an item", new BigDecimal(4.3));
+        Item anItem = new Item("category", "an item", new Amount(4.3));
         BidEngine bidEngine = new BidEngine(new Items(anItem), expiration);
         bidEngine.activate("AllItemsInCategory");
         bidEngine.bid(user, "an item", 5.0);
 
         resolvesBidOffer(bidEngine);
 
-        assertThat(user.getBalance().doubleValue()).isEqualTo(1495);
+        assertThat(user.getBalance()).isEqualTo(new Amount(1495));
     }
 
     private void resolvesBidOffer(BidEngine bidEngine) {

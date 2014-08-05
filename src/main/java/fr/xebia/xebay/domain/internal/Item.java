@@ -1,8 +1,6 @@
 package fr.xebia.xebay.domain.internal;
 
-import java.math.BigDecimal;
-
-import static fr.xebia.xebay.domain.utils.Math.round;
+import fr.xebia.xebay.domain.Amount;
 
 public class Item {
     public static final User BANK = null;
@@ -10,12 +8,12 @@ public class Item {
     private final String category;
     private final String name;
 
-    private BigDecimal value;
+    private Amount value;
     private User owner;
 
     private boolean offered = false;
 
-    public Item(String category, String name, BigDecimal value) {
+    public Item(String category, String name, Amount value) {
         this.category = category;
         this.name = name;
         this.value = value;
@@ -26,7 +24,7 @@ public class Item {
         return name;
     }
 
-    public BigDecimal getValue() {
+    public Amount getValue() {
         return value;
     }
 
@@ -38,7 +36,7 @@ public class Item {
         return category;
     }
 
-    public void concludeTransaction(BigDecimal value, User buyer) {
+    public void concludeTransaction(Amount value, User buyer) {
         this.value = value;
 
         if (owner != null) {
@@ -55,7 +53,7 @@ public class Item {
 
     public void depreciate() {
         offered = false;
-        value = value.subtract(value.divide(BigDecimal.TEN));
+        value = value.minusTenPercent();
     }
 
     public boolean isOffered() {
@@ -91,6 +89,6 @@ public class Item {
     }
 
     public fr.xebia.xebay.domain.Item toItem() {
-        return new fr.xebia.xebay.domain.Item(category, name, round(value), offered);
+        return new fr.xebia.xebay.domain.Item(category, name, value.value(), offered);
     }
 }

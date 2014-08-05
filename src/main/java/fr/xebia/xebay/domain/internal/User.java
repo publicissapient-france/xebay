@@ -1,26 +1,25 @@
 package fr.xebia.xebay.domain.internal;
 
+import fr.xebia.xebay.domain.Amount;
 import fr.xebia.xebay.domain.PublicUser;
 
 import javax.security.auth.Subject;
-import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
 
-import static fr.xebia.xebay.domain.utils.Math.round;
-import static java.math.BigDecimal.ZERO;
+import static fr.xebia.xebay.domain.Amount.ZERO;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.toSet;
 
 public class User implements Principal {
-    public static final BigDecimal INITIAL_BALANCE = new BigDecimal(1000);
+    public static final Amount INITIAL_BALANCE = new Amount(1000);
 
     private final String key;
     private final String name;
     private final Set<Item> items;
 
-    private BigDecimal balance;
+    private Amount balance;
 
     private boolean mailed;
 
@@ -44,7 +43,7 @@ public class User implements Principal {
         return unmodifiableSet(items);
     }
 
-    public BigDecimal getBalance() {
+    public Amount getBalance() {
         return balance;
     }
 
@@ -59,7 +58,7 @@ public class User implements Principal {
     }
 
     public fr.xebia.xebay.domain.User toUser() {
-        fr.xebia.xebay.domain.User user = new fr.xebia.xebay.domain.User(name, key, round(getBalance()), items.stream()
+        fr.xebia.xebay.domain.User user = new fr.xebia.xebay.domain.User(name, key, getBalance().value(), items.stream()
                 .map(Item::toItem)
                 .collect(toSet()));
         user.setMailed(mailed);
@@ -91,7 +90,7 @@ public class User implements Principal {
         return name;
     }
 
-    public boolean canBid(BigDecimal cost) {
+    public boolean canBid(Amount cost) {
         return balance.compareTo(cost) > 0;
     }
 
@@ -100,13 +99,13 @@ public class User implements Principal {
     }
 
     public PublicUser toPublicUser() {
-        return new PublicUser(name, round(balance), round(items.stream()
-                .map(item -> item.getValue())
-                .reduce(ZERO, (a, b) -> a.add(b))));
+        return new PublicUser(name, balance.value(), items.stream()
+            .map(item -> item.getValue())
+            .reduce(ZERO, (a, b) -> a.add(b)).value());
     }
 
-    public void credit(BigDecimal value) {
-        balance = balance.add(value.abs());
+    public void credit(Amount value) {
+        balance = balance.add(value);
     }
 
     public void setMailed(boolean mailed) {

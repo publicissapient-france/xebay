@@ -1,10 +1,8 @@
 package fr.xebia.xebay.domain.internal;
 
+import fr.xebia.xebay.domain.Amount;
 import org.junit.Test;
 
-import java.math.BigDecimal;
-
-import static fr.xebia.xebay.domain.utils.Math.round;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserTest {
@@ -15,7 +13,7 @@ public class UserTest {
         assertThat(user.getKey()).isEqualTo("key");
         assertThat(user.getName()).isEqualTo("user1");
         assertThat(user.getItems()).isEmpty();
-        assertThat(user.getBalance()).isEqualTo(new BigDecimal(1000));
+        assertThat(user.getBalance()).isEqualTo(new Amount(1000));
         assertThat(user.toString()).isEqualTo("user1");
     }
 
@@ -39,24 +37,24 @@ public class UserTest {
 
     @Test
     public void a_user_can_buy_an_item() {
-        Item item = new Item("category", "item", new BigDecimal(20));
+        Item item = new Item("category", "item", new Amount(20));
         User user = new User("key", "user");
 
         user.buy(item);
 
-        assertThat(user.getBalance()).isEqualTo(new BigDecimal(980));
+        assertThat(user.getBalance()).isEqualTo(new Amount(980));
         assertThat(user.getItems()).containsExactly(item);
     }
 
     @Test
     public void a_user_can_sell_an_item() {
-        Item item = new Item("category", "item", new BigDecimal(20));
+        Item item = new Item("category", "item", new Amount(20));
         User user = new User("key", "user");
         user.buy(item);
 
         user.sell(item);
 
-        assertThat(user.getBalance()).isEqualTo(new BigDecimal(1000));
+        assertThat(user.getBalance()).isEqualTo(new Amount(1000));
         assertThat(user.getItems()).isEmpty();
     }
 
@@ -64,7 +62,7 @@ public class UserTest {
     public void a_user_can_bid_item_lower_than_his_balance() {
         User user = new User("key", "user");
 
-        boolean canBid = user.canBid(new BigDecimal(20));
+        boolean canBid = user.canBid(new Amount(20));
 
         assertThat(canBid).isTrue();
     }
@@ -73,7 +71,7 @@ public class UserTest {
     public void a_user_can_t_bid_item_higher_than_his_balance() {
         User user = new User("key", "user");
 
-        boolean canBid = user.canBid(new BigDecimal(1001));
+        boolean canBid = user.canBid(new Amount(1001));
 
         assertThat(canBid).isFalse();
     }
@@ -91,8 +89,8 @@ public class UserTest {
     public void balance_of_a_user_can_be_increased_with_an_amount() {
         User user = new User("key", "user");
 
-        user.credit(new BigDecimal(4.3));
+        user.credit(new Amount(4.3));
 
-        assertThat(round(user.getBalance())).isEqualTo(1004.3);
+        assertThat(user.getBalance()).isEqualTo(new Amount(1004.3));
     }
 }

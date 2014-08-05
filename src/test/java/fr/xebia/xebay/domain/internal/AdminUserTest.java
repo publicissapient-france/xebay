@@ -1,7 +1,5 @@
 package fr.xebia.xebay.domain.internal;
 
-import fr.xebia.xebay.domain.*;
-import fr.xebia.xebay.domain.internal.AdminUser;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -16,7 +14,7 @@ public class AdminUserTest {
     public void should_have_predefined_initial_values() throws Exception {
         AdminUser adminUser = new AdminUser();
 
-        assertThat(adminUser.getBalance()).isZero();
+        assertThat(adminUser.getBalance().value()).isZero();
         assertThat(adminUser.getKey()).isEqualTo("4dm1n");
         assertThat(adminUser.getName()).isEqualTo("admin");
         assertThat(adminUser.getItems()).isEmpty();

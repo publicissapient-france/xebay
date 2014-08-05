@@ -2,6 +2,7 @@ package fr.xebia.xebay.api.rest;
 
 import com.google.common.collect.Sets;
 import fr.xebia.xebay.api.dto.BidDemand;
+import fr.xebia.xebay.domain.Amount;
 import fr.xebia.xebay.domain.BidEngine;
 import fr.xebia.xebay.domain.PluginInfo;
 import fr.xebia.xebay.domain.internal.Item;
@@ -17,7 +18,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.SecurityContext;
-import java.math.BigDecimal;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,7 +54,7 @@ public class BidEngineResourceTest {
 
     @Test
     public void should_call_bidEngine_offer_when_user_offering_item() {
-        Item item = new Item("category", "an item", new BigDecimal(1.2));
+        Item item = new Item("category", "an item", new Amount(1.2));
 
         when(securityContext.getUserPrincipal()).thenReturn(user);
         when(items.find("an item")).thenReturn(item);

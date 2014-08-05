@@ -11,7 +11,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,7 +36,7 @@ public class BidEngineListenerTest {
 
     @Test
     public void should_be_notified_when_bid() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", new BigDecimal(4.3))), expiration);
+        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", new Amount(4.3))), expiration);
         BidEngineListener bidEngineListener = mock(BidEngineListener.class);
         bidEngine.addListener(bidEngineListener);
 
@@ -54,7 +53,7 @@ public class BidEngineListenerTest {
 
     @Test
     public void should_be_notified_when_bid_offer_is_resolved() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", new BigDecimal(4.3)),new Item("category", "another item", new BigDecimal(2.4))), expiration);
+        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", new Amount(4.3)),new Item("category", "another item", new Amount(2.4))), expiration);
         BidEngineListener bidEngineListener = mock(BidEngineListener.class);
         bidEngine.addListener(bidEngineListener);
 
@@ -77,7 +76,7 @@ public class BidEngineListenerTest {
 
     @Test
     public void should_be_notified_when_new_bid_offer_is_proposed() {
-        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", new BigDecimal(4.3)), new Item("category", "another item", new BigDecimal(2.4))), expiration);
+        BidEngine bidEngine = new BidEngine(new Items(new Item("category", "an item", new Amount(4.3)), new Item("category", "another item", new Amount(2.4))), expiration);
         BidEngineListener bidEngineListener = mock(BidEngineListener.class);
         bidEngine.addListener(bidEngineListener);
 

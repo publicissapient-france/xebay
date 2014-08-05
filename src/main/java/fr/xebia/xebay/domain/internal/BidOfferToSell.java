@@ -1,15 +1,14 @@
 package fr.xebia.xebay.domain.internal;
 
-import java.math.BigDecimal;
+import fr.xebia.xebay.domain.Amount;
 
 import static fr.xebia.xebay.domain.internal.Item.BANK;
-import static fr.xebia.xebay.domain.utils.Math.areEquals;
 
 public class BidOfferToSell {
     private final Item item;
-    private final BigDecimal initialValue;
+    private final Amount initialValue;
 
-    public BidOfferToSell(Item item, BigDecimal initialValue) {
+    public BidOfferToSell(Item item, Amount initialValue) {
         this.item = item;
         this.initialValue = initialValue;
     }
@@ -19,7 +18,7 @@ public class BidOfferToSell {
     }
 
     public boolean isInitialValueAtItemPrice() {
-        return areEquals(initialValue, item.getValue());
+        return initialValue.equals(item.getValue());
     }
 
     public void backToBankAtItemPrice() {
